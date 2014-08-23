@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SchautUp</string>
+    <string name="menu_sort_by_schedule">按照设定时间排序</string>
+    <string name="menu_sort_by_creation_time">按照创建时间排序</string>
+
+</resources>

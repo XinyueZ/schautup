@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">SchautUp</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="menu_sort_by_schedule">Sort by schedule</string>
+    <string name="menu_sort_by_creation_time">Sort by create date</string>
 
 </resources>

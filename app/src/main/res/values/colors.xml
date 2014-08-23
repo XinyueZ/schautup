@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="c0">#ffffff</color>
+    <color name="c1">#80ffffff</color>
+    <color name="c2">#ccffffff</color>
+    <color name="c3">#052d41</color>
+    <color name="c4">#1effffff</color>
+    <color name="c5">#40ffffff</color>
+    <color name="c6">#33000000</color>
+    <color name="c7">#CC000000</color>
+    <color name="c8">#b314b9d2</color>
+    <color name="c9">#0f6ea5</color>
+    <color name="c10">#ddd72025</color>
+
+
+    <color name="txt_common">@color/c7</color>
+    <color name="bg_list_item">@color/c0</color>
+    <color name="bg_pressed_status">@color/c5</color>
+</resources>
