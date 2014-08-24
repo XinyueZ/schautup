@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="AppTheme" parent="@style/Theme.AppCompat">
-		<item name="windowActionBar">false</item>
-		<item name="android:windowNoTitle">true</item>
-		<item name="android:windowActionBar">false</item>
-	</style>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat">
+        <item name="android:actionBarStyle">@style/AbStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/AbStyle</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="popupMenuStyle">@style/PopupMenuStyle</item>
+    </style>
+
+    <!--Support ActionBar-->
+    <style name="AbStyle" parent="@style/Widget.AppCompat.Base.ActionBar">
+        <item name="android:background">@color/bg_actionbar</item>
+        <item name="android:icon">@drawable/ic_action_logo</item>
+        <!-- Support library compatibility -->
+        <item name="icon">@drawable/ic_action_logo</item>
+        <item name="background">@color/bg_actionbar</item>
+    </style>
+
+    <!--Background of popover-->
+    <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/bg_actionbar</item>
+        <item name="android:dropDownSelector">@color/bg_actionbar</item>
+    </style>
 
 </resources>
