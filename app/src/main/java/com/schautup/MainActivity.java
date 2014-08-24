@@ -7,15 +7,20 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.adapters.ScheduleListViewAdapter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
+
+import org.joda.time.DateTime;
 
 
 /**
@@ -24,7 +29,8 @@ import com.schautup.data.ScheduleType;
  *
  * @author Xinyue Zhao
  */
-public final class MainActivity extends ActionBarActivity implements AbsListView.OnScrollListener {
+public final class MainActivity extends ActionBarActivity implements AbsListView.OnScrollListener,
+		ScheduleListViewAdapter.OnOptionClickedListener, RadialTimePickerDialog.OnTimeSetListener {
 	private static final int LAYOUT = R.layout.activity_main;
 	private static final int LAYOUT_HEADER = R.layout.inc_lv_header;
 	private static final int MENU = R.menu.main;
@@ -82,6 +88,7 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 		// Show data.
 		mAdapter = new ScheduleListViewAdapter(items);
 		mScheduleLv.setAdapter(mAdapter);
+		mAdapter.setListener(this);
 	}
 
 	@Override
@@ -122,6 +129,20 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+	}
+
+	@Override
+	public void onOptionClicked(ScheduleItem item) {
+		DateTime now = DateTime.now();
+		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+				.newInstance(this, now.getHourOfDay(), now.getMinuteOfHour(),
+						DateFormat.is24HourFormat(this));
+		timePickerDialog.show(getSupportFragmentManager(), null);
+	}
+
+	@Override
+	public void onTimeSet(RadialPickerLayout dialog, int hourOfDay, int minute) {
 
 	}
 }

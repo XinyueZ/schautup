@@ -16,7 +16,7 @@
 
     <color name="txt_common">@color/c7</color>
     <color name="bg_list_item">@color/c0</color>
-    <color name="bg_pressed_status">@color/c5</color>
+    <color name="bg_pressed_status">@color/c3</color>
     <color name="bg_actionbar">@color/c9</color>
     <color name="bg_overflow">@color/c3</color>
     <color name="divider">@color/c1</color>

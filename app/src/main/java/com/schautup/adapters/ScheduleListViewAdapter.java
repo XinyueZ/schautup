@@ -67,10 +67,16 @@ public final class ScheduleListViewAdapter extends BaseAdapter {
 		} else {
 			h = (ViewHolder) convertView.getTag();
 		}
-		ScheduleItem item = mItemList.get(position);
+		final ScheduleItem item = mItemList.get(position);
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.timeFromItem(item));
-		h.mOptionBtn.setOnClickListener(mListener);
+		h.mOptionBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mListener!=null)
+					mListener.onOptionClicked(item);
+			}
+		});
 
 		return convertView;
 	}
@@ -100,7 +106,7 @@ public final class ScheduleListViewAdapter extends BaseAdapter {
 	/**
 	 * Listener for click event on option button.
 	 */
-	public static interface OnOptionClickedListener extends View.OnClickListener {
+	public static interface OnOptionClickedListener   {
 		/**
 		 * Callback by clicking.
 		 *
