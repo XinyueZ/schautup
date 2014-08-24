@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">SchautUp</string>
+    <!--ListView-->
+    <string name="lbl_listview_top">数据顶端</string>
+    <!--Menu-->
     <string name="menu_sort_by_schedule">按照设定时间排序</string>
     <string name="menu_sort_by_creation_time">按照创建时间排序</string>
 

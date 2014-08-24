@@ -1,5 +1,8 @@
 package com.schautup;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
@@ -17,8 +20,11 @@ public final class Utils {
 	 */
 	public static String timeFromItem(ScheduleItem item) {
 		String fmt = "%s:%s";
-		return String.format(fmt, item.getHour(), item.getMinute());
+		NumberFormat fmtNum = new DecimalFormat("##00");
+		String ret = String.format(fmt, fmtNum.format(item.getHour()), fmtNum.format(item.getMinute()));
+		return ret;
 	}
+
 
 	/**
 	 * Show long time toast.

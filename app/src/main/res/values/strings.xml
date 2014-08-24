@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">SchautUp</string>
+    <!--ListView-->
+    <string name="lbl_listview_top">Top of data</string>
+    <!--Menu-->
     <string name="menu_sort_by_schedule">Sort by schedule</string>
     <string name="menu_sort_by_creation_time">Sort by recently created</string>
 

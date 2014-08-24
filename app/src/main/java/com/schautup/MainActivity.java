@@ -3,10 +3,14 @@ package com.schautup;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.schautup.adapters.ScheduleListViewAdapter;
@@ -20,8 +24,14 @@ import com.schautup.data.ScheduleType;
  *
  * @author Xinyue Zhao
  */
-public final class MainActivity extends ActionBarActivity {
+public final class MainActivity extends ActionBarActivity implements AbsListView.OnScrollListener {
 	private static final int LAYOUT = R.layout.activity_main;
+	private static final int LAYOUT_HEADER = R.layout.inc_lv_header;
+	private static final int MENU = R.menu.main;
+	/**
+	 * Height of {@link android.support.v7.app.ActionBar}.
+	 */
+	private int mActionBarHeight;
 	/**
 	 * {@link android.widget.ListView} for all schedules.
 	 */
@@ -30,19 +40,46 @@ public final class MainActivity extends ActionBarActivity {
 	 * {@link com.schautup.adapters.ScheduleListViewAdapter} for {@link #mScheduleLv}.
 	 */
 	private ScheduleListViewAdapter mAdapter;
+	/**
+	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mScheduleLv}.
+	 */
+	private int mLastFirstVisibleItem;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+
+		//Actionbar height.
+		int[] abSzAttr;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			abSzAttr = new int[] { android.R.attr.actionBarSize };
+		} else {
+			abSzAttr = new int[] { R.attr.actionBarSize };
+		}
+		TypedArray a = obtainStyledAttributes(abSzAttr);
+		mActionBarHeight = a.getDimensionPixelSize(0, -1);
+
+		// List header.
 		mScheduleLv = (ListView) findViewById(R.id.schedule_lv);
-		ScheduleItem item0 = new ScheduleItem(ScheduleType.MUTE, 2, 4, System.currentTimeMillis());
-		ScheduleItem item1 = new ScheduleItem(ScheduleType.MUTE, 23, 34, System.currentTimeMillis());
-		ScheduleItem item2 = new ScheduleItem(ScheduleType.MUTE, 21, 44, System.currentTimeMillis());
+		mScheduleLv.setOnScrollListener(this);
+		View headerV = getLayoutInflater().inflate(LAYOUT_HEADER, mScheduleLv, false);
+		mScheduleLv.addHeaderView(headerV, null, false);
+		headerV.getLayoutParams().height = mActionBarHeight;
+
+		//----------------------------------------------------------
+		// Description: Test data block.
+		//
+		// Will be removed late.
+		//----------------------------------------------------------
 		List<ScheduleItem> items = new ArrayList<ScheduleItem>();
-		items.add(item0);
-		items.add(item1);
-		items.add(item2);
+		for (int i = 0; i < 100; i++) {
+			items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
+		}
+		//----------------------------------------------------------
+
+		// Show data.
 		mAdapter = new ScheduleListViewAdapter(items);
 		mScheduleLv.setAdapter(mAdapter);
 	}
@@ -64,5 +101,27 @@ public final class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static final int MENU = R.menu.main;
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		final ListView lw = (ListView) view;
+		if (view.getId() == lw.getId()) {
+			final int currentFirstVisibleItem = lw.getFirstVisiblePosition();
+			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+				if (getSupportActionBar().isShowing()) {
+					getSupportActionBar().hide();
+				}
+			} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+				if (!getSupportActionBar().isShowing()) {
+					getSupportActionBar().show();
+				}
+			}
+			mLastFirstVisibleItem = currentFirstVisibleItem;
+		}
+	}
+
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+	}
 }

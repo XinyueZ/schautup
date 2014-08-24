@@ -8,5 +8,7 @@
         android:id="@+id/schedule_lv"
         android:cacheColorHint="@android:color/transparent"
         android:layout_width="match_parent"
+        android:divider="@drawable/lv_divider"
+        android:dividerHeight="@dimen/divider_height"
         android:layout_height="wrap_content" />
 </RelativeLayout>
