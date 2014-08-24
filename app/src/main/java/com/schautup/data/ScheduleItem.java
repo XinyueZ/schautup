@@ -21,9 +21,9 @@ public final class ScheduleItem {
 	 */
 	private int mMinute;
 	/**
-	 * Created time.
+	 * Edited time.
 	 */
-	private long mCreationTime;
+	private long mEditedTime;
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
@@ -36,15 +36,15 @@ public final class ScheduleItem {
 	 * 		Hour.
 	 * @param _minute
 	 * 		Minute.
-	 * @param _creationTime
+	 * @param __editedTime
 	 * 		Created time.
 	 */
-	public ScheduleItem(int _id, ScheduleType _type, int _hour, int _minute, long _creationTime) {
+	public ScheduleItem(int _id, ScheduleType _type, int _hour, int _minute, long __editedTime) {
 		mId = _id;
 		mType = _type;
 		mHour = _hour;
 		mMinute = _minute;
-		mCreationTime = _creationTime;
+		mEditedTime = __editedTime;
 	}
 
 	/**
@@ -56,11 +56,11 @@ public final class ScheduleItem {
 	 * 		Hour.
 	 * @param _minute
 	 * 		Minute.
-	 * @param _creationTime
+	 * @param __editedTime
 	 * 		Created time.
 	 */
-	public ScheduleItem(ScheduleType _type, int _hour, int _minute, long _creationTime) {
-		this(-1, _type, _hour, _minute, _creationTime);
+	public ScheduleItem(ScheduleType _type, int _hour, int _minute, long __editedTime) {
+		this(-1, _type, _hour, _minute, __editedTime);
 	}
 
 	/**
@@ -121,20 +121,20 @@ public final class ScheduleItem {
 	}
 
 	/**
-	 * Get created time.
+	 * Get edited time.
 	 */
-	public long getCreationTime() {
-		return mCreationTime;
+	public long getEditedTime() {
+		return mEditedTime;
 	}
 
 	/**
-	 * Set created time.
+	 * Set edited time.
 	 * <p/>
 	 *
-	 * @param _creationTime
+	 * @param _editedTime
 	 * 		The created time.
 	 */
-	public void setCreationTime(long _creationTime) {
-		mCreationTime = _creationTime;
+	public void setEditedTime(long _editedTime) {
+		mEditedTime = _editedTime;
 	}
 }

@@ -11,11 +11,15 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.adapters.ScheduleListViewAdapter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
@@ -50,7 +54,14 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mScheduleLv}.
 	 */
 	private int mLastFirstVisibleItem;
-
+	/**
+	 * Add new data item.
+	 */
+	private ImageButton mAddBtn;
+	/**
+	 * {@link android.view.ViewGroup} that holds a "add" {@link android.widget.ImageButton} {@link #mAddBtn}.
+	 */
+	private ViewGroup mAddNewVG;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,11 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 		}
 		TypedArray a = obtainStyledAttributes(abSzAttr);
 		mActionBarHeight = a.getDimensionPixelSize(0, -1);
+
+		// Add new.
+		mAddNewVG = (ViewGroup) findViewById(R.id.add_fl);
+		mAddBtn = (ImageButton) mAddNewVG.findViewById(R.id.add_btn);
+		mAddNewVG.getLayoutParams().height = mActionBarHeight;
 
 		// List header.
 		mScheduleLv = (ListView) findViewById(R.id.schedule_lv);
@@ -111,6 +127,20 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		final ListView lw = (ListView) view;
+		float alpha = ViewHelper.getAlpha(mAddNewVG);
+		if (scrollState == 0) {
+			//ListView is idle, user can add item with a button.
+			if (alpha != 1) {
+				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
+				animator.alpha(1).setDuration(1000);
+			}
+		} else {
+			//ListView moving, add button can dismiss.
+			if (alpha != 0) {
+				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
+				animator.alpha(0).setDuration(1000);
+			}
+		}
 		if (view.getId() == lw.getId()) {
 			final int currentFirstVisibleItem = lw.getFirstVisiblePosition();
 			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
@@ -135,9 +165,8 @@ public final class MainActivity extends ActionBarActivity implements AbsListView
 	@Override
 	public void onOptionClicked(ScheduleItem item) {
 		DateTime now = DateTime.now();
-		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-				.newInstance(this, now.getHourOfDay(), now.getMinuteOfHour(),
-						DateFormat.is24HourFormat(this));
+		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, now.getHourOfDay(),
+				now.getMinuteOfHour(), DateFormat.is24HourFormat(this));
 		timePickerDialog.show(getSupportFragmentManager(), null);
 	}
 

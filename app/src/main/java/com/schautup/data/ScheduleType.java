@@ -8,7 +8,12 @@ import com.schautup.R;
  * @author Xinyue Zhao
  */
 public enum ScheduleType {
-	MUTE(R.drawable.ic_mute), VIBRATE(R.drawable.ic_vibrate), SOUND(R.drawable.ic_sound);
+	MUTE(0, R.drawable.ic_mute), VIBRATE(1, R.drawable.ic_vibrate), SOUND(2, R.drawable.ic_sound);
+
+	/**
+	 * Code of type.
+	 */
+	private int mCode;
 	/**
 	 * ResId of status icon.
 	 */
@@ -20,7 +25,8 @@ public enum ScheduleType {
 	 * @param _iconDrawResId
 	 * 		The resId of status icon.
 	 */
-	ScheduleType(int _iconDrawResId) {
+	ScheduleType(int _code, int _iconDrawResId) {
+		mCode = _code;
 		mIconDrawResId = _iconDrawResId;
 	}
 
@@ -32,4 +38,33 @@ public enum ScheduleType {
 	public int getIconDrawResId() {
 		return mIconDrawResId;
 	}
+
+	/**
+	 * Get code of type.
+	 */
+	public int getCode() {
+		return mCode;
+	}
+
+	/**
+	 * Convert code to {@link com.schautup.data.ScheduleType}. It should return {@code null} when a unknown code is
+	 * passed.
+	 *
+	 * @param code
+	 * 		The code represent a {@link com.schautup.data.ScheduleType}.
+	 * @return {@link com.schautup.data.ScheduleType}, <b>{@code null} when a unknown code.</b>
+	 */
+	public ScheduleType fromCode(int code) {
+		switch (code) {
+		case 0:
+			return MUTE;
+		case 1:
+			return VIBRATE;
+		case 2:
+			return SOUND;
+		default:
+			return null;
+		}
+	}
+
 }
