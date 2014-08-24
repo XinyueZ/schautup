@@ -5,6 +5,10 @@ package com.schautup.data;
  */
 public final class ScheduleItem {
 	/**
+	 * Possible Id if data instance is from DB.
+	 */
+	private int mId;
+	/**
 	 * Different types scheduled.
 	 */
 	private ScheduleType mType;
@@ -24,6 +28,28 @@ public final class ScheduleItem {
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
 	 *
+	 * @param _id
+	 * 		Possible Id if data instance is from DB.
+	 * @param _type
+	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
+	 * @param _hour
+	 * 		Hour.
+	 * @param _minute
+	 * 		Minute.
+	 * @param _creationTime
+	 * 		Created time.
+	 */
+	public ScheduleItem(int _id, ScheduleType _type, int _hour, int _minute, long _creationTime) {
+		mId = _id;
+		mType = _type;
+		mHour = _hour;
+		mMinute = _minute;
+		mCreationTime = _creationTime;
+	}
+
+	/**
+	 * Constructor of {@link com.schautup.data.ScheduleItem}.
+	 *
 	 * @param _type
 	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
 	 * @param _hour
@@ -34,10 +60,7 @@ public final class ScheduleItem {
 	 * 		Created time.
 	 */
 	public ScheduleItem(ScheduleType _type, int _hour, int _minute, long _creationTime) {
-		mType = _type;
-		mHour = _hour;
-		mMinute = _minute;
-		mCreationTime = _creationTime;
+		this(-1, _type, _hour, _minute, _creationTime);
 	}
 
 	/**
