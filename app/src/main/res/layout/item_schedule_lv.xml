@@ -6,6 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_height">
 
+    <View
+        android:id="@+id/status_level_v"
+        android:background="@color/level_6"
+        android:layout_marginTop="@dimen/margin_padding_status_level"
+        android:layout_marginBottom="@dimen/margin_padding_status_level"
+        android:layout_height="match_parent"
+        android:layout_width="@dimen/size_status_level" />
+
     <ImageView
         android:id="@+id/status_iv"
         android:layout_width="0dp"
