@@ -45,7 +45,7 @@ public final class Utils {
 		Resources resources = cxt.getResources();
 		DateTime now = DateTime.now();
 		int hourToWait = item.getHour();
-		if (hourToWait > now.getHourOfDay()) {
+		if (hourToWait >= now.getHourOfDay()) {
 			int diff = hourToWait - now.getHourOfDay();
 			if (diff >= 0 && diff <= 11) {
 				if (diff < 1) {
