@@ -16,11 +16,11 @@ public final class SetOptionEvent {
 	/**
 	 * Constructor of {@link SetOptionEvent}.
 	 *
-	 * @param _scheduleItem
+	 * @param  scheduleItem
 	 * 		The Data that holds this option.
 	 */
-	public SetOptionEvent(ScheduleItem _scheduleItem) {
-		mScheduleItem = _scheduleItem;
+	public SetOptionEvent(ScheduleItem  scheduleItem) {
+		mScheduleItem =  scheduleItem;
 	}
 
 	/**

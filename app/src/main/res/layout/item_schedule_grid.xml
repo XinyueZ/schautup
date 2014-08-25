@@ -30,7 +30,7 @@
             android:textSize="20sp"
             android:gravity="center"
             android:layout_marginTop="10dp"
-            android:textColor="@color/txt_common"
+            android:textColor="@color/txt_common_black"
             android:layout_height="wrap_content" />
 
 

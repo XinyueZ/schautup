@@ -58,7 +58,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		ScheduleItem item = getItemList().get(position);
 		h.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
-		h.mStatusTv.setText(Utils.timeFromItem(item));
+		h.mStatusTv.setText(Utils.convertValue(item));
 
 		return convertView;
 	}

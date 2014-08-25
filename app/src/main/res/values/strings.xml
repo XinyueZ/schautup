@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">SchautUp</string>
+    <string name="hour_minute_divider">:</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_close">Close</string>
+
     <!--ListView-->
     <string name="lbl_listview_top">Top of data</string>
     <!--Menu-->
@@ -9,5 +14,9 @@
     <string name="menu_view">View</string>
     <string name="menu_sort_by_schedule">Sort by schedule</string>
     <string name="menu_sort_by_edited_time">Sort by recently edited</string>
-
+    <!--Option dialog-->
+    <string name="lbl_option_title">Option</string>
+    <string name="option_mute">Mute</string>
+    <string name="option_vibrate">Vibrate</string>
+    <string name="option_sound">Sound</string>
 </resources>

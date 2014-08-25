@@ -9,8 +9,10 @@ import android.view.MenuItem;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.bus.AddNewScheduleItemEvent;
+import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetOptionEvent;
-import com.schautup.data.ScheduleItem;
+import com.schautup.bus.SetTimeEvent;
+import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
 
@@ -50,7 +52,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link com.schautup.bus.SetOptionEvent}.
 	 */
 	public void onEvent(SetOptionEvent e) {
-		openOptionDialog(e.getScheduleItem());
+		showDialogFragment(OptionDialogFragment.newInstance(this), null);
 	}
 
 	/**
@@ -60,7 +62,21 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.AddNewScheduleItemEvent}.
 	 */
 	public void onEvent(AddNewScheduleItemEvent e) {
-		Utils.showShortToast(this, "AddNewScheduleItemEvent");
+		showDialogFragment(OptionDialogFragment.newInstance(this), null);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.OpenTimePickerEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.OpenTimePickerEvent}.
+	 */
+	public void onEvent(OpenTimePickerEvent e) {
+		DateTime now = DateTime.now();
+		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, now.getHourOfDay(),
+				now.getMinuteOfHour(), DateFormat.is24HourFormat(this));
+		timePickerDialog.show(getSupportFragmentManager(), null);
+
 	}
 	//------------------------------------------------
 
@@ -111,22 +127,11 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/**
-	 * Open a dialog set properties on a {@link com.schautup.data.ScheduleItem}.
-	 *
-	 * @param item
-	 * 		{@link com.schautup.data.ScheduleItem} to be set.
-	 */
-	public void openOptionDialog(ScheduleItem item) {
-		DateTime now = DateTime.now();
-		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, now.getHourOfDay(),
-				now.getMinuteOfHour(), DateFormat.is24HourFormat(this));
-		timePickerDialog.show(getSupportFragmentManager(), null);
-	}
+
 
 	@Override
 	public void onTimeSet(RadialPickerLayout dialog, int hourOfDay, int minute) {
-
+		EventBus.getDefault().post(new SetTimeEvent(Utils.convertValue(hourOfDay), Utils.convertValue(minute)));
 	}
 
 	/**

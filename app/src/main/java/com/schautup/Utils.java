@@ -19,9 +19,36 @@ import org.joda.time.DateTime;
  */
 public final class Utils {
 	/**
-	 * Convert time in {@link java.lang.String} from a {@link com.schautup.data.ScheduleItem}.
+	 * Convert value.
+	 * <p/>
+	 * For example:
+	 * <p/>
+	 * value := 1 return 01
+	 * <p/>
+	 * value := 12 return 12
+	 *
+	 * @param value
 	 */
-	public static String timeFromItem(ScheduleItem item) {
+	public static String convertValue(int value) {
+		String fmt = "%s";
+		NumberFormat fmtNum = new DecimalFormat("##00");
+		String ret = String.format(fmt, fmtNum.format(value));
+		return ret;
+	}
+
+	/**
+	 * Convert time in {@link java.lang.String} from a {@link com.schautup.data.ScheduleItem}.
+	 * <p/>
+	 * For example:
+	 * <p/>
+	 * value := 1 return 01
+	 * <p/>
+	 * value := 12 return 12
+	 *
+	 * @param item
+	 * 		{@link com.schautup.data.ScheduleItem}.
+	 */
+	public static String convertValue(ScheduleItem item) {
 		String fmt = "%s:%s";
 		NumberFormat fmtNum = new DecimalFormat("##00");
 		String ret = String.format(fmt, fmtNum.format(item.getHour()), fmtNum.format(item.getMinute()));
@@ -39,9 +66,9 @@ public final class Utils {
 	 */
 	public static int getStatusLevelColor(Context cxt, ScheduleItem item) {
 		int colorRes = R.color.level_0;
-		int[] levels =
-				{ R.color.level_11, R.color.level_10, R.color.level_9, R.color.level_8, R.color.level_7, R.color.level_6, R.color.level_5,
-						R.color.level_4, R.color.level_3, R.color.level_2, R.color.level_1, R.color.level_0 };
+		int[] levels = { R.color.level_11, R.color.level_10, R.color.level_9, R.color.level_8, R.color.level_7,
+				R.color.level_6, R.color.level_5, R.color.level_4, R.color.level_3, R.color.level_2, R.color.level_1,
+				R.color.level_0 };
 		Resources resources = cxt.getResources();
 		DateTime now = DateTime.now();
 		int hourToWait = item.getHour();

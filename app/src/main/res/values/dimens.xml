@@ -3,4 +3,7 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="size_status_level">6dp</dimen>
     <dimen name="margin_padding_status_level">3dp</dimen>
+    <dimen name="size_hour_minute">60dp</dimen>
+    <dimen name="size_text_hour_minute">30sp</dimen>
+    <dimen name="size_option_dialog">250dp</dimen>
 </resources>
