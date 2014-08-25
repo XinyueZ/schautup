@@ -4,10 +4,13 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import com.schautup.data.ScheduleItem;
+
+import org.joda.time.DateTime;
 
 /**
  * Util tool.
@@ -25,6 +28,39 @@ public final class Utils {
 		return ret;
 	}
 
+	/**
+	 * Get different {@link android.support.annotation.ColorRes} for different schedule status.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param item
+	 * 		{@link com.schautup.data.ScheduleItem}.
+	 * @return A {@link android.support.annotation.ColorRes}.
+	 */
+	public static int getStatusLevelColor(Context cxt, ScheduleItem item) {
+		int colorRes = R.color.level_0;
+		int[] levels =
+				{ R.color.level_11, R.color.level_10, R.color.level_9, R.color.level_8, R.color.level_7, R.color.level_6, R.color.level_5,
+						R.color.level_4, R.color.level_3, R.color.level_2, R.color.level_1, R.color.level_0 };
+		Resources resources = cxt.getResources();
+		DateTime now = DateTime.now();
+		int hourToWait = item.getHour();
+		if (hourToWait > now.getHourOfDay()) {
+			int diff = hourToWait - now.getHourOfDay();
+			if (diff >= 0 && diff <= 11) {
+				if (diff < 1) {
+					colorRes = R.color.level_11;
+				} else {
+					colorRes = levels[diff - 1];
+				}
+			} else {
+				colorRes = R.color.level_0;
+			}
+		} else {
+			colorRes = R.color.level_0;
+		}
+		return resources.getColor(colorRes);
+	}
 
 	/**
 	 * Show long time toast.

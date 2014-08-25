@@ -1,15 +1,10 @@
 package com.schautup.adapters;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.Utils;
 import com.schautup.bus.SetOptionEvent;
-import com.schautup.data.ScheduleItem;
 
 import de.greenrobot.event.EventBus;
 
@@ -41,39 +36,25 @@ public final class ScheduleGridViewAdapter extends BaseScheduleAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder h;
-		if (convertView == null) {
-			convertView = LayoutInflater.from(parent.getContext()).inflate(ITEM_LAYOUT, parent, false);
-			h = new ViewHolder(convertView);
-			convertView.setTag(h);
-		} else {
-			h = (ViewHolder) convertView.getTag();
-		}
-		final ScheduleItem item = getItemList().get(position);
-		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
-		h.mStatusTv.setText(Utils.timeFromItem(item));
+	public View getView(final int position, View convertView, ViewGroup parent) {
+		convertView = super.getView(position, convertView, parent);
 		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EventBus.getDefault().post(new SetOptionEvent(item));
+				EventBus.getDefault().post(new SetOptionEvent(getItemList().get(position)));
 			}
 		});
 
 		return convertView;
 	}
 
-	/**
-	 * ViewHolder patter for item_schedule_grid.
-	 */
-	private static class ViewHolder {
-		private ImageView mStatusIv;
-		private TextView mStatusTv;
-
-		private ViewHolder(View convertView) {
-			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
-			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
-		}
+	@Override
+	protected int getLayoutId() {
+		return ITEM_LAYOUT;
 	}
 
+	@Override
+	protected ViewHolder createViewHolder(View convertView) {
+		return new ViewHolder(convertView);
+	}
 }

@@ -35,7 +35,7 @@
     <color name="divider">@color/c1</color>
     <color name="bg_add_new">@color/c8</color>
 
-    <!--Status live, pre 30 min a level-->
+
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>
     <color name="level_2">@color/c20</color>
