@@ -3,17 +3,16 @@
 
     <FrameLayout
         android:id="@+id/add_fl"
-        android:background="@color/bg_add_new"
+        android:background="@drawable/selector_bg2_btn"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <FrameLayout
             android:id="@+id/add_btn"
             android:layout_width="wrap_content"
-            android:background="@drawable/selector_bg_btn"
-            android:src="@drawable/ic_add_btn"
+            android:background="@drawable/ic_add_btn"
             android:layout_gravity="center"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </FrameLayout>
 </merge>

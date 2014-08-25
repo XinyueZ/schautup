@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.Utils;
+import com.schautup.bus.SetOptionEvent;
 import com.schautup.data.ScheduleItem;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The adapter for main {@link android.widget.ListView}.
@@ -26,11 +29,6 @@ public final class ScheduleListViewAdapter extends BaseAdapter {
 	 */
 	private List<ScheduleItem> mItemList;
 
-
-	/**
-	 * {@link com.schautup.adapters.ScheduleListViewAdapter.OnOptionClickedListener}.
-	 */
-	private OnOptionClickedListener mListener;
 
 	/**
 	 * Constructor of {@link #ScheduleListViewAdapter}.
@@ -73,19 +71,11 @@ public final class ScheduleListViewAdapter extends BaseAdapter {
 		h.mOptionBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mListener!=null)
-					mListener.onOptionClicked(item);
+				EventBus.getDefault().post(new SetOptionEvent(item));
 			}
 		});
 
 		return convertView;
-	}
-
-	/**
-	 * Set {@link com.schautup.adapters.ScheduleListViewAdapter.OnOptionClickedListener}.
-	 */
-	public void setListener(OnOptionClickedListener _listener) {
-		mListener = _listener;
 	}
 
 	/**
@@ -103,16 +93,4 @@ public final class ScheduleListViewAdapter extends BaseAdapter {
 		}
 	}
 
-	/**
-	 * Listener for click event on option button.
-	 */
-	public static interface OnOptionClickedListener   {
-		/**
-		 * Callback by clicking.
-		 *
-		 * @param item
-		 * 		{@link com.schautup.data.ScheduleItem}.
-		 */
-		void onOptionClicked(ScheduleItem item);
-	}
 }
