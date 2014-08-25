@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/lv_divider"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.ScheduleListFragment">
+
+    <FrameLayout
+        android:id="@+id/header_fl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <GridView
+            android:id="@+id/schedule_gv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="100dp"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:horizontalSpacing="1dp"
+            android:verticalSpacing="1dp"
+            android:gravity="center" />
+
+        <include layout="@layout/inc_add_item" />
+    </FrameLayout>
+</LinearLayout>

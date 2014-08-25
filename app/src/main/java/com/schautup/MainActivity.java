@@ -1,6 +1,7 @@
 package com.schautup;
 
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,9 +11,12 @@ import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.SetOptionEvent;
 import com.schautup.data.ScheduleItem;
+import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
 
 import org.joda.time.DateTime;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -30,6 +34,10 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * Main menu.
 	 */
 	private static final int MENU = R.menu.main;
+	/**
+	 * {@code true} when current view is a list, otherwise is a grid.
+	 */
+	private boolean mListViewCurrent = true;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -60,11 +68,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
-
-		getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in,
-				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).add(R.id.content_fl,
-				ScheduleListFragment.newInstance(this)).commit();
+		showListView();
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,12 +81,34 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_add:
+			EventBus.getDefault().post(new AddNewScheduleItemEvent());
+			break;
+		case R.id.action_view:
+			if (!mListViewCurrent) {
+				//Current is grid, then switch to list.
+				showListView();
+			} else {
+				showGridView();
+			}
+			break;
 		case R.id.action_sort_by_schedule:
 			break;
 		case R.id.action_sort_by_creation_time:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (!mListViewCurrent) {
+			//Current is grid, then switch to list late.
+			menu.findItem(R.id.action_view).setIcon(R.drawable.ic_action_listview);
+		} else {
+			menu.findItem(R.id.action_view).setIcon(R.drawable.ic_action_gridview);
+		}
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**
@@ -99,5 +127,29 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	@Override
 	public void onTimeSet(RadialPickerLayout dialog, int hourOfDay, int minute) {
 
+	}
+
+	/**
+	 * Show list view of all schedules.
+	 */
+	private void showListView() {
+		getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in,
+				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
+				ScheduleListFragment.newInstance(this), ScheduleListFragment.class.getName()).commit();
+		mListViewCurrent = true;
+
+		ActivityCompat.invalidateOptionsMenu(this);
+	}
+
+	/**
+	 * Show grid view of all schedules.
+	 */
+	private void showGridView() {
+		getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in,
+				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
+				ScheduleGridFragment.newInstance(this), ScheduleGridFragment.class.getName()).commit();
+		mListViewCurrent = false;
+
+		ActivityCompat.invalidateOptionsMenu(this);
 	}
 }

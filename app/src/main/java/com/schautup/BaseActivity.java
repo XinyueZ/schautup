@@ -13,7 +13,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public class BaseActivity extends ActionBarActivity {
+public abstract  class BaseActivity extends ActionBarActivity {
 	/**
 	 * Handler for {@link }
 	 *

@@ -3,7 +3,6 @@ package com.schautup.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,11 +18,11 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
+public final class ScheduleGridViewAdapter extends BaseScheduleAdapter {
 	/**
 	 * Main layout for this component.
 	 */
-	private static final int ITEM_LAYOUT = R.layout.item_schedule_lv;
+	private static final int ITEM_LAYOUT = R.layout.item_schedule_grid;
 
 
 	@Override
@@ -54,28 +53,26 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 		final ScheduleItem item = getItemList().get(position);
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.timeFromItem(item));
-		h.mOptionBtn.setOnClickListener(new View.OnClickListener() {
+		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				EventBus.getDefault().post(new SetOptionEvent(item));
 			}
 		});
+
 		return convertView;
 	}
 
-
 	/**
-	 * ViewHolder patter for item_schedule_lv.
+	 * ViewHolder patter for item_schedule_grid.
 	 */
 	private static class ViewHolder {
 		private ImageView mStatusIv;
 		private TextView mStatusTv;
-		private ImageButton mOptionBtn;
 
 		private ViewHolder(View convertView) {
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
-			mOptionBtn = (ImageButton) convertView.findViewById(R.id.status_option_btn);
 		}
 	}
 

@@ -6,6 +6,7 @@
     <string name="lbl_listview_top">Top of data</string>
     <!--Menu-->
     <string name="menu_add">Add New</string>
+    <string name="menu_view">View</string>
     <string name="menu_sort_by_schedule">Sort by schedule</string>
     <string name="menu_sort_by_edited_time">Sort by recently edited</string>
 

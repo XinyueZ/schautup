@@ -6,6 +6,7 @@
     <string name="lbl_listview_top">数据顶端</string>
     <!--Menu-->
     <string name="menu_add">添加</string>
+    <string name="menu_view">界面</string>
     <string name="menu_sort_by_schedule">按照设定时间排序</string>
     <string name="menu_sort_by_edited_time">按照被编辑时间排序</string>
 

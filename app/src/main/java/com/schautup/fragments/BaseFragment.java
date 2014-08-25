@@ -16,7 +16,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public class BaseFragment extends Fragment {
+public abstract  class BaseFragment extends Fragment {
 	/**
 	 * Height of {@link android.support.v7.app.ActionBar}.
 	 */
