@@ -43,16 +43,20 @@ public final class AnimImageButton extends ImageButton {
 	/**
 	 * Click listener for {@link AnimImageButton} which enhance an animation when clicking.
 	 *
-	 * @author  Xinyue Zhao
+	 * @author Xinyue Zhao
 	 */
-	public static class OnAnimImageButtonClickedListener implements OnClickListener {
+	public static abstract class OnAnimImageButtonClickedListener implements OnClickListener {
+		/**
+		 * Impl. Event what user clicks.
+		 */
+		public abstract void onClick();
+
 		@Override
-		public void onClick(final View v) {
+		public final void onClick(final View v) {
 			v.setEnabled(false);
 			final float initX = ViewHelper.getScaleX(v);
 			final float initY = ViewHelper.getScaleY(v);
-			ViewPropertyAnimator animator = ViewPropertyAnimator.animate(v);
-			animator.scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+			ViewPropertyAnimator.animate(v).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					super.onAnimationEnd(animation);
@@ -61,6 +65,7 @@ public final class AnimImageButton extends ImageButton {
 						@Override
 						public void onAnimationEnd(Animator animation) {
 							super.onAnimationEnd(animation);
+							onClick();
 							v.setEnabled(true);
 						}
 					}).start();

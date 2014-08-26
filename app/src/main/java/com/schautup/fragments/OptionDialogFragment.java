@@ -118,8 +118,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
 				new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
-					public void onClick(View v) {
-						super.onClick(v);
+					public void onClick() {
 						EventBus.getDefault().post(new OpenTimePickerEvent());
 					}
 				});
@@ -156,7 +155,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
 				Utils.showLongToast(getActivity(), R.string.lbl_tip_selection);
-				((View)mSelMuteV.getParent()).setSelected(true);
+				((View) mSelMuteV.getParent()).setSelected(true);
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);

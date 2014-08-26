@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.utils.Utils;
 import com.schautup.data.ScheduleItem;
+import com.schautup.utils.Utils;
 
 /**
  * Abstract impl {@link android.widget.BaseAdapter} for all {@link android.widget.ListView}, {@link
@@ -26,16 +26,6 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	private List<ScheduleItem> mItemList;
 
 	/**
-	 * Set data source, list of {@link com.schautup.data.ScheduleItem}.
-	 *
-	 * @param _itemList
-	 * 		The list of {@link com.schautup.data.ScheduleItem}.
-	 */
-	public void setItemList(List<ScheduleItem> _itemList) {
-		mItemList = _itemList;
-	}
-
-	/**
 	 * Get data source, list of {@link com.schautup.data.ScheduleItem}.
 	 *
 	 * @return The list of {@link com.schautup.data.ScheduleItem}.
@@ -44,6 +34,15 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		return mItemList;
 	}
 
+	/**
+	 * Set data source, list of {@link com.schautup.data.ScheduleItem}.
+	 *
+	 * @param _itemList
+	 * 		The list of {@link com.schautup.data.ScheduleItem}.
+	 */
+	public void setItemList(List<ScheduleItem> _itemList) {
+		mItemList = _itemList;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

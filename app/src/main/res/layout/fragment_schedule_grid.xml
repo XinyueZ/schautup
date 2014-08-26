@@ -16,14 +16,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <include layout="@layout/inc_empty" />
 
         <GridView
             android:id="@+id/schedule_gv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:columnWidth="100dp"
             android:numColumns="auto_fit"
             android:stretchMode="columnWidth"

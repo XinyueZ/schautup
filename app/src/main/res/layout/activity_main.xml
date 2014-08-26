@@ -1,10 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content_fl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/content_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/content_srl"
@@ -14,7 +17,7 @@
 
         <View
             android:layout_width="0dp"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

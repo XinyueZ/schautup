@@ -101,8 +101,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mNoDataBtn = (AnimImageButton) view.findViewById(R.id.no_data_btn);
 		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 			@Override
-			public void onClick(View v) {
-				super.onClick(v);
+			public void onClick() {
 				EventBus.getDefault().post(new ShowSetOptionEvent(null));
 			}
 		});
@@ -123,8 +122,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		//				}
 		//				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
 		//----------------------------------------------------------
-		EventBus.getDefault().post(new AllScheduleLoadedEvent(
-				DB.getInstance(getActivity().getApplication()).getAllSchedules()));
+		EventBus.getDefault().post(new AllScheduleLoadedEvent(DB.getInstance(getActivity().getApplication())
+				.getAllSchedules()));
 	}
 
 	@Override

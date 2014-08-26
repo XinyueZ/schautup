@@ -69,6 +69,7 @@ public enum ScheduleType {
 
 	/**
 	 * Get code of type.
+	 *
 	 * @return code.
 	 */
 	public int toCode() {

@@ -18,11 +18,11 @@ public final class AllScheduleLoadedEvent {
 	/**
 	 * Constructor of {@link com.schautup.bus.AllScheduleLoadedEvent}.
 	 *
-	 * @param  scheduleItemList
+	 * @param scheduleItemList
 	 * 		All loaded {@link com.schautup.data.ScheduleItem}.
 	 */
-	public AllScheduleLoadedEvent(List<ScheduleItem>  scheduleItemList) {
-		mScheduleItemList =  scheduleItemList;
+	public AllScheduleLoadedEvent(List<ScheduleItem> scheduleItemList) {
+		mScheduleItemList = scheduleItemList;
 	}
 
 	/**
