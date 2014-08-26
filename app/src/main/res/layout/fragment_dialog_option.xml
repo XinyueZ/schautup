@@ -53,14 +53,14 @@
                 android:background="@color/bg_hour_minute"
                 android:text="23" />
 
-            <ImageButton
+            <com.schautup.views.AnimImageButton
                 android:id="@+id/open_timepicker_btn"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_timepicker_btn"
-                android:background="@drawable/selector_bg1_btn" />
+                android:background="@android:color/transparent" />
 
         </LinearLayout>
 

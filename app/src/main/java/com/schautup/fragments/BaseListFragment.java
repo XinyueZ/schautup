@@ -1,5 +1,8 @@
 package com.schautup.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -14,6 +17,8 @@ import com.schautup.Utils;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
+import com.schautup.data.ScheduleItem;
+import com.schautup.data.ScheduleType;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -61,8 +66,13 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	public void onEvent(AllScheduleLoadedEvent e) {
 		// Show data.
-		mAdp.setItemList(e.getScheduleItemList());
-		((AdapterView) getListViewWidget()).setAdapter(mAdp);
+		if(e.getScheduleItemList() != null && e.getScheduleItemList().size() > 0) {
+			mNoDataBtn.setVisibility(View.GONE);
+			mAdp.setItemList(e.getScheduleItemList());
+			((AdapterView) getListViewWidget()).setAdapter(mAdp);
+		} else {
+			mNoDataBtn.setVisibility(View.VISIBLE);
+		}
 	}
 
 	//------------------------------------------------
@@ -102,11 +112,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		//
 		// Will be removed late.
 		//----------------------------------------------------------
-		//		List<ScheduleItem> items = new ArrayList<ScheduleItem>();
-		//		for (int i = 0; i < 100; i++) {
-		//			items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
-		//		}
-		//		EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
+				List<ScheduleItem> items = new ArrayList<ScheduleItem>();
+				for (int i = 0; i < 100; i++) {
+					items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
+				}
+				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
 		//----------------------------------------------------------
 	}
 
@@ -117,13 +127,13 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			//ListView is idle, user can add item with a button.
 			if (translationY != 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(0).setDuration(1000);
+				animator.translationY(0).setDuration(700);
 			}
 		} else {
 			//ListView moving, add button can dismiss.
 			if (translationY == 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight()).setDuration(1000);
+				animator.translationY(getActionBarHeight()).setDuration(700);
 			}
 		}
 		if (view.getId() == view.getId()) {

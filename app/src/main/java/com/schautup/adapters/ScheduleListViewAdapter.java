@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 
 import com.schautup.R;
 import com.schautup.bus.SetOptionEvent;
+import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -39,9 +40,10 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
-		((ViewHolder) convertView.getTag()).mOptionBtn.setOnClickListener(new View.OnClickListener() {
+		((ViewHolder) convertView.getTag()).mOptionBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener(){
 			@Override
 			public void onClick(View v) {
+				super.onClick(v);
 				EventBus.getDefault().post(new SetOptionEvent(getItemList().get(position)));
 			}
 		});

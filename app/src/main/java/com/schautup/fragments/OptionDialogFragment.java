@@ -14,6 +14,7 @@ import com.schautup.R;
 import com.schautup.Utils;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.views.AnimImageButton;
 
 import org.joda.time.DateTime;
 
@@ -107,7 +108,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelSoundV.setOnClickListener(this);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
-		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(this);
+		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener(){
+			@Override
+			public void onClick(View v) {
+				super.onClick(v);
+				EventBus.getDefault().post(new OpenTimePickerEvent());
+			}
+		});
 		getDialog().setTitle(R.string.lbl_option_title);
 	}
 
@@ -134,9 +141,6 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(true);
-			break;
-		case R.id.open_timepicker_btn:
-			EventBus.getDefault().post(new OpenTimePickerEvent());
 			break;
 		case R.id.close_confirm_btn:
 			dismiss();

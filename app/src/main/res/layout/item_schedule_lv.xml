@@ -36,13 +36,13 @@
         android:paddingLeft="5dp"
         android:layout_height="match_parent" />
 
-    <ImageButton
+    <com.schautup.views.AnimImageButton
         android:id="@+id/status_option_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:contentDescription="@string/app_name"
         android:layout_gravity="right|center_vertical"
-        android:background="@drawable/selector_bg1_btn"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_option" />
 </LinearLayout>
