@@ -7,6 +7,10 @@
     <string name="btn_cancel">取消</string>
     <!--ListView-->
     <string name="lbl_listview_top">数据顶端</string>
+    <string name="lbl_try_to_add_schedule">添加一个预定。</string>
+    <string name="lbl_try_to_add_schedule_fail">糟糕！无法添加预定。</string>
+    <string name="lbl_tip_selection">请选择一种类型!</string>
+
     <!--Menu-->
     <string name="menu_add">添加</string>
     <string name="menu_view">界面</string>

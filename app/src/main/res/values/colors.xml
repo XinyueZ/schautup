@@ -37,8 +37,9 @@
     <color name="bg_add_new">@color/c8</color>
     <color name="bg_hour_minute">@color/c5</color>
     <color name="bg_option_dialog">@color/c18</color>
-    <color name="bg_rect_solid">@color/c24</color>
-    <color name="bg_rect_stroke">@color/c13</color>
+    <color name="bg_blue_rect_solid">@color/c24</color>
+    <color name="bg_blue_rect_stroke">@color/c13</color>
+    <color name="bg_red_rect_stroke">@color/c17</color>
     <color name="bg_button_close_cancel">@color/c6</color>
     <color name="bg_app">@color/c1</color>
 
@@ -55,4 +56,8 @@
     <color name="level_10">@color/c16</color>
     <color name="level_11">@color/c17</color>
 
+    <color name="prg_0">@color/c12</color>
+    <color name="prg_1">@color/c13</color>
+    <color name="prg_2">@color/c14</color>
+    <color name="prg_3">@color/c15</color>
 </resources>

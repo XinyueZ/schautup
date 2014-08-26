@@ -56,6 +56,23 @@ public final class ScheduleItem {
 	 * 		Hour.
 	 * @param _minute
 	 * 		Minute.
+	 */
+	public ScheduleItem(ScheduleType _type, int _hour, int _minute) {
+		mType = _type;
+		mHour = _hour;
+		mMinute = _minute;
+	}
+
+
+	/**
+	 * Constructor of {@link com.schautup.data.ScheduleItem}.
+	 *
+	 * @param _type
+	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
+	 * @param _hour
+	 * 		Hour.
+	 * @param _minute
+	 * 		Minute.
 	 * @param __editedTime
 	 * 		Created time.
 	 */

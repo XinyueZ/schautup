@@ -54,7 +54,7 @@ public enum ScheduleType {
 	 * 		The code represent a {@link com.schautup.data.ScheduleType}.
 	 * @return {@link com.schautup.data.ScheduleType}, <b>{@code null} when a unknown code.</b>
 	 */
-	public ScheduleType fromCode(int code) {
+	public static ScheduleType fromCode(int code) {
 		switch (code) {
 		case 0:
 			return MUTE;
@@ -67,4 +67,11 @@ public enum ScheduleType {
 		}
 	}
 
+	/**
+	 * Get code of type.
+	 * @return code.
+	 */
+	public int toCode() {
+		return mCode;
+	}
 }

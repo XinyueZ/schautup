@@ -1,8 +1,5 @@
 package com.schautup.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -13,12 +10,11 @@ import android.widget.AdapterView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
-import com.schautup.Utils;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.data.ScheduleItem;
-import com.schautup.data.ScheduleType;
+import com.schautup.bus.ShowSetOptionEvent;
+import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -53,6 +49,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * A button to load data when there's no data.
 	 */
 	private AnimImageButton mNoDataBtn;
+	/**
+	 * {@code true} if the adapter has pushed data on to list.
+	 */
+	private boolean mIsShowing = false;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -66,10 +66,15 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	public void onEvent(AllScheduleLoadedEvent e) {
 		// Show data.
-		if(e.getScheduleItemList() != null && e.getScheduleItemList().size() > 0) {
+		if (e.getScheduleItemList() != null && e.getScheduleItemList().size() > 0) {
 			mNoDataBtn.setVisibility(View.GONE);
 			mAdp.setItemList(e.getScheduleItemList());
-			((AdapterView) getListViewWidget()).setAdapter(mAdp);
+			if (mIsShowing) {
+				mAdp.notifyDataSetChanged();
+			} else {
+				((AdapterView) getListViewWidget()).setAdapter(mAdp);
+				mIsShowing = true;
+			}
 		} else {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
@@ -94,11 +99,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 		// No data.
 		mNoDataBtn = (AnimImageButton) view.findViewById(R.id.no_data_btn);
-		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener(){
+		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 			@Override
 			public void onClick(View v) {
 				super.onClick(v);
-				Utils.showShortToast(getActivity(), "sdfasdfadsfadsf");
+				EventBus.getDefault().post(new ShowSetOptionEvent(null));
 			}
 		});
 	}
@@ -112,12 +117,14 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		//
 		// Will be removed late.
 		//----------------------------------------------------------
-				List<ScheduleItem> items = new ArrayList<ScheduleItem>();
-				for (int i = 0; i < 100; i++) {
-					items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
-				}
-				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
+		//				List<ScheduleItem> items = new ArrayList<ScheduleItem>();
+		//				for (int i = 0; i < 100; i++) {
+		//					items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
+		//				}
+		//				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
 		//----------------------------------------------------------
+		EventBus.getDefault().post(new AllScheduleLoadedEvent(
+				DB.getInstance(getActivity().getApplication()).getAllSchedules()));
 	}
 
 	@Override

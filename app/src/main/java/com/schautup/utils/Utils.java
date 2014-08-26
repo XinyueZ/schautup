@@ -1,4 +1,4 @@
-package com.schautup;
+package com.schautup.utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 
 import org.joda.time.DateTime;
@@ -88,6 +89,7 @@ public final class Utils {
 		}
 		return resources.getColor(colorRes);
 	}
+
 
 	/**
 	 * Show long time toast.

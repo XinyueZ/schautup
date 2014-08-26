@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.schautup.R;
-import com.schautup.bus.SetOptionEvent;
+import com.schautup.bus.ShowSetOptionEvent;
 
 import de.greenrobot.event.EventBus;
 
@@ -41,7 +41,7 @@ public final class ScheduleGridViewAdapter extends BaseScheduleAdapter {
 		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EventBus.getDefault().post(new SetOptionEvent(getItemList().get(position)));
+				EventBus.getDefault().post(new ShowSetOptionEvent(getItemList().get(position)));
 			}
 		});
 

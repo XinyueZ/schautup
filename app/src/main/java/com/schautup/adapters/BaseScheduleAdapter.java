@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.Utils;
+import com.schautup.utils.Utils;
 import com.schautup.data.ScheduleItem;
 
 /**

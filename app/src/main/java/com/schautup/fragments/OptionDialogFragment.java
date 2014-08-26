@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.Utils;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.UpdateDBEvent;
+import com.schautup.data.ScheduleItem;
+import com.schautup.data.ScheduleType;
+import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 
 import org.joda.time.DateTime;
@@ -51,6 +54,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * {@link android.widget.TextView} for selected minute.
 	 */
 	private TextView mMinuteTv;
+	/**
+	 * Pointer to selected {@link com.schautup.data.ScheduleType}.
+	 */
+	private ScheduleType mSelectedType;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -108,13 +115,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelSoundV.setOnClickListener(this);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
-		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener(){
-			@Override
-			public void onClick(View v) {
-				super.onClick(v);
-				EventBus.getDefault().post(new OpenTimePickerEvent());
-			}
-		});
+		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
+				new AnimImageButton.OnAnimImageButtonClickedListener() {
+					@Override
+					public void onClick(View v) {
+						super.onClick(v);
+						EventBus.getDefault().post(new OpenTimePickerEvent());
+					}
+				});
 		getDialog().setTitle(R.string.lbl_option_title);
 	}
 
@@ -131,19 +139,32 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(true);
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(false);
+			mSelectedType = ScheduleType.MUTE;
 			break;
 		case R.id.set_vibrate_ll:
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(true);
 			mSelSoundV.setSelected(false);
+			mSelectedType = ScheduleType.VIBRATE;
 			break;
 		case R.id.set_sound_ll:
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(true);
+			mSelectedType = ScheduleType.SOUND;
 			break;
 		case R.id.close_confirm_btn:
-			dismiss();
+			if (mSelectedType == null) {
+				Utils.showLongToast(getActivity(), R.string.lbl_tip_selection);
+				((View)mSelMuteV.getParent()).setSelected(true);
+				mSelMuteV.setSelected(false);
+				mSelVibrateV.setSelected(false);
+				mSelSoundV.setSelected(false);
+			} else {
+				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mSelectedType, Integer.valueOf(
+						mHourTv.getText().toString()), Integer.valueOf(mMinuteTv.getText().toString()))));
+				dismiss();
+			}
 			break;
 		case R.id.close_cancel_btn:
 			dismiss();

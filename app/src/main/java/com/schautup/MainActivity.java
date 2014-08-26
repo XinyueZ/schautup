@@ -2,6 +2,7 @@ package com.schautup;
 
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,12 +10,19 @@ import android.view.MenuItem;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.bus.AddNewScheduleItemEvent;
+import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.OpenTimePickerEvent;
-import com.schautup.bus.SetOptionEvent;
+import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowSetOptionEvent;
+import com.schautup.bus.UpdateDBEvent;
+import com.schautup.db.DB;
+import com.schautup.exceptions.AddSameDataException;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
+import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Utils;
 
 import org.joda.time.DateTime;
 
@@ -40,18 +48,33 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * {@code true} when current view is a list, otherwise is a grid.
 	 */
 	private boolean mListViewCurrent = true;
-
+	/**
+	 * Progress indicator.
+	 */
+	private SwipeRefreshLayout mRefreshLayout;
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.SetOptionEvent}
+	 * Handler for {@link com.schautup.bus.ProgressbarEvent}
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.SetOptionEvent}.
+	 * 		Event {@link  com.schautup.bus.ProgressbarEvent}.
 	 */
-	public void onEvent(SetOptionEvent e) {
+	public void onEvent(ProgressbarEvent e) {
+		if (e.isShow()) {
+			mRefreshLayout.setRefreshing(true);
+		}
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ShowSetOptionEvent}.
+	 */
+	public void onEvent(ShowSetOptionEvent e) {
 		showDialogFragment(OptionDialogFragment.newInstance(this), null);
 	}
 
@@ -78,12 +101,49 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		timePickerDialog.show(getSupportFragmentManager(), null);
 
 	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.UpdateDBEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.UpdateDBEvent}.
+	 */
+	public void onEvent(final UpdateDBEvent e) {
+		Utils.showShortToast(this, R.string.lbl_try_to_add_schedule);
+
+		// Add new item into DB.
+		new ParallelTask<Void, Void, Object>(true) {
+			@Override
+			protected Object doInBackground(Void... params) {
+				DB db = DB.getInstance(getApplication());
+				try {
+					db.addSchedule(e.getItem());
+				} catch (AddSameDataException e1) {
+					return e1;
+				}
+				return db.getAllSchedules();
+			}
+
+			@Override
+			protected void onPostExecute(Object obj) {
+				super.onPostExecute(obj);
+				if (obj instanceof AddSameDataException) {
+					Utils.showShortToast(MainActivity.this, R.string.lbl_try_to_add_schedule_fail);
+				} else {
+					EventBus.getDefault().post(new AllScheduleLoadedEvent(
+							(java.util.List<com.schautup.data.ScheduleItem>) obj));
+				}
+			}
+		}.executeParallel();
+	}
 	//------------------------------------------------
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
+		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
 		showListView();
 	}
 
@@ -126,7 +186,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
-
 
 
 	@Override

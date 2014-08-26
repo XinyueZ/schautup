@@ -9,6 +9,10 @@
 
     <!--ListView-->
     <string name="lbl_listview_top">Top of data</string>
+    <string name="lbl_try_to_add_schedule">Add a new schedule.</string>
+    <string name="lbl_try_to_add_schedule_fail">Sorry! Can not add a new schedule.</string>
+    <string name="lbl_tip_selection">Please select a type!</string>
+
     <!--Menu-->
     <string name="menu_add">Add New</string>
     <string name="menu_view">View</string>

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  *
  * @author Xinyue Zhao
  */
-public final class DatabaseHelper extends SQLiteOpenHelper {
+final class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "schautUpDB";
 	private static final int DATABASE_VERSION = 1;
 
