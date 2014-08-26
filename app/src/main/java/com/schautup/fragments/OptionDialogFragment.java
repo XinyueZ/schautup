@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
+import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.schautup.R;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
@@ -104,8 +106,40 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		super.onViewCreated(view, savedInstanceState);
 		DateTime now = DateTime.now();
 		mHourTv = (TextView) view.findViewById(R.id.sel_hour_tv);
+		mHourTv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
+						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
+						.setMaxNumber(23).setStyleResId(R.style.BetterPickersDialogFragment_Light)
+						.addNumberPickerDialogHandler(new NumberPickerDialogFragment.NumberPickerDialogHandler() {
+							@Override
+							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
+									double fullNumber) {
+								mHourTv.setText(Utils.convertValue(number));
+							}
+						});
+				npb.show();
+			}
+		});
 		mHourTv.setText(Utils.convertValue(now.getHourOfDay()));
 		mMinuteTv = (TextView) view.findViewById(R.id.sel_minute_tv);
+		mMinuteTv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
+						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
+						.setMaxNumber(60).setStyleResId(R.style.BetterPickersDialogFragment_Light)
+						.addNumberPickerDialogHandler(new NumberPickerDialogFragment.NumberPickerDialogHandler() {
+							@Override
+							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
+									double fullNumber) {
+								mMinuteTv.setText(Utils.convertValue(number));
+							}
+						});
+				npb.show();
+			}
+		});
 		mMinuteTv.setText(Utils.convertValue(now.getMinuteOfHour()));
 		mSelMuteV = view.findViewById(R.id.set_mute_ll);
 		mSelMuteV.setOnClickListener(this);
