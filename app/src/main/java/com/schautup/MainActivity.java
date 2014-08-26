@@ -22,6 +22,7 @@ import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
 
 import org.joda.time.DateTime;
@@ -142,11 +143,24 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+
+		// Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
-		showListView();
+
+		// Show all saved schedules.
+		if (Prefs.getInstance(getApplication()).isLastAListView()) {
+			showListView();
+		} else {
+			showGridView();
+		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Prefs.getInstance(getApplication()).setLastAListView(mListViewCurrent);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
