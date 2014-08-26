@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/lv_divider"
+    android:background="@color/bg_app"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragments.ScheduleListFragment">
+    tools:context=".fragments.ScheduleGridFragment">
+
+    <include layout="@layout/inc_empty" />
 
     <FrameLayout
         android:id="@+id/header_fl"

@@ -40,6 +40,7 @@
     <color name="bg_rect_solid">@color/c24</color>
     <color name="bg_rect_stroke">@color/c13</color>
     <color name="bg_button_close_cancel">@color/c6</color>
+    <color name="bg_app">@color/c1</color>
 
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>
