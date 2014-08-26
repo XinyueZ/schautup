@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
@@ -19,6 +20,12 @@ import org.joda.time.DateTime;
  * @author Xinyue Zhao
  */
 public final class Utils {
+	/**
+	 * There is different between android pre 3.0 and 3.x, 4.x on this wording.
+	 */
+	public static final String ALPHA =
+			(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) ? "alpha" : "Alpha";
+
 	/**
 	 * Convert value.
 	 * <p/>

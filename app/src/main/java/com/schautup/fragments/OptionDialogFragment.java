@@ -20,6 +20,7 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
+import com.schautup.views.AnimImageTextView;
 
 import org.joda.time.DateTime;
 
@@ -106,9 +107,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		super.onViewCreated(view, savedInstanceState);
 		DateTime now = DateTime.now();
 		mHourTv = (TextView) view.findViewById(R.id.sel_hour_tv);
-		mHourTv.setOnClickListener(new View.OnClickListener() {
+		mHourTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick() {
 				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
 						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
 						.setMaxNumber(23).setStyleResId(R.style.BetterPickersDialogFragment_Light)
@@ -124,9 +125,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		});
 		mHourTv.setText(Utils.convertValue(now.getHourOfDay()));
 		mMinuteTv = (TextView) view.findViewById(R.id.sel_minute_tv);
-		mMinuteTv.setOnClickListener(new View.OnClickListener() {
+		mMinuteTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick() {
 				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
 						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
 						.setMaxNumber(60).setStyleResId(R.style.BetterPickersDialogFragment_Light)
