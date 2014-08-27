@@ -41,6 +41,7 @@
         android:id="@+id/status_level_v"
         android:layout_width="match_parent"
         android:background="@color/level_11"
+        android:layout_gravity="center_horizontal"
         android:layout_marginRight="@dimen/margin_padding_status_level"
         android:layout_marginLeft="@dimen/margin_padding_status_level"
         android:layout_height="@dimen/size_status_level" />
