@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/inc_empty" />
 
         <GridView
             android:id="@+id/schedule_gv"
@@ -32,5 +31,7 @@
             android:gravity="center" />
 
         <include layout="@layout/inc_add_item" />
+
+        <include layout="@layout/inc_empty" />
     </FrameLayout>
 </LinearLayout>
