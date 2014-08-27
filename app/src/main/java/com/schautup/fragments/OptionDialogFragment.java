@@ -79,7 +79,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	//------------------------------------------------
 
 	/**
-	 * Initialize a {@link com.schautup.fragments.OptionDialogFragment}.
+	 * Initialize an {@link com.schautup.fragments.OptionDialogFragment}.
 	 *
 	 * @param context
 	 * 		A {@link android.content.Context} object.

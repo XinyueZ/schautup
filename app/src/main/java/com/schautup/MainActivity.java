@@ -19,6 +19,7 @@ import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.db.DB;
 import com.schautup.exceptions.AddSameDataException;
+import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
@@ -194,6 +195,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		case R.id.action_sort_by_schedule:
 			break;
 		case R.id.action_sort_by_creation_time:
+			break;
+		case R.id.action_about:
+			showDialogFragment(AboutDialogFragment.newInstance(this), null);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
