@@ -92,7 +92,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setCancelable(false);
+		setCancelable(true);
 		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_Base_AppCompat_Dialog_FixedSize);
 	}
 

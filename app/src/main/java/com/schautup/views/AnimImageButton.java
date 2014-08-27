@@ -7,8 +7,9 @@ import android.widget.ImageButton;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
  * Extension of {@link android.widget.ImageButton} only with animation.
@@ -56,21 +57,18 @@ public final class AnimImageButton extends ImageButton {
 			v.setEnabled(false);
 			final float initX = ViewHelper.getScaleX(v);
 			final float initY = ViewHelper.getScaleY(v);
-			ViewPropertyAnimator.animate(v).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+			AnimatorSet animatorSet = new AnimatorSet();
+			animatorSet.playTogether(ObjectAnimator.ofFloat(v, "scaleX", initX, 0.5f, initX).setDuration(100),
+					ObjectAnimator.ofFloat(v, "scaleY", initY, 0.5f, initY).setDuration(100));
+			animatorSet.addListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					super.onAnimationEnd(animation);
-					ViewPropertyAnimator animator = ViewPropertyAnimator.animate(v);
-					animator.scaleX(initX).scaleY(initY).setDuration(100).setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							super.onAnimationEnd(animation);
-							onClick();
-							v.setEnabled(true);
-						}
-					}).start();
+					onClick();
+					v.setEnabled(true);
 				}
-			}).start();
+			});
+			animatorSet.start();
 		}
 	}
 }

@@ -55,9 +55,9 @@ public final class AnimImageTextView extends TextView {
 		@Override
 		public final void onClick(final View v) {
 			v.setEnabled(false);
-			float initAplha = ViewHelper.getAlpha(v);
-			ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v, Utils.ALPHA, initAplha, 0.1f, 0.2f,
-					0.3f, 0.4f, 0.5f, initAplha).setDuration(400);
+			final float initAplha = ViewHelper.getAlpha(v);
+			ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v, Utils.ALPHA, initAplha, 0.1f, 0.2f, 0.3f, 0.4f,
+					0.5f, initAplha).setDuration(400);
 			objectAnimator.addListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
