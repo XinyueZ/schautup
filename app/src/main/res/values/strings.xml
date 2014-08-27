@@ -12,12 +12,18 @@
     <string name="lbl_try_to_add_schedule">Add a new schedule.</string>
     <string name="lbl_try_to_add_schedule_fail">Sorry! Can not add a new schedule.</string>
     <string name="lbl_tip_selection">Please select a type!</string>
+    <string name="lbl_share_app_title">A good App you should have: SchautUp</string>
+    <string name="lbl_share_app_content">Hello!\n\n\u00A0\u00A0\u00A0\u00A0Manage some features like mute, vibrate, sound of your devices
+        with
+        schedule, a timer, improve your daily life.\n\nDownload: market://details?id=com.schautup </string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>
     <string name="menu_view">View</string>
     <string name="menu_sort_by_schedule">Sort by schedule</string>
     <string name="menu_sort_by_edited_time">Sort by recently edited</string>
+    <string name="menu_share_app">Share this</string>
+
     <!--Option dialog-->
     <string name="lbl_option_title">Option</string>
     <string name="option_mute">Mute</string>

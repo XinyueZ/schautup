@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.StringRes;
@@ -95,6 +96,22 @@ public final class Utils {
 			colorRes = R.color.level_0;
 		}
 		return resources.getColor(colorRes);
+	}
+
+	/**
+	 * Standard sharing app for sharing on actionbar.
+	 */
+	public static Intent getDefaultShareIntent(android.support.v7.widget.ShareActionProvider provider, String subject,
+			String body) {
+		if (provider != null) {
+			Intent i = new Intent(Intent.ACTION_SEND);
+			i.setType("text/plain");
+			i.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+			i.putExtra(android.content.Intent.EXTRA_TEXT, body);
+			provider.setShareIntent(i);
+			return i;
+		}
+		return null;
 	}
 
 

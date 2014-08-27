@@ -10,12 +10,17 @@
     <string name="lbl_try_to_add_schedule">添加一个预定。</string>
     <string name="lbl_try_to_add_schedule_fail">糟糕！无法添加预定。</string>
     <string name="lbl_tip_selection">请选择一种类型!</string>
+    <string name="lbl_share_app_title">分享一个不错的App：SchautUp</string>
+    <string name="lbl_share_app_content">你好！\n\u00A0\u00A0\u00A0\u00A0希望设备一些功能被定时启动吗，比如：声音，震动，静音？\n\n下载: market://details?id=com
+        .schautup </string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
     <string name="menu_view">界面</string>
     <string name="menu_sort_by_schedule">按照设定时间排序</string>
     <string name="menu_sort_by_edited_time">按照被编辑时间排序</string>
+    <string name="menu_share_app">分享App</string>
+
     <!--Option dialog-->
     <string name="lbl_option_title">选项</string>
     <string name="option_mute">静音</string>
