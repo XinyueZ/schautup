@@ -14,6 +14,8 @@
         <item name="popupMenuStyle">@style/PopupMenuStyle</item>
         <item name="dropDownListViewStyle">@style/OverflowDropDown</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenu</item>
+        <!--There's a bug. The ShareActionProvider doesn't run when Theme.Base.AppCompat.Light. -->
+        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_holo_light</item>
     </style>
 
     <!--Support ActionBar-->
