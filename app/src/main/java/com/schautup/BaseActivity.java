@@ -10,6 +10,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.ViewConfiguration;
 
+import com.schautup.fragments.AboutDialogFragment;
+import com.schautup.utils.Prefs;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -48,6 +51,10 @@ public abstract class BaseActivity extends ActionBarActivity {
 	public void onResume() {
 		EventBus.getDefault().register(this);
 		super.onResume();
+		//The "End User License Agreement" must be confirmed before you use this application.
+		if(!Prefs.getInstance(getApplication()).isEULAOnceConfirmed()) {
+			showDialogFragment(AboutDialogFragment.EulaConfirmationDialog.newInstance(this), null);
+		}
 	}
 
 	@Override

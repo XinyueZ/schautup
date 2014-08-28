@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.schautup.R;
+import com.schautup.utils.Prefs;
 
 /**
  * Dialog popup a "About", include legal text, open source licenses etc.
@@ -184,17 +185,80 @@ public final class AboutDialogFragment extends DialogFragment {
 			eulaTextView.setText(Html.fromHtml(getString(R.string.about_eula_legal_text)));
 			eulaTextView.setMovementMethod(LinkMovementMethod.getInstance());
 			eulaTextView.setPadding(padding, padding, padding, padding);
-			return new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.about_eula)
-					.setView(eulaTextView)
-					.setPositiveButton(R.string.btn_ok,
-							new DialogInterface.OnClickListener() {
+			return new AlertDialog.Builder(getActivity()).setTitle(R.string.about_eula).setView(eulaTextView)
+					.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+						}
+					}).create();
+		}
+	}
+
+	/**
+	 * Dialog to open showing the confirmation of "End User License Agreement".
+	 * <p/>
+	 * When user does not agree, user can not use the application.
+	 *
+	 * @author Xinyue Zhao
+	 */
+	public static void showEulaConfirmation(FragmentActivity activity) {
+		FragmentManager fm = activity.getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag("dialog_eula_confirmation");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		new EulaDialog().show(ft, "dialog_eula_confirmation");
+	}
+
+	/**
+	 * Dialog to open showing the "End User License Agreement".
+	 * <p/>
+	 * When user does not agree, user can not use the application.
+	 *
+	 * @author Xinyue Zhao
+	 */
+	public static class EulaConfirmationDialog extends DialogFragment {
+
+		/**
+		 * Initialize an {@link com.schautup.fragments.AboutDialogFragment.EulaConfirmationDialog}.
+		 *
+		 * @param context
+		 * 		A {@link android.content.Context} object.
+		 * @return An instance of {@link com.schautup.fragments.AboutDialogFragment.EulaConfirmationDialog}.
+		 */
+		public static DialogFragment newInstance(Context context) {
+			return (DialogFragment) Fragment.instantiate(context, EulaConfirmationDialog.class.getName());
+		}
+
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setCancelable(false);
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			int padding = getResources().getDimensionPixelSize(R.dimen.padding_eula);
+			TextView eulaTextView = new TextView(getActivity());
+			eulaTextView.setText(Html.fromHtml(getString(R.string.about_eula_legal_text)));
+			eulaTextView.setMovementMethod(LinkMovementMethod.getInstance());
+			eulaTextView.setPadding(padding, padding, padding, padding);
+			return new AlertDialog.Builder(getActivity()).setTitle(R.string.about_eula).setView(eulaTextView)
+					.setPositiveButton(R.string.btn_agree, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int whichButton) {
+									Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(true);
 									dialog.dismiss();
 								}
-							}
-					)
-					.create();
+							})
+					.setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(false);
+									getActivity().finish();
+								}
+					}).create();
 		}
 	}
 }

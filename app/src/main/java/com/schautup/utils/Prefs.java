@@ -29,7 +29,12 @@ public final class Prefs {
 	 * It should be a boolean, when {@code true}, it is a list-view.
 	 */
 	private static final String KEY_LAST_VIEW = "key.last.view";
-
+	/**
+	 * Storage. Whether the "End User License Agreement" has been shown and agreed at application's first start.
+	 * <p/>
+	 * {@code true} if EULA has been shown and agreed.
+	 */
+	private static final String KEY_EULA_SHOWN = "key_eula_shown";
 	//----------------------------------------------------------
 
 	private Prefs(Context cxt) {
@@ -137,5 +142,27 @@ public final class Prefs {
 	 */
 	public void setLastAListView(boolean isListView) {
 		setBoolean(KEY_LAST_VIEW, isListView);
+	}
+
+
+	/**
+	 * Whether the "End User License Agreement" has been shown and agreed at application's first start.
+	 * <p/>
+	 *
+	 * @return {@code true} if EULA has been shown and agreed.
+	 */
+	public boolean isEULAOnceConfirmed() {
+		return getBoolean(KEY_EULA_SHOWN, false);
+	}
+
+	/**
+	 * Set whether the "End User License Agreement" has been shown and agreed at application's first start.
+	 * <p/>
+	 *
+	 * @param isConfirmed
+	 * 		{@code true} if EULA has been shown and agreed.
+	 */
+	public void setEULAOnceConfirmed(boolean isConfirmed) {
+		setBoolean(KEY_EULA_SHOWN, isConfirmed);
 	}
 }
