@@ -7,21 +7,21 @@ public final class SetTimeEvent {
 	/**
 	 * Selected hour.
 	 */
-	private String mHour;
+	private int mHour;
 	/**
 	 * Selected minute.
 	 */
-	private String mMinute;
+	private int mMinute;
 
 	/**
 	 * Constructor of {@link com.schautup.bus.SetTimeEvent}.
 	 *
 	 * @param hour
-	 * 		{@link java.lang.String} Selected hour.
+	 * 		Selected hour.
 	 * @param minute
-	 * 		{@link java.lang.String} Selected minute.
+	 * 		Selected minute.
 	 */
-	public SetTimeEvent(String hour, String minute) {
+	public SetTimeEvent(int hour, int minute) {
 		mHour = hour;
 		mMinute = minute;
 	}
@@ -29,18 +29,18 @@ public final class SetTimeEvent {
 	/**
 	 * Get selected hour.
 	 *
-	 * @return {@link java.lang.String} The selected hour.
+	 * @return The selected hour.
 	 */
-	public String getHour() {
+	public int getHour() {
 		return mHour;
 	}
 
 	/**
 	 * Get selected minute.
 	 *
-	 * @return {@link java.lang.String} The selected minute.
+	 * @return The selected minute.
 	 */
-	public String getMinute() {
+	public int getMinute() {
 		return mMinute;
 	}
 }

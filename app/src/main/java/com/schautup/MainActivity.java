@@ -216,7 +216,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 
 	@Override
 	public void onTimeSet(RadialPickerLayout dialog, int hourOfDay, int minute) {
-		EventBus.getDefault().post(new SetTimeEvent(Utils.convertValue(hourOfDay), Utils.convertValue(minute)));
+		EventBus.getDefault().post(new SetTimeEvent(hourOfDay, minute));
 	}
 
 	/**

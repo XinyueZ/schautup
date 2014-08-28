@@ -61,6 +61,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Pointer to selected {@link com.schautup.data.ScheduleType}.
 	 */
 	private ScheduleType mSelectedType;
+	/**
+	 * Selected hour.
+	 */
+	private int mHour;
+	/**
+	 * Selected minute.
+	 */
+	private int mMinute;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -73,9 +81,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * 		Event {@link  com.schautup.bus.SetTimeEvent}.
 	 */
 	public void onEvent(SetTimeEvent e) {
-		mHourTv.setText(e.getHour());
-		mMinuteTv.setText(e.getMinute());
+		mHour = e.getHour();
+		mMinute = e.getMinute();
+		mHourTv.setText(Utils.convertValue(mHour));
+		mMinuteTv.setText(Utils.convertValue(mMinute));
 	}
+
 	//------------------------------------------------
 
 	/**
@@ -106,6 +117,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		EventBus.getDefault().register(this);
 		super.onViewCreated(view, savedInstanceState);
 		DateTime now = DateTime.now();
+		mHour = now.getHourOfDay();
+		mMinute = now.getMinuteOfHour();
 		mHourTv = (TextView) view.findViewById(R.id.sel_hour_tv);
 		mHourTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
 			@Override
@@ -118,12 +131,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
 									double fullNumber) {
 								mHourTv.setText(Utils.convertValue(number));
+								mHour = number;
 							}
 						});
 				npb.show();
 			}
 		});
-		mHourTv.setText(Utils.convertValue(now.getHourOfDay()));
+		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv = (TextView) view.findViewById(R.id.sel_minute_tv);
 		mMinuteTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
 			@Override
@@ -136,12 +150,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
 									double fullNumber) {
 								mMinuteTv.setText(Utils.convertValue(number));
+								mMinute = number;
 							}
 						});
 				npb.show();
 			}
 		});
-		mMinuteTv.setText(Utils.convertValue(now.getMinuteOfHour()));
+		mMinuteTv.setText(Utils.convertValue(mMinute));
 		mSelMuteV = view.findViewById(R.id.set_mute_ll);
 		mSelMuteV.setOnClickListener(this);
 		mSelVibrateV = view.findViewById(R.id.set_vibrate_ll);
@@ -195,8 +210,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
 			} else {
-				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mSelectedType, Integer.valueOf(
-						mHourTv.getText().toString()), Integer.valueOf(mMinuteTv.getText().toString()))));
+				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mSelectedType, mHour,
+						mMinute)));
 				dismiss();
 			}
 			break;
