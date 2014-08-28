@@ -25,7 +25,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/size_hour_minute"
-                android:textColor="@color/txt_common_black"
+                android:textColor="@color/text_common_black"
                 android:gravity="center"
                 android:textSize="@dimen/size_text_hour_minute"
                 android:background="@color/bg_hour_minute"
@@ -39,7 +39,7 @@
                 android:layout_gravity="center_vertical"
                 android:paddingBottom="4dp"
                 android:textSize="@dimen/size_text_hour_minute"
-                android:textColor="@color/txt_common_black"
+                android:textColor="@color/text_common_black"
                 android:text="@string/hour_minute_divider" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:gravity="center"
-                android:textColor="@color/txt_common_black"
+                android:textColor="@color/text_common_black"
                 android:layout_height="@dimen/size_hour_minute"
                 android:textSize="@dimen/size_text_hour_minute"
                 android:background="@color/bg_hour_minute"
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/txt_common_black"
+                    android:textColor="@color/text_common_black"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/option_mute" />
             </LinearLayout>
@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/txt_common_black"
+                    android:textColor="@color/text_common_black"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/option_vibrate" />
             </LinearLayout>
@@ -139,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/txt_common_black"
+                    android:textColor="@color/text_common_black"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/option_sound" />
             </LinearLayout>
@@ -156,7 +156,7 @@
                 android:id="@+id/close_confirm_btn"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:textColor="@color/txt_common_black"
+                android:textColor="@color/text_common_black"
                 android:layout_height="match_parent"
                 android:text="@string/btn_confirm"
                 android:background="@drawable/selector_bg2_btn" />
@@ -165,7 +165,7 @@
                 android:id="@+id/close_cancel_btn"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:textColor="@color/txt_common_black"
+                android:textColor="@color/text_common_black"
                 android:layout_height="match_parent"
                 android:text="@string/btn_cancel"
                 android:background="@drawable/selector_bg4_btn" />

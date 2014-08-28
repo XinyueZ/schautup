@@ -9,7 +9,7 @@
         android:text="@string/lbl_listview_top"
         android:gravity="center"
         android:background="@color/bg_list_item"
-        android:textColor="@color/txt_common_black"
+        android:textColor="@color/text_common_black"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

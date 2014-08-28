@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat">
+    <style name="AppTheme" parent="@style/Theme.Base.AppCompat.Light">
         <item name="android:actionBarStyle">@style/AbStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:dropDownListViewStyle">@style/OverflowDropDown</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowMenu</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyle</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="popupMenuStyle">@style/PopupMenuStyle</item>
+        <item name="dropDownListViewStyle">@style/OverflowDropDown</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenu</item>
     </style>
 
     <!--Support ActionBar-->
@@ -20,10 +25,21 @@
         <item name="background">@color/bg_actionbar</item>
     </style>
 
-    <!--Background of popover-->
+    <!--Actionbar background of popover-->
     <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@color/bg_overflow</item>
         <item name="android:dropDownSelector">@color/bg_actionbar</item>
+    </style>
+
+    <!--Actionbar overflow menu divider-->
+    <style name="OverflowDropDown" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@color/menu_divider</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <!--Actionbar 3 dot menu icon-->
+    <style name="OverflowMenu" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
 </resources>

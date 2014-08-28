@@ -131,8 +131,13 @@ public final class AboutDialogFragment extends DialogFragment {
 	public static class OpenSourceLicensesDialog extends DialogFragment {
 
 		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
 			setCancelable(false);
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			WebView webView = new WebView(getActivity());
 			webView.loadUrl("file:///android_asset/licenses.html");
 
