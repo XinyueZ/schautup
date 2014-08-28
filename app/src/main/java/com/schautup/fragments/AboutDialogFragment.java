@@ -68,10 +68,11 @@ public final class AboutDialogFragment extends DialogFragment {
 			versionName = VERSION_UNAVAILABLE;
 		}
 
-		// Build the about body view and append the link to see OSS licenses
+		// About.
 		SpannableStringBuilder aboutBody = new SpannableStringBuilder();
 		aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
 
+		// Licenses.
 		SpannableString licensesLink = new SpannableString(getString(R.string.about_licenses));
 		licensesLink.setSpan(new ClickableSpan() {
 			@Override
@@ -82,16 +83,18 @@ public final class AboutDialogFragment extends DialogFragment {
 		aboutBody.append("\n\n");
 		aboutBody.append(licensesLink);
 
-		//		SpannableString eulaLink = new SpannableString(getString(R.string.about_eula));
-		//		eulaLink.setSpan(new ClickableSpan() {
-		//			@Override
-		//			public void onClick(View view) {
-		//				HelpUtils.showEula(getActivity());
-		//			}
-		//		}, 0, eulaLink.length(), 0);
-		//		aboutBody.append("\n\n");
-		//		aboutBody.append(eulaLink);
+		// End User License Agreement.
+		SpannableString eulaLink = new SpannableString(getString(R.string.about_eula));
+		eulaLink.setSpan(new ClickableSpan() {
+			@Override
+			public void onClick(View view) {
+				showEula(getActivity());
+			}
+		}, 0, eulaLink.length(), 0);
+		aboutBody.append("\n\n");
+		aboutBody.append(eulaLink);
 
+		// Show "About" dialog.
 		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 		TextView aboutBodyView = (TextView) layoutInflater.inflate(R.layout.dialog_about, null);
@@ -147,6 +150,51 @@ public final class AboutDialogFragment extends DialogFragment {
 							dialog.dismiss();
 						}
 					}).create();
+		}
+	}
+
+	/**
+	 * Dialog to open showing the "End User License Agreement".
+	 *
+	 * @author Xinyue Zhao
+	 */
+	public static void showEula(FragmentActivity activity) {
+		FragmentManager fm = activity.getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag("dialog_eula");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		new EulaDialog().show(ft, "dialog_eula");
+	}
+
+	/**
+	 * Dialog to open showing the "End User License Agreement".
+	 *
+	 * @author Xinyue Zhao
+	 */
+	public static class EulaDialog extends DialogFragment {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			int padding = getResources().getDimensionPixelSize(R.dimen.padding_eula);
+			TextView eulaTextView = new TextView(getActivity());
+			eulaTextView.setText(Html.fromHtml(getString(R.string.about_eula_legal_text)));
+			eulaTextView.setMovementMethod(LinkMovementMethod.getInstance());
+			eulaTextView.setPadding(padding, padding, padding, padding);
+			return new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.about_eula)
+					.setView(eulaTextView)
+					.setPositiveButton(R.string.btn_ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									dialog.dismiss();
+								}
+							}
+					)
+					.create();
 		}
 	}
 }
