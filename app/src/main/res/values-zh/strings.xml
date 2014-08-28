@@ -12,7 +12,7 @@
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">数据顶端</string>
     <string name="lbl_try_to_add_schedule">添加一个预定。</string>
-    <string name="lbl_try_to_add_schedule_fail">糟糕！无法添加预定。</string>
+    <string name="lbl_try_to_add_schedule_fail">糟糕！无法添加预，因为您已经预定了同一项目在同一时间点上。</string>
     <string name="lbl_tip_selection">请选择一种类型!</string>
     <string name="lbl_share_app_title">分享一个不错的App：SchautUp</string>
     <string name="lbl_share_app_content">你好！\n\u00A0\u00A0\u00A0\u00A0希望设备一些功能被定时启动吗，比如：声音，震动，静音？\n\n下载: market://details?id=com.schautup </string>

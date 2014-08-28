@@ -112,10 +112,14 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.UpdateDBEvent}.
 	 */
 	public void onEvent(final UpdateDBEvent e) {
-		Utils.showShortToast(this, R.string.lbl_try_to_add_schedule);
-
 		// Add new item into DB.
 		new ParallelTask<Void, Void, Object>(true) {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				Utils.showShortToast(MainActivity.this, R.string.lbl_try_to_add_schedule);
+			}
+
 			@Override
 			protected Object doInBackground(Void... params) {
 				DB db = DB.getInstance(getApplication());
@@ -131,7 +135,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
 				if (obj instanceof AddSameDataException) {
-					Utils.showShortToast(MainActivity.this, R.string.lbl_try_to_add_schedule_fail);
+					Utils.showLongToast(MainActivity.this, R.string.lbl_try_to_add_schedule_fail);
 				} else {
 					EventBus.getDefault().post(new AllScheduleLoadedEvent(
 							(java.util.List<com.schautup.data.ScheduleItem>) obj));

@@ -11,18 +11,4 @@ interface ScheduleTbl {
 	static final String SQL_CREATE =
 			"CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TYPE + " INTEGER, " +
 					HOUR + " INTEGER, " + MINUTE + " INTEGER, " + EDIT_TIME + " INTEGER" + ");";
-
-
-	static final String STMT_INSERT =
-			"INSERT INTO " + TABLE_NAME + " (" + TYPE + "," + HOUR + "," + MINUTE + "," + EDIT_TIME + ")" +
-					" VALUES (?,?,?,?);";
-
-	static final String STMT_UPDATE =
-			"UPDATE " + TABLE_NAME + " SET " + TYPE + " = ?, " + HOUR + " = ?, " + MINUTE + " = ?, " + EDIT_TIME +
-					" = ? " + "WHERE " + ID + " = ?;";
-
-	static final String STMT_SELECT_BY_ALL = "SELECT * FROM " + TABLE_NAME + ";";
-
-	static final String STMT_SELECT_BY_TYPE_HOUR_MINUTE =
-			"SELECT _id FROM " + TABLE_NAME + " WHERE " + TYPE + " = ? AND " + HOUR + " = ? AND " + MINUTE + " = ?;";
 }

@@ -97,9 +97,11 @@ public final class DB {
 		Cursor c = null;
 		try {
 			long rowId = -1;
-			c = mDB.rawQuery(ScheduleTbl.STMT_SELECT_BY_TYPE_HOUR_MINUTE,
-					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" });
-			if (c.getCount() > 1) {
+			c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, ScheduleTbl.TYPE + " = ? AND " +
+					ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
+					null, null, null);
+			if (c.getCount() >= 1) {
 				throw new AddSameDataException();
 			} else {
 				ContentValues v = new ContentValues();
@@ -117,8 +119,8 @@ public final class DB {
 				c.close();
 			}
 			close();
-			return success;
 		}
+		return success;
 	}
 
 
@@ -131,7 +133,7 @@ public final class DB {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.rawQuery(ScheduleTbl.STMT_SELECT_BY_ALL, null);
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, null);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new ArrayList<ScheduleItem>();
 		try {

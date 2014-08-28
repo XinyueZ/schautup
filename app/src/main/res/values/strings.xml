@@ -13,7 +13,8 @@
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
     <string name="lbl_try_to_add_schedule">Add a new schedule.</string>
-    <string name="lbl_try_to_add_schedule_fail">Sorry! Can not add a new schedule.</string>
+    <string name="lbl_try_to_add_schedule_fail">Sorry! Can not add a new item, because you\'ve scheduled
+        same item at the same time point before.</string>
     <string name="lbl_tip_selection">Please select a type!</string>
     <string name="lbl_share_app_title">A good App you should have: SchautUp</string>
     <string name="lbl_share_app_content">Hello!\n\n\u00A0\u00A0\u00A0\u00A0Manage some features like mute, vibrate,

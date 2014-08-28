@@ -12,5 +12,5 @@ package com.schautup.exceptions;
  *
  * @author Xinyue Zhao
  */
-public final class AddSameDataException extends Exception {
+public final class AddSameDataException extends IllegalArgumentException {
 }
