@@ -13,7 +13,6 @@ import com.schautup.R;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
 
@@ -102,7 +101,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 			@Override
 			public void onClick() {
-				EventBus.getDefault().post(new ShowSetOptionEvent(null));
+				EventBus.getDefault().post(new AddNewScheduleItemEvent());
 			}
 		});
 	}
