@@ -7,6 +7,8 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_close">Close</string>
     <string name="btn_ok">Ok</string>
+    <string name="btn_agree">I agree.</string>
+    <string name="btn_not_agree">I do not agree.</string>
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
@@ -38,4 +40,11 @@
     <string name="about_licenses">Open Source Licenses</string>
     <!-- Shown as a link in the About screen of the app; user can click to see the EULA. -->
     <string name="about_eula">End User License Agreement</string>
+    <string name="about_eula_legal_text">Your use of this application is governed by a)Activating permissions of
+        hardware that the features of this application need and work well. b)The Google Terms of
+        Service (http://www.google.com/intl/en/policies/terms/), Google's Privacy
+        Policy(http://www.google.com/intl/en/policies/privacy/). c)Any applicable Google service-specific terms of service of privacy
+        policies. Google's terms of service and privacy policies may be updated from time to time and without
+        notice.\n\n\nBy using the application, your agree to the use of your data and permissions of your hardware in
+        accordance with Google's Privacy Policy and Google Terms of Service.</string>
 </resources>
