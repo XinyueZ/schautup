@@ -44,7 +44,7 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 				new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
 					public void onClick() {
-						EventBus.getDefault().post(new ShowSetOptionEvent(getItemList().get(position)));
+						EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
 					}
 				});
 		return convertView;

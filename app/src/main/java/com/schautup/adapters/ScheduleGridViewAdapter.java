@@ -41,7 +41,7 @@ public final class ScheduleGridViewAdapter extends BaseScheduleAdapter {
 		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EventBus.getDefault().post(new ShowSetOptionEvent(getItemList().get(position)));
+				EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
 			}
 		});
 

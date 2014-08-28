@@ -12,13 +12,21 @@ public final class UpdateDBEvent {
 	private ScheduleItem mItem;
 
 	/**
+	 * {@code true} if we do update, {@code false} if it is a new data to insert.
+	 */
+	private boolean mEditMode = false;
+
+	/**
 	 * Constructor of {@link com.schautup.bus.UpdateDBEvent}.
 	 *
-	 * @param _item
+	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem} to update onto DB.
+	 * @param editMode
+	 * 		{@code true} if we do update, {@code false} if it is a new data to insert.
 	 */
-	public UpdateDBEvent(ScheduleItem _item) {
-		mItem = _item;
+	public UpdateDBEvent(ScheduleItem item, boolean editMode) {
+		mItem = item;
+		mEditMode = editMode;
 	}
 
 	/**
@@ -28,5 +36,14 @@ public final class UpdateDBEvent {
 	 */
 	public ScheduleItem getItem() {
 		return mItem;
+	}
+
+	/**
+	 * Update or insert new data.
+	 *
+	 * @return {@code true} if we do update, {@code false} if it is a new data to insert.
+	 */
+	public boolean isEditMode() {
+		return mEditMode;
 	}
 }

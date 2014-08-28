@@ -124,6 +124,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			protected Object doInBackground(Void... params) {
 				DB db = DB.getInstance(getApplication());
 				try {
+					//TODO Impl usage of updateSchedule........
 					db.addSchedule(e.getItem());
 				} catch (AddSameDataException e1) {
 					return e1;

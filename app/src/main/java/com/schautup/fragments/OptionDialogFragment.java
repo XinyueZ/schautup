@@ -15,6 +15,7 @@ import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment
 import com.schautup.R;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
@@ -69,6 +70,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Selected minute.
 	 */
 	private int mMinute;
+	/**
+	 * {@code true} if the shown data should only be updated.
+	 */
+	private boolean mEditMode = false;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -85,6 +90,34 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mMinute = e.getMinute();
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.ShowSetOptionEvent}.
+	 */
+	public void onEvent(ShowSetOptionEvent e) {
+		mEditMode = true;
+		mHour = e.getScheduleItem().getHour();
+		mMinute =  e.getScheduleItem().getMinute();
+		mHourTv.setText(Utils.convertValue(mHour));
+		mMinuteTv.setText(Utils.convertValue(mMinute));
+
+		switch (e.getScheduleItem().getType()) {
+		case MUTE:
+			mSelMuteV.setSelected(true);
+			break;
+		case VIBRATE:
+			mSelVibrateV.setSelected(true);
+			break;
+		case SOUND:
+			mSelSoundV.setSelected(true);
+			break;
+		}
+
+		EventBus.getDefault().removeStickyEvent(ShowSetOptionEvent.class);
 	}
 
 	//------------------------------------------------
@@ -114,7 +147,6 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		EventBus.getDefault().register(this);
 		super.onViewCreated(view, savedInstanceState);
 		DateTime now = DateTime.now();
 		mHour = now.getHourOfDay();
@@ -176,7 +208,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	}
 
 	@Override
-	public void onDestroyView() {
+	public void onResume() {
+		EventBus.getDefault().registerSticky(this);
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
 		EventBus.getDefault().unregister(this);
 		super.onDestroyView();
 	}
@@ -211,7 +249,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelSoundV.setSelected(false);
 			} else {
 				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mSelectedType, mHour,
-						mMinute)));
+						mMinute), mEditMode));
 				dismiss();
 			}
 			break;

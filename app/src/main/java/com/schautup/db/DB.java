@@ -123,13 +123,57 @@ public final class DB {
 		return success;
 	}
 
+	/**
+	 * Update a schedule in DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user
+	 * tries to insert same data after being udpate.
+	 *
+	 * @param item
+	 * 		{@link com.schautup.data.ScheduleItem} to insert.
+	 * @return {@code true} if insert is success.
+	 * @throws AddSameDataException
+	 */
+	public synchronized boolean updateSchedule(ScheduleItem item) throws AddSameDataException {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		//TODO Impl updateSchedule......
+//		Cursor c = null;
+//		try {
+//			long rowId = -1;
+//			c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, ScheduleTbl.TYPE + " = ? AND " +
+//							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+//					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
+//					null, null, null);
+//			if (c.getCount() >= 1) {
+//				throw new AddSameDataException();
+//			} else {
+//				ContentValues v = new ContentValues();
+//				v.put(ScheduleTbl.TYPE, item.getType().toCode());
+//				v.put(ScheduleTbl.HOUR, item.getHour());
+//				v.put(ScheduleTbl.MINUTE, item.getMinute());
+//				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
+//				rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
+//				success = rowId != -1;
+//			}
+//		} catch (AddSameDataException e) {
+//			throw e;
+//		} finally {
+//			if (c != null) {
+//				c.close();
+//			}
+//			close();
+//		}
+		return success;
+	}
+
 
 	/**
 	 * Returns all {@link com.schautup.data.ScheduleItem}s from DB.
 	 *
 	 * @return All {@link com.schautup.data.ScheduleItem}s from DB.
 	 */
-	public List<ScheduleItem> getAllSchedules() {
+	public synchronized  List<ScheduleItem> getAllSchedules() {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
