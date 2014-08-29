@@ -31,8 +31,6 @@ import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
 
-import org.joda.time.DateTime;
-
 import de.greenrobot.event.EventBus;
 
 
@@ -118,11 +116,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.OpenTimePickerEvent}.
 	 */
 	public void onEvent(OpenTimePickerEvent e) {
-		DateTime now = DateTime.now();
-		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, now.getHourOfDay(),
-				now.getMinuteOfHour(), DateFormat.is24HourFormat(this));
-		timePickerDialog.show(getSupportFragmentManager(), null);
-
+		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, e.getHour(),
+				e.getMinute(), DateFormat.is24HourFormat(this));
+		showDialogFragment(timePickerDialog, null);
 	}
 
 	/**

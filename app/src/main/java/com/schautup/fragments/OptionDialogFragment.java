@@ -201,7 +201,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
 					public void onClick() {
-						EventBus.getDefault().post(new OpenTimePickerEvent());
+						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
 					}
 				});
 		getDialog().setTitle(R.string.lbl_option_title);
