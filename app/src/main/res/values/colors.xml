@@ -57,8 +57,8 @@
     <color name="level_10">@color/c16</color>
     <color name="level_11">@color/c17</color>
 
-    <color name="prg_0">@color/c12</color>
-    <color name="prg_1">@color/c13</color>
+    <color name="prg_0">@color/c17</color>
+    <color name="prg_1">@color/c16</color>
     <color name="prg_2">@color/c14</color>
     <color name="prg_3">@color/c15</color>
 </resources>

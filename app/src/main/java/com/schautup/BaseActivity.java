@@ -2,6 +2,8 @@ package com.schautup;
 
 import java.lang.reflect.Field;
 
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,11 @@ import de.greenrobot.event.EventBus;
  */
 public abstract class BaseActivity extends ActionBarActivity {
 	/**
+	 * Height of {@link android.support.v7.app.ActionBar}.
+	 */
+	private int mActionBarHeight;
+
+	/**
 	 * Handler for {@link }
 	 *
 	 * @param e
@@ -34,6 +41,17 @@ public abstract class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		int[] abSzAttr;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			abSzAttr = new int[] { android.R.attr.actionBarSize };
+		} else {
+			abSzAttr = new int[] { R.attr.actionBarSize };
+		}
+		TypedArray a = obtainStyledAttributes(abSzAttr);
+		mActionBarHeight = a.getDimensionPixelSize(0, -1);
+
+
 		try {
 			ViewConfiguration config = ViewConfiguration.get(this);
 			Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -52,7 +70,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 		EventBus.getDefault().register(this);
 		super.onResume();
 		//The "End User License Agreement" must be confirmed before you use this application.
-		if(!Prefs.getInstance(getApplication()).isEULAOnceConfirmed()) {
+		if (!Prefs.getInstance(getApplication()).isEULAOnceConfirmed()) {
 			showDialogFragment(AboutDialogFragment.EulaConfirmationDialog.newInstance(this), null);
 		}
 	}
@@ -93,5 +111,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 			}
 		} catch (Exception _e) {
 		}
+	}
+
+	/**
+	 * Get height of {@link android.support.v7.app.ActionBar}.
+	 */
+	protected int getActionBarHeight() {
+		return mActionBarHeight;
 	}
 }

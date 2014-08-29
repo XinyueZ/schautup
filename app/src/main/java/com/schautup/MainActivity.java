@@ -3,10 +3,12 @@ package com.schautup;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
@@ -57,6 +59,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * Progress indicator.
 	 */
 	private SwipeRefreshLayout mRefreshLayout;
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -68,10 +71,13 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link com.schautup.bus.ShowActionBarEvent }.
 	 */
 	public void onEvent(ShowActionBarEvent e) {
+		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRefreshLayout.getLayoutParams();
 		if (e.isShow()) {
 			getSupportActionBar().show();
+			ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 		} else {
 			getSupportActionBar().hide();
+			ViewCompat.setY(mRefreshLayout, 0);
 		}
 	}
 
