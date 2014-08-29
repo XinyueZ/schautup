@@ -4,6 +4,8 @@ import com.schautup.data.ScheduleItem;
 
 /**
  * Event if user tries to update DB.
+ *
+ * @author Xinyue
  */
 public final class UpdateDBEvent {
 	/**

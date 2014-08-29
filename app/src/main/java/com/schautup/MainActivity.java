@@ -12,6 +12,7 @@ import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
+import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.SetTimeEvent;
@@ -66,9 +67,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.ProgressbarEvent}.
 	 */
 	public void onEvent(ProgressbarEvent e) {
-		if (e.isShow()) {
-			mRefreshLayout.setRefreshing(true);
-		}
+		mRefreshLayout.setRefreshing(e.isShow());
 	}
 
 	/**
@@ -137,6 +136,8 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 				super.onPostExecute(obj);
 				if (obj instanceof AddSameDataException) {
 					Utils.showLongToast(MainActivity.this, R.string.lbl_try_to_add_schedule_fail);
+					AddSameDataException exp = (AddSameDataException) obj;
+					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
 				} else {
 					EventBus.getDefault().post(new AllScheduleLoadedEvent(
 							(java.util.List<com.schautup.data.ScheduleItem>) obj));

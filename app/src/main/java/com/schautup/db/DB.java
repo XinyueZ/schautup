@@ -97,11 +97,12 @@ public final class DB {
 		Cursor c = null;
 		try {
 			long rowId = -1;
-			c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, ScheduleTbl.TYPE + " = ? AND " +
+			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
 					ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
 					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
 					null, null, null);
 			if (c.getCount() == 1) {
+				c.moveToNext();
 				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME))));

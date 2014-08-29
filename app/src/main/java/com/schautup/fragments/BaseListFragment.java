@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
@@ -13,6 +14,8 @@ import com.schautup.R;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
+import com.schautup.bus.FindDuplicatedItemEvent;
+import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
 
@@ -77,6 +80,33 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		} else {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.FindDuplicatedItemEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.FindDuplicatedItemEvent}.
+	 */
+	public void onEvent(FindDuplicatedItemEvent e) {
+		final ScheduleItem item = e.getDuplicatedItem();
+		final int location = mAdp.getItemPosition(item);
+		mLv.setSelection(location);
+
+		//This tricky is only for compatiable impl. for the GridView. For ListView,
+		//we can call mAdp.showWarningOnItem(item); directly after  mLv.setSelection(location);
+		ViewTreeObserver viewTreeObserver = mLv.getViewTreeObserver();
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				mLv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				View v = mLv.getChildAt(location);
+				if (v != null) {
+					v.setSelected(true);
+					mAdp.showWarningOnItem(item);
+				}
+			}
+		});
 	}
 
 	//------------------------------------------------

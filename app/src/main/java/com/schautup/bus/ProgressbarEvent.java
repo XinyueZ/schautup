@@ -1,7 +1,9 @@
 package com.schautup.bus;
 
 /**
- * Event for progress indicator
+ * Event for progress indicator.
+ *
+ * @author Xinyue
  */
 public final class ProgressbarEvent {
 	/**

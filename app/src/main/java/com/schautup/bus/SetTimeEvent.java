@@ -2,6 +2,8 @@ package com.schautup.bus;
 
 /**
  * Event after time has been selected.
+ *
+ * @author Xinyue
  */
 public final class SetTimeEvent {
 	/**
