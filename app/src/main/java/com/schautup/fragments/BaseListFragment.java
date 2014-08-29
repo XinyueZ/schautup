@@ -104,10 +104,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				View v = mLv.getChildAt(location);
 				if (v != null) {
 					v.setSelected(true);
-					mAdp.showWarningOnItem(item);
 				}
 			}
 		});
+
+		mAdp.showWarningOnItem(item);
 	}
 
 	//------------------------------------------------
@@ -185,7 +186,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
 		}
-//		mAdp.clearWarning();
+		mAdp.clearWarning();
 	}
 
 
