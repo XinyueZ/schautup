@@ -35,6 +35,12 @@ public final class Prefs {
 	 * {@code true} if EULA has been shown and agreed.
 	 */
 	private static final String KEY_EULA_SHOWN = "key_eula_shown";
+	/**
+	 * Storage. Whether the tip of "long press to remove" has been shown before or not.
+	 * <p/>
+	 * {@code true} if has been shown.
+	 */
+	private static final String KEY_TIP_LONG_PRESS_RMV = "key_long_press_rmv";
 	//----------------------------------------------------------
 
 	private Prefs(Context cxt) {
@@ -164,5 +170,27 @@ public final class Prefs {
 	 */
 	public void setEULAOnceConfirmed(boolean isConfirmed) {
 		setBoolean(KEY_EULA_SHOWN, isConfirmed);
+	}
+
+
+	/**
+	 * Set whether the tip of "long press to remove" has been shown before or not.
+	 * <p/>
+	 *
+	 * @param isShown
+	 * 		{@code true} if has been shown.
+	 */
+	public void setTipLongPressRmvShown(boolean isShown) {
+		setBoolean(KEY_TIP_LONG_PRESS_RMV, isShown);
+	}
+
+	/**
+	 * Get whether the tip of "long press to remove" has been shown before or not.
+	 * <p/>
+	 *
+	 * @return {@code true} if has been shown.
+	 */
+	public boolean isTipLongPressRmvShown() {
+		return getBoolean(KEY_TIP_LONG_PRESS_RMV, false);
 	}
 }

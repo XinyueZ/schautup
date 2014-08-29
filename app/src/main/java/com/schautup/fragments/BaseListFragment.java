@@ -185,7 +185,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
 		}
-		mAdp.clearWarning();
+//		mAdp.clearWarning();
 	}
 
 

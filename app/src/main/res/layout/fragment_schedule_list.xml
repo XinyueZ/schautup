@@ -14,7 +14,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:layout_width="match_parent"
         android:divider="@drawable/lv_divider"
-        android:dividerHeight="@dimen/divider_height"
+        android:dividerHeight="@dimen/height_divider"
         android:layout_height="wrap_content" />
 
     <include layout="@layout/inc_add_item" />

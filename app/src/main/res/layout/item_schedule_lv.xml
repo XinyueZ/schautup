@@ -4,7 +4,7 @@
     android:weightSum="4"
     android:background="@color/bg_list_item"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_height">
+    android:layout_height="@dimen/height_item">
 
     <View
         android:id="@+id/status_level_v"

@@ -8,7 +8,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
@@ -20,6 +25,7 @@ import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowSetOptionEvent;
+import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.db.DB;
 import com.schautup.exceptions.AddSameDataException;
@@ -40,7 +46,8 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class MainActivity extends BaseActivity implements RadialTimePickerDialog.OnTimeSetListener {
+public final class MainActivity extends BaseActivity implements RadialTimePickerDialog.OnTimeSetListener,
+		Animation.AnimationListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -57,10 +64,37 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * Progress indicator.
 	 */
 	private SwipeRefreshLayout mRefreshLayout;
+	/**
+	 * Message sticky.
+	 */
+	private View mStickyV;
+	/**
+	 * {@link android.widget.TextView} where message to be shown.
+	 */
+	private TextView mStickyMsgTv;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowStickyEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.ShowStickyEvent}.
+	 */
+	public void onEvent(ShowStickyEvent e) {
+		if(getSupportActionBar().isShowing()) {
+			getSupportActionBar().hide();
+		}
+		mStickyMsgTv.setText(e.getMessage());
+		mStickyV.setVisibility(View.VISIBLE);
+		mStickyV.setBackgroundColor(e.getColor());
+		AnimationSet animSet = (AnimationSet) AnimationUtils.loadAnimation(this, R.anim.slide_in_and_out);
+		animSet.setAnimationListener(this);
+		mStickyV.startAnimation(animSet);
+	}
+
 
 	/**
 	 * Handler for {@link com.schautup.bus.ShowActionBarEvent}
@@ -116,8 +150,8 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.OpenTimePickerEvent}.
 	 */
 	public void onEvent(OpenTimePickerEvent e) {
-		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, e.getHour(),
-				e.getMinute(), DateFormat.is24HourFormat(this));
+		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, e.getHour(), e.getMinute(),
+				DateFormat.is24HourFormat(this));
 		timePickerDialog.show(getSupportFragmentManager(), null);
 	}
 
@@ -130,14 +164,11 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	public void onEvent(final UpdateDBEvent e) {
 		// Add new item into DB.
 		new ParallelTask<Void, Void, Object>(true) {
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				Utils.showShortToast(MainActivity.this, R.string.lbl_try_to_add_schedule);
-			}
+			private boolean mEditMode = false;
 
 			@Override
 			protected Object doInBackground(Void... params) {
+				mEditMode = e.isEditMode();
 				DB db = DB.getInstance(getApplication());
 				try {
 					//TODO Impl usage of updateSchedule........
@@ -152,12 +183,23 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
 				if (obj instanceof AddSameDataException) {
-					Utils.showLongToast(MainActivity.this, R.string.lbl_try_to_add_schedule_fail);
+					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_try_to_add_schedule_fail),
+							getResources().getColor(R.color.warning_red_1)));
 					AddSameDataException exp = (AddSameDataException) obj;
 					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
 				} else {
 					EventBus.getDefault().post(new AllScheduleLoadedEvent(
 							(java.util.List<com.schautup.data.ScheduleItem>) obj));
+
+					if (!mEditMode) {
+						//Show a tip: long press to remove for first insert.
+						Prefs prefs = Prefs.getInstance(getApplication());
+						if (!prefs.isTipLongPressRmvShown()) {
+							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
+									R.color.warning_green_1)));
+							prefs.setTipLongPressRmvShown(true);
+						}
+					}
 				}
 			}
 		}.executeParallel();
@@ -168,6 +210,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+		mStickyV = findViewById(R.id.sticky_fl);
+		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
+
 		// Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
@@ -264,5 +309,21 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		mListViewCurrent = false;
 
 		ActivityCompat.invalidateOptionsMenu(this);
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		mStickyV.setVisibility(View.GONE);
+		getSupportActionBar().show();
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+
 	}
 }
