@@ -16,6 +16,7 @@ import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.db.DB;
@@ -59,6 +60,20 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowActionBarEvent}
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ShowActionBarEvent }.
+	 */
+	public void onEvent(ShowActionBarEvent e) {
+		if (e.isShow()) {
+			getSupportActionBar().show();
+		} else {
+			getSupportActionBar().hide();
+		}
+	}
 
 	/**
 	 * Handler for {@link com.schautup.bus.ProgressbarEvent}

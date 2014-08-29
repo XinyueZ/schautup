@@ -15,6 +15,7 @@ import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
+import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
@@ -162,24 +163,24 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			//ListView is idle, user can add item with a button.
 			if (translationY != 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(0).setDuration(700);
+				animator.translationY(0).setDuration(500);
 			}
 		} else {
 			//ListView moving, add button can dismiss.
 			if (translationY == 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight()).setDuration(700);
+				animator.translationY(getActionBarHeight()).setDuration(500);
 			}
 		}
 		if (view.getId() == view.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
 				if (getSupportActionBar().isShowing()) {
-					getSupportActionBar().hide();
+					EventBus.getDefault().post(new ShowActionBarEvent(false));
 				}
 			} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
 				if (!getSupportActionBar().isShowing()) {
-					getSupportActionBar().show();
+					EventBus.getDefault().post(new ShowActionBarEvent(true));
 				}
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
