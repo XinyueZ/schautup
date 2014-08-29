@@ -63,7 +63,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		h.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.convertValue(item));
-		if(mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId() ) {
+		if (mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
 			convertView.setBackgroundResource(R.drawable.anim_list_warning);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
@@ -117,6 +117,16 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	public void showWarningOnItem(ScheduleItem item) {
 		mDuplicatedItem = item;
 		notifyDataSetChanged();
+	}
+
+	/**
+	 * Clear warning animation if possible.
+	 */
+	public void clearWarning() {
+		if (mDuplicatedItem != null) {
+			mDuplicatedItem = null;
+			notifyDataSetChanged();
+		}
 	}
 
 	/**
