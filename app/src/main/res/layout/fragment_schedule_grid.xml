@@ -28,7 +28,8 @@
             android:stretchMode="columnWidth"
             android:horizontalSpacing="2dp"
             android:verticalSpacing="2dp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:layoutAnimation="@anim/grid_wave_scale"/>
 
         <include layout="@layout/inc_add_item" />
 
