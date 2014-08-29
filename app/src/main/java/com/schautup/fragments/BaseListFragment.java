@@ -68,10 +68,12 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link  com.schautup.bus.AllScheduleLoadedEvent}.
 	 */
 	public void onEvent(AllScheduleLoadedEvent e) {
-		// Show data.
+		// Show all schedules on the ListView or GridView.
 		if (e.getScheduleItemList() != null && e.getScheduleItemList().size() > 0) {
+			//Never see the button "no data" after at least one item was added.
 			mNoDataBtn.setVisibility(View.GONE);
 			mAdp.setItemList(e.getScheduleItemList());
+			//Show data.
 			if (mIsShowing) {
 				mAdp.notifyDataSetChanged();
 			} else {
@@ -107,7 +109,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				}
 			}
 		});
-
+		//Change the state of layout cased by mLv(AbsListView).
 		mAdp.showWarningOnItem(item);
 	}
 
@@ -186,6 +188,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
 		}
+		//So long the state of the ListView is changed, removed the warning highlighting.
 		mAdp.clearWarning();
 	}
 

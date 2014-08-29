@@ -84,7 +84,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.ShowStickyEvent}.
 	 */
 	public void onEvent(ShowStickyEvent e) {
-		if(getSupportActionBar().isShowing()) {
+		if (getSupportActionBar().isShowing()) {
 			getSupportActionBar().hide();
 		}
 		mStickyMsgTv.setText(e.getMessage());
@@ -171,7 +171,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 				mEditMode = e.isEditMode();
 				DB db = DB.getInstance(getApplication());
 				try {
-					if(mEditMode) {
+					if (mEditMode) {
 						db.updateSchedule(e.getItem());
 					} else {
 						db.addSchedule(e.getItem());
@@ -186,11 +186,14 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
 				if (obj instanceof AddSameDataException) {
+					//Show warning sticky for duplicated updating.
 					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_try_to_add_schedule_fail),
 							getResources().getColor(R.color.warning_red_1)));
+					//Highlight item that might be duplicated by the updating.
 					AddSameDataException exp = (AddSameDataException) obj;
 					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
 				} else {
+					//Refresh ListView or GridView.
 					EventBus.getDefault().post(new AllScheduleLoadedEvent(
 							(java.util.List<com.schautup.data.ScheduleItem>) obj));
 
