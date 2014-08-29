@@ -28,56 +28,70 @@ public final class ScheduleItem {
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
 	 *
-	 * @param _id
+	 * @param id
 	 * 		Possible Id if data instance is from DB.
-	 * @param _type
+	 * @param type
 	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
-	 * @param _hour
+	 * @param hour
 	 * 		Hour.
-	 * @param _minute
+	 * @param minute
 	 * 		Minute.
-	 * @param __editedTime
+	 * @param editedTime
 	 * 		Created time.
 	 */
-	public ScheduleItem(int _id, ScheduleType _type, int _hour, int _minute, long __editedTime) {
-		mId = _id;
-		mType = _type;
-		mHour = _hour;
-		mMinute = _minute;
-		mEditedTime = __editedTime;
+	public ScheduleItem(int id, ScheduleType type, int hour, int minute, long editedTime) {
+		mId = id;
+		mType = type;
+		mHour = hour;
+		mMinute = minute;
+		mEditedTime = editedTime;
 	}
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
 	 *
-	 * @param _type
+	 * @param id
+	 * 		Possible Id if data instance is from DB.
+	 * @param type
 	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
-	 * @param _hour
+	 * @param hour
 	 * 		Hour.
-	 * @param _minute
+	 * @param minute
 	 * 		Minute.
 	 */
-	public ScheduleItem(ScheduleType _type, int _hour, int _minute) {
-		mType = _type;
-		mHour = _hour;
-		mMinute = _minute;
+	public ScheduleItem(int id, ScheduleType type, int hour, int minute) {
+		this(id, type, hour, minute, System.currentTimeMillis());
+	}
+
+	/**
+	 * Constructor of {@link com.schautup.data.ScheduleItem}.
+	 *
+	 * @param type
+	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 */
+	public ScheduleItem(ScheduleType type, int hour, int minute) {
+		this(-1, type, hour, minute, System.currentTimeMillis());
 	}
 
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
 	 *
-	 * @param _type
+	 * @param type
 	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
-	 * @param _hour
+	 * @param hour
 	 * 		Hour.
-	 * @param _minute
+	 * @param minute
 	 * 		Minute.
-	 * @param __editedTime
+	 * @param editedTime
 	 * 		Created time.
 	 */
-	public ScheduleItem(ScheduleType _type, int _hour, int _minute, long __editedTime) {
-		this(-1, _type, _hour, _minute, __editedTime);
+	public ScheduleItem(ScheduleType type, int hour, int minute, long editedTime) {
+		this(-1, type, hour, minute, editedTime);
 	}
 
 	/**
@@ -92,11 +106,11 @@ public final class ScheduleItem {
 	/**
 	 * Set {@link com.schautup.data.ScheduleType}.
 	 *
-	 * @param _type
+	 * @param type
 	 * 		{@link com.schautup.data.ScheduleType}.
 	 */
-	public void setType(ScheduleType _type) {
-		mType = _type;
+	public void setType(ScheduleType type) {
+		mType = type;
 	}
 
 	/**
@@ -111,11 +125,11 @@ public final class ScheduleItem {
 	/**
 	 * Set Hour.
 	 *
-	 * @param _hour
+	 * @param hour
 	 * 		Hour.
 	 */
-	public void setHour(int _hour) {
-		mHour = _hour;
+	public void setHour(int hour) {
+		mHour = hour;
 	}
 
 	/**
@@ -130,11 +144,11 @@ public final class ScheduleItem {
 	/**
 	 * Set minute.
 	 *
-	 * @param _minute
-	 * 		_minute.
+	 * @param minute
+	 * 		minute.
 	 */
-	public void setMinute(int _minute) {
-		mMinute = _minute;
+	public void setMinute(int minute) {
+		mMinute = minute;
 	}
 
 	/**
@@ -148,11 +162,11 @@ public final class ScheduleItem {
 	 * Set edited time.
 	 * <p/>
 	 *
-	 * @param _editedTime
+	 * @param editedTime
 	 * 		The created time.
 	 */
-	public void setEditedTime(long _editedTime) {
-		mEditedTime = _editedTime;
+	public void setEditedTime(long editedTime) {
+		mEditedTime = editedTime;
 	}
 
 	/**

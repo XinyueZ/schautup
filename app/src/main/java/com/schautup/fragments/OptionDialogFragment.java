@@ -59,6 +59,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	private TextView mMinuteTv;
 	/**
+	 * The id of item if the item was inserted into DB before.
+	 */
+	private int mId;
+	/**
 	 * Pointer to selected {@link com.schautup.data.ScheduleType}.
 	 */
 	private ScheduleType mSelectedType;
@@ -100,12 +104,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	public void onEvent(ShowSetOptionEvent e) {
 		mEditMode = true;
-		mHour = e.getScheduleItem().getHour();
-		mMinute =  e.getScheduleItem().getMinute();
+		ScheduleItem item = e.getScheduleItem();
+		mId = item.getId();
+		mHour = item.getHour();
+		mMinute =  item.getMinute();
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
 
-		switch (e.getScheduleItem().getType()) {
+		switch (item.getType()) {
 		case MUTE:
 			mSelMuteV.setSelected(true);
 			break;
@@ -248,8 +254,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
 			} else {
-				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mSelectedType, mHour,
-						mMinute), mEditMode));
+				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mId, mSelectedType, mHour, mMinute),
+						mEditMode));
 				dismiss();
 			}
 			break;

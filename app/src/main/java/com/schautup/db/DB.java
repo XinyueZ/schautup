@@ -140,33 +140,36 @@ public final class DB {
 			open();
 		}
 		boolean success = false;
-		//TODO Impl updateSchedule......
-//		Cursor c = null;
-//		try {
-//			long rowId = -1;
-//			c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, ScheduleTbl.TYPE + " = ? AND " +
-//							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
-//					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
-//					null, null, null);
-//			if (c.getCount() >= 1) {
-//				throw new AddSameDataException();
-//			} else {
-//				ContentValues v = new ContentValues();
-//				v.put(ScheduleTbl.TYPE, item.getType().toCode());
-//				v.put(ScheduleTbl.HOUR, item.getHour());
-//				v.put(ScheduleTbl.MINUTE, item.getMinute());
-//				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
-//				rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
-//				success = rowId != -1;
-//			}
-//		} catch (AddSameDataException e) {
-//			throw e;
-//		} finally {
-//			if (c != null) {
-//				c.close();
-//			}
-//			close();
-//		}
+		Cursor c = null;
+		try {
+			long rowId = -1;
+			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
+							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
+					null, null, null);
+			if (c.getCount() >= 1) {
+				c.moveToNext();
+				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME))));
+			} else {
+				ContentValues v = new ContentValues();
+				v.put(ScheduleTbl.TYPE, item.getType().toCode());
+				v.put(ScheduleTbl.HOUR, item.getHour());
+				v.put(ScheduleTbl.MINUTE, item.getMinute());
+				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
+				String[] args = new String[]{item.getId() + ""};
+				rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
+				success = rowId != -1;
+			}
+		} catch (AddSameDataException e) {
+			throw e;
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+		}
 		return success;
 	}
 
