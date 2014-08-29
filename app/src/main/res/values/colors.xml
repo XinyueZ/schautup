@@ -33,7 +33,7 @@
     <color name="bg_pressed_status">@color/c3</color>
     <color name="bg_actionbar">@color/c9</color>
     <color name="bg_overflow">@color/c3</color>
-    <color name="divider">@color/c1</color>
+    <color name="divider">@color/c6</color>
     <color name="menu_divider">@color/c23</color>
     <color name="bg_add_new">@color/c8</color>
     <color name="bg_hour_minute">@color/c5</color>
@@ -42,7 +42,7 @@
     <color name="bg_blue_rect_stroke">@color/c13</color>
     <color name="bg_red_rect_stroke">@color/c17</color>
     <color name="bg_button_close_cancel">@color/c6</color>
-    <color name="bg_app">@color/c1</color>
+    <color name="bg_app">@color/c6</color>
 
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>
