@@ -118,7 +118,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	public void onEvent(OpenTimePickerEvent e) {
 		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, e.getHour(),
 				e.getMinute(), DateFormat.is24HourFormat(this));
-		showDialogFragment(timePickerDialog, null);
+		timePickerDialog.show(getSupportFragmentManager(), null);
 	}
 
 	/**

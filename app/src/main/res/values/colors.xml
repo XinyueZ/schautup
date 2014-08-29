@@ -61,4 +61,30 @@
     <color name="prg_1">@color/c16</color>
     <color name="prg_2">@color/c14</color>
     <color name="prg_3">@color/c15</color>
+
+
+    <color name="warning_red_1">#FF0000</color>
+    <color name="warning_red_2">#FF1A1A</color>
+    <color name="warning_red_3">#FF3333</color>
+    <color name="warning_red_4">#FF4D4D</color>
+    <color name="warning_red_5">#FF6666</color>
+    <color name="warning_red_6">#FF8080</color>
+    <color name="warning_red_7">#FF9999</color>
+    <color name="warning_red_8">#FFB3B3</color>
+    <color name="warning_red_9">#FFCCCC</color>
+    <color name="warning_red_10">#FFE5E5</color>
+    <color name="warning_red_11">#FFFFFF</color>
+
+
+    <color name="warning_green_1">#00FF00</color>
+    <color name="warning_green_2">#1AFF1A</color>
+    <color name="warning_green_3">#33FF33</color>
+    <color name="warning_green_4">#4DFF4D</color>
+    <color name="warning_green_5">#66FF66</color>
+    <color name="warning_green_6">#80FF80</color>
+    <color name="warning_green_7">#99FF99</color>
+    <color name="warning_green_8">#B3FFB3</color>
+    <color name="warning_green_9">#CCFFCC</color>
+    <color name="warning_green_10">#E5FFE5</color>
+    <color name="warning_green_11">#FFFFFF</color>
 </resources>

@@ -64,7 +64,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.convertValue(item));
 		if (mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
-			convertView.setBackgroundResource(R.drawable.anim_list_warning);
+			convertView.setBackgroundResource(R.drawable.anim_list_warning_red);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
 			convertView.setBackgroundResource(R.color.bg_list_item);
