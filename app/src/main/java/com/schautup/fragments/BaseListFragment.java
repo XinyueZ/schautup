@@ -189,12 +189,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mAdp.clearWarning();
 	}
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-	}
-
-
 	/**
 	 * Refresh UI after some Ops on DB. It could be fired after user has updated(added, edited) an item, or user tried
 	 * to add a duplicated data.
@@ -223,6 +217,19 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		});
 		//Change the state of layout cased by mLv(AbsListView).
 		mAdp.showWarningOnItem(_item, warningDrawable);
+
+		//Dismiss bottom "add" button.
+		float translationY = ViewHelper.getTranslationY(mAddNewVG);
+		if (translationY == 0) {
+			ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
+			animator.translationY(getActionBarHeight()).setDuration(500);
+		}
+	}
+
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
 	}
 
 	/**
