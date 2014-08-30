@@ -44,4 +44,6 @@
     <string name="msg_try_to_add_schedule">添加一个预定。</string>
     <string name="msg_try_to_add_schedule_fail">糟糕！无法添加项目，因为您已经预定了同一项目在同一时间点上。</string>
     <string name="msg_long_press_rmv">提示！长按选项，可以有机会移除预定。</string>
+    <string name="msg_rmv_fail">糟糕！无法删除选项。</string>
+    <string name="msg_rmv_success">成功删除选项。</string>
 </resources>

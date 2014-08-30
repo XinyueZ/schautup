@@ -25,6 +25,7 @@
     <color name="c22">#00ffff</color>
     <color name="c23">#00c8ff</color>
     <color name="c24">#4000c8ff</color>
+    <color name="c25">#cc0f6ea5</color>
 
     <color name="text_common_black">@color/c7</color>
     <color name="text_common_white">@color/c0</color>
@@ -43,6 +44,7 @@
     <color name="bg_button_close_cancel">@color/c6</color>
     <color name="bg_app">@color/c6</color>
     <color name="bg_eula">@color/c0</color>
+    <color name="bg_selected_item">@color/c25</color>
 
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>

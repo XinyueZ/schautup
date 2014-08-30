@@ -132,7 +132,7 @@ public final class DB {
 
 	/**
 	 * Update a schedule in DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user tries to
-	 * insert same data after being udpate.
+	 * insert same data after being updated.
 	 *
 	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem} to insert.
@@ -209,5 +209,29 @@ public final class DB {
 			close();
 			return list;
 		}
+	}
+
+	/**
+	 * Remove one schedule item from DB.
+	 *
+	 * @param item
+	 * 		The item to remove.
+	 * @return {@code true} if remove is successful.
+	 */
+	public synchronized boolean removeSchedule(ScheduleItem item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId = -1;
+			String whereClause = ScheduleTbl.ID + " = ?";
+			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
+			rowId = mDB.delete(ScheduleTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+		} finally {
+			close();
+		}
+		return success;
 	}
 }

@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.schautup.R;
+import com.schautup.bus.ShowActionModeEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.utils.Utils;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Abstract impl {@link android.widget.BaseAdapter} for all {@link android.widget.ListView}, {@link
@@ -42,7 +45,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @return The list of {@link com.schautup.data.ScheduleItem}.
 	 */
-	protected List<ScheduleItem> getItemList() {
+	public List<ScheduleItem> getItemList() {
 		return mItemList;
 	}
 
@@ -75,7 +78,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder h;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(parent.getContext()).inflate(getLayoutId(), parent, false);
@@ -84,7 +87,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		} else {
 			h = (ViewHolder) convertView.getTag();
 		}
-		ScheduleItem item = getItemList().get(position);
+		final ScheduleItem item = getItemList().get(position);
 		h.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.convertValue(item));
@@ -92,8 +95,16 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 			Utils.setBackgroundCompat(convertView, mWarningDrawable);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
-			convertView.setBackgroundResource(R.color.bg_list_item);
+			convertView.setBackgroundResource(R.drawable.selector_item_bg);
 		}
+		convertView.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				EventBus.getDefault().post(new ShowActionModeEvent(item));
+				v.setSelected(true);
+				return true;
+			}
+		});
 		return convertView;
 	}
 
@@ -193,6 +204,30 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		itemFound.setMinute(newItem.getMinute());
 		itemFound.setEditedTime(newItem.getEditedTime());
 		notifyDataSetChanged();
+	}
+
+	/**
+	 * Remove a found item which has been cached by this {@link android.widget.Adapter}.
+	 * <p/>
+	 * When {@code itemFound} is null, nothing happens.
+	 * <p/>
+	 * It calls <b>{@link #notifyDataSetChanged()}</b> internally.
+	 *
+	 * @param itemFound
+	 * 		The item that has been cached.
+	 * @param itemFound
+	 * 		The item to remove.
+	 */
+	public void removeItem(ScheduleItem itemFound) {
+		if(itemFound != null) {
+			for (ScheduleItem i : mItemList) {
+				if (i.getId() == itemFound.getId()) {
+					mItemList.remove(i);
+					notifyDataSetChanged();
+					break;
+				}
+			}
+		}
 	}
 
 	/**

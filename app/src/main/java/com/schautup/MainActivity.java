@@ -24,8 +24,10 @@ import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
+import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
+import com.schautup.bus.ShowActionModeEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
@@ -51,7 +53,7 @@ import de.greenrobot.event.EventBus;
  * @author Xinyue Zhao
  */
 public final class MainActivity extends BaseActivity implements RadialTimePickerDialog.OnTimeSetListener,
-		Animation.AnimationListener {
+		Animation.AnimationListener, android.support.v7.view.ActionMode.Callback {
 	/**
 	 * Main layout for this component.
 	 */
@@ -60,6 +62,10 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * Main menu.
 	 */
 	private static final int MENU = R.menu.main;
+	/**
+	 * Menu for the Action-Mode.
+	 */
+	private static final int ACTION_MODE_MENU = R.menu.action_mode;
 	/**
 	 * {@code true} when current view is a list, otherwise is a grid.
 	 */
@@ -76,6 +82,10 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * {@link android.widget.TextView} where message to be shown.
 	 */
 	private TextView mStickyMsgTv;
+	/**
+	 * The item that has been selected by the Action Mode.
+	 */
+	private ScheduleItem mItemSelected;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -230,6 +240,20 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			showGridView();
 		}
 	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowActionModeEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ShowActionModeEvent}.
+	 */
+	public void onEvent(ShowActionModeEvent e) {
+		mItemSelected = e.getSelectedItem();
+		if(!getSupportActionBar().isShowing()) {
+			getSupportActionBar().show();
+		}
+		startSupportActionMode(this);
+	}
 	//------------------------------------------------
 
 	@Override
@@ -363,4 +387,45 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	public void onAnimationRepeat(Animation animation) {
 
 	}
+
+	@Override
+	public boolean onCreateActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
+		actionMode.getMenuInflater().inflate(ACTION_MODE_MENU, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
+		return false;
+	}
+
+	@Override
+	public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
+		if (mItemSelected != null) {
+			switch (menuItem.getItemId()) {
+			case R.id.action_delete: {
+				if( DB.getInstance(getApplication()).removeSchedule(mItemSelected) ) {
+					EventBus.getDefault().post(new RemovedItemEvent(mItemSelected));
+					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
+							getResources().getColor(R.color.warning_green_1)));
+				} else {
+					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
+							getResources().getColor(R.color.warning_red_1)));
+				}
+				actionMode.finish();
+				break;
+			}
+			default:
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onDestroyActionMode(android.support.v7.view.ActionMode actionMode) {
+		actionMode = null;
+	}
+
 }

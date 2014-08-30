@@ -16,6 +16,7 @@ import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
+import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
@@ -109,6 +110,15 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		refreshUI(item, getResources().getDrawable(R.drawable.anim_list_warning_green));
 	}
 
+	/**
+	 * Handler for {@link com.schautup.bus.RemovedItemEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.RemovedItemEvent}.
+	 */
+	public void onEvent(RemovedItemEvent e) {
+		mAdp.removeItem(e.getItem());
+	}
 
 	//------------------------------------------------
 
@@ -222,10 +232,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-	}
 
 	/**
 	 * Create a {@link android.widget.AbsListView} object.
@@ -243,5 +249,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	protected void setAdapter(BaseScheduleAdapter adp) {
 		mAdp = adp;
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
 	}
 }
