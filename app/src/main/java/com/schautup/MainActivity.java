@@ -220,11 +220,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		setContentView(LAYOUT);
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
-
 		// Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
-
 		// Show all saved schedules.
 		if (Prefs.getInstance(getApplication()).isLastAListView()) {
 			showListView();
