@@ -14,11 +14,11 @@ public final class ShowActionBarEvent {
 	/**
 	 * Constructor of {@link ShowActionBarEvent}.
 	 *
-	 * @param _show
+	 * @param show
 	 * 		{@code true} if show the  {@link android.support.v7.app.ActionBar}.
 	 */
-	public ShowActionBarEvent(boolean _show) {
-		mShow = _show;
+	public ShowActionBarEvent(boolean show) {
+		mShow = show;
 	}
 
 	/**

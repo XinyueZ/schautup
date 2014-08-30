@@ -3,13 +3,15 @@ package com.schautup.bus;
 import com.schautup.data.ScheduleItem;
 
 /**
- * Event if user tries to update DB.
+ * Event fired user tries to add / edit item on DB.
+ * <p/>
+ * <b>The event is different from {@link com.schautup.bus.UpdatedItemEvent} that it's fired when DB Ops.
  *
  * @author Xinyue
  */
 public final class UpdateDBEvent {
 	/**
-	 * Item to update onto DB.
+	 * Item to update on DB.
 	 */
 	private ScheduleItem mItem;
 
@@ -22,7 +24,7 @@ public final class UpdateDBEvent {
 	 * Constructor of {@link com.schautup.bus.UpdateDBEvent}.
 	 *
 	 * @param item
-	 * 		{@link com.schautup.data.ScheduleItem} to update onto DB.
+	 * 		{@link com.schautup.data.ScheduleItem} to update on DB.
 	 * @param editMode
 	 * 		{@code true} if we do update, {@code false} if it is a new data to insert.
 	 */
@@ -32,7 +34,7 @@ public final class UpdateDBEvent {
 	}
 
 	/**
-	 * Get {@link com.schautup.data.ScheduleItem} to update onto DB.
+	 * Get {@link com.schautup.data.ScheduleItem} to update on DB.
 	 *
 	 * @return {@link com.schautup.data.ScheduleItem}.
 	 */

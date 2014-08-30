@@ -1,6 +1,8 @@
 package com.schautup.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
+import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
@@ -62,7 +65,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.AllScheduleLoadedEvent}
+	 * Handler for {@link com.schautup.bus.AllScheduleLoadedEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.AllScheduleLoadedEvent}.
@@ -86,32 +89,25 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.FindDuplicatedItemEvent}
+	 * Handler for {@link com.schautup.bus.FindDuplicatedItemEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.FindDuplicatedItemEvent}.
 	 */
 	public void onEvent(FindDuplicatedItemEvent e) {
-		final ScheduleItem item = e.getDuplicatedItem();
-		final int location = mAdp.getItemPosition(item);
-		mLv.setSelection(location);
-
-		//This tricky is only for compatiable impl. for the GridView. For ListView,
-		//we can call mAdp.showWarningOnItem(item); directly after  mLv.setSelection(location);
-		ViewTreeObserver viewTreeObserver = mLv.getViewTreeObserver();
-		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				mLv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				View v = mLv.getChildAt(location);
-				if (v != null) {
-					v.setSelected(true);
-				}
-			}
-		});
-		//Change the state of layout cased by mLv(AbsListView).
-		mAdp.showWarningOnItem(item);
+		refreshUI(e.getDuplicatedItem(), getResources().getDrawable(R.drawable.anim_list_warning_red));
 	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.UpdatedItemEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.UpdatedItemEvent}.
+	 */
+	public void onEvent(UpdatedItemEvent e) {
+		refreshUI(e.getItem(), getResources().getDrawable(R.drawable.anim_list_warning_green));
+	}
+
 
 	//------------------------------------------------
 
@@ -139,6 +135,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 		});
 	}
+
 
 	@Override
 	public void onResume() {
@@ -192,10 +189,40 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mAdp.clearWarning();
 	}
 
-
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
+	}
+
+
+	/**
+	 * Refresh UI after some Ops on DB. It could be fired after user has updated(added, edited) an item, or user tried
+	 * to add a duplicated data.
+	 *
+	 * @param _item
+	 * 		The item that user wanna do.
+	 * @param warningDrawable
+	 * 		The {@link android.support.annotation.DrawableRes} for waning animation-list.
+	 */
+	private void refreshUI(ScheduleItem _item, @DrawableRes Drawable warningDrawable) {
+		final int location = mAdp.getItemPosition(_item);
+		mLv.setSelection(location);
+
+		//This tricky is only for compatible impl. for the GridView. For ListView,
+		//we can call mAdp.showWarningOnItem(item); directly after  mLv.setSelection(location);
+		ViewTreeObserver viewTreeObserver = mLv.getViewTreeObserver();
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				mLv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				View v = mLv.getChildAt(location);
+				if (v != null) {
+					v.setSelected(true);
+				}
+			}
+		});
+		//Change the state of layout cased by mLv(AbsListView).
+		mAdp.showWarningOnItem(_item, warningDrawable);
 	}
 
 	/**

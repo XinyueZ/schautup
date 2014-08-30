@@ -3,11 +3,15 @@ package com.schautup.utils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.view.View;
 import android.widget.Toast;
 
 import com.schautup.R;
@@ -125,6 +129,28 @@ public final class Utils {
 	 */
 	public static void showLongToast(Context context, @StringRes int messageId) {
 		Toast.makeText(context, context.getString(messageId), Toast.LENGTH_LONG).show();
+	}
+
+	/**
+	 * A compatible method for setting {@link android.graphics.drawable.Drawable} object on the {@link
+	 * android.view.View}.
+	 * <p/>
+	 * Inspired by <a href="http://stackoverflow
+	 * .com/questions/11947603/setbackground-vs-setbackgrounddrawable-android">StackOverflow</a>.
+	 *
+	 * @param v
+	 * 		The {@link android.view.View} that needs background.
+	 * @param drawable
+	 * 		{@link android.support.annotation.DrawableRes} for a {@link android.graphics.drawable.Drawable}.
+	 */
+	@SuppressLint("NewApi")
+	public static void setBackgroundCompat(View v, @DrawableRes Drawable drawable) {
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			v.setBackgroundDrawable(drawable);
+		} else {
+			v.setBackground(drawable);
+		}
 	}
 
 	/**

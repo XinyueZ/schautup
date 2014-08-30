@@ -14,11 +14,11 @@ public final class ProgressbarEvent {
 	/**
 	 * Constructor of {@link com.schautup.bus.ProgressbarEvent}.
 	 *
-	 * @param _show
+	 * @param show
 	 * 		{@code true} if show indicator.
 	 */
-	public ProgressbarEvent(boolean _show) {
-		mShow = _show;
+	public ProgressbarEvent(boolean show) {
+		mShow = show;
 	}
 
 	/**

@@ -3,6 +3,8 @@ package com.schautup.adapters;
 import java.util.List;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,10 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 * The item that duplicates a current already shown item in {@link #mItemList}.
 	 */
 	private ScheduleItem mDuplicatedItem;
+	/**
+	 * {@link android.support.annotation.DrawableRes}, animation-list when an item needs show warning.
+	 */
+	private Drawable mWarningDrawable;
 
 	/**
 	 * Get data source, list of {@link com.schautup.data.ScheduleItem}.
@@ -63,8 +69,8 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		h.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.convertValue(item));
-		if (mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
-			convertView.setBackgroundResource(R.drawable.anim_list_warning_red);
+		if (mWarningDrawable != null && mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
+			Utils.setBackgroundCompat(convertView,mWarningDrawable);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
 			convertView.setBackgroundResource(R.color.bg_list_item);
@@ -113,9 +119,12 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @param item
 	 * 		The item that might be inserted into DB or update in DB but it was rejected.
+	 * @param warningDrawable
+	 * 		The animation-list when an item needs show warning.
 	 */
-	public void showWarningOnItem(ScheduleItem item) {
+	public void showWarningOnItem(ScheduleItem item, @DrawableRes Drawable warningDrawable) {
 		mDuplicatedItem = item;
+		mWarningDrawable = warningDrawable;
 		notifyDataSetChanged();
 	}
 
@@ -125,6 +134,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	public void clearWarning() {
 		if (mDuplicatedItem != null) {
 			mDuplicatedItem = null;
+			mWarningDrawable = null;
 			notifyDataSetChanged();
 		}
 	}

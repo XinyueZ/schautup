@@ -5,7 +5,7 @@ import com.schautup.data.ScheduleItem;
 /**
  * Event fired when there's a duplicated item before we update(add) one item in DB.
  *
- * @author Xinyue
+ * @author Xinyue Zhao
  */
 public final class FindDuplicatedItemEvent {
 	/**
@@ -16,12 +16,12 @@ public final class FindDuplicatedItemEvent {
 	/**
 	 * Constructor  of {@link FindDuplicatedItemEvent}.
 	 *
-	 * @param _duplicatedItem
+	 * @param duplicatedItem
 	 * 		The item that could be duplicated for the pre inserted one.
 	 */
-	public FindDuplicatedItemEvent(ScheduleItem _duplicatedItem) {
+	public FindDuplicatedItemEvent(ScheduleItem duplicatedItem) {
 		super();
-		mDuplicatedItem = _duplicatedItem;
+		mDuplicatedItem = duplicatedItem;
 	}
 
 	/**

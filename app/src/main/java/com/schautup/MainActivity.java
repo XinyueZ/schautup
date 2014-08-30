@@ -27,6 +27,8 @@ import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
+import com.schautup.bus.UpdatedItemEvent;
+import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.exceptions.AddSameDataException;
 import com.schautup.fragments.AboutDialogFragment;
@@ -78,7 +80,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.ShowStickyEvent}
+	 * Handler for {@link com.schautup.bus.ShowStickyEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.ShowStickyEvent}.
@@ -97,7 +99,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 
 
 	/**
-	 * Handler for {@link com.schautup.bus.ShowActionBarEvent}
+	 * Handler for {@link com.schautup.bus.ShowActionBarEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link com.schautup.bus.ShowActionBarEvent }.
@@ -114,7 +116,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.ProgressbarEvent}
+	 * Handler for {@link com.schautup.bus.ProgressbarEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.ProgressbarEvent}.
@@ -124,7 +126,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}
+	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link com.schautup.bus.ShowSetOptionEvent}.
@@ -134,7 +136,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.AddNewScheduleItemEvent}
+	 * Handler for {@link com.schautup.bus.AddNewScheduleItemEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.AddNewScheduleItemEvent}.
@@ -144,7 +146,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.OpenTimePickerEvent}
+	 * Handler for {@link com.schautup.bus.OpenTimePickerEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.OpenTimePickerEvent}.
@@ -156,7 +158,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.UpdateDBEvent}
+	 * Handler for {@link com.schautup.bus.UpdateDBEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.UpdateDBEvent}.
@@ -165,16 +167,18 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		// Add new item into DB.
 		new ParallelTask<Void, Void, Object>(true) {
 			private boolean mEditMode = false;
+			private ScheduleItem mItem;
 
 			@Override
 			protected Object doInBackground(Void... params) {
 				mEditMode = e.isEditMode();
+				mItem = e.getItem();
 				DB db = DB.getInstance(getApplication());
 				try {
 					if (mEditMode) {
-						db.updateSchedule(e.getItem());
+						db.updateSchedule(mItem);
 					} else {
-						db.addSchedule(e.getItem());
+						db.addSchedule(mItem);
 					}
 				} catch (AddSameDataException e1) {
 					return e1;
@@ -194,6 +198,11 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
 				} else {
 					//Refresh ListView or GridView.
+					/**
+					 * FIXME Does it really need to reload data from DB and refresh directly?
+					 *
+					 * Should we refresh "data" in the adapter and notify the ListView or GridView ?
+					 */
 					EventBus.getDefault().post(new AllScheduleLoadedEvent(
 							(java.util.List<com.schautup.data.ScheduleItem>) obj));
 
@@ -206,6 +215,8 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 							prefs.setTipLongPressRmvShown(true);
 						}
 					}
+					//It lets UI show warning(green) on the item that has been added or edited.
+					EventBus.getDefault().post(new UpdatedItemEvent(mItem));
 				}
 			}
 		}.executeParallel();
