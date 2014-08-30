@@ -172,6 +172,15 @@ public final class Prefs {
 		setBoolean(KEY_EULA_SHOWN, isConfirmed);
 	}
 
+	/**
+	 * Get whether the tip of "long press to remove" has been shown before or not.
+	 * <p/>
+	 *
+	 * @return {@code true} if has been shown.
+	 */
+	public boolean isTipLongPressRmvShown() {
+		return getBoolean(KEY_TIP_LONG_PRESS_RMV, false);
+	}
 
 	/**
 	 * Set whether the tip of "long press to remove" has been shown before or not.
@@ -182,15 +191,5 @@ public final class Prefs {
 	 */
 	public void setTipLongPressRmvShown(boolean isShown) {
 		setBoolean(KEY_TIP_LONG_PRESS_RMV, isShown);
-	}
-
-	/**
-	 * Get whether the tip of "long press to remove" has been shown before or not.
-	 * <p/>
-	 *
-	 * @return {@code true} if has been shown.
-	 */
-	public boolean isTipLongPressRmvShown() {
-		return getBoolean(KEY_TIP_LONG_PRESS_RMV, false);
 	}
 }

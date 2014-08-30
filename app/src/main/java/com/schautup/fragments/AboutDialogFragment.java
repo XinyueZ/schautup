@@ -244,21 +244,20 @@ public final class AboutDialogFragment extends DialogFragment {
 			int padding = getResources().getDimensionPixelSize(R.dimen.padding_eula);
 			TextView eulaTextView = new TextView(getActivity());
 			eulaTextView.setText(Html.fromHtml(getString(R.string.about_eula_legal_text)));
-			eulaTextView.setBackgroundResource(getResources().getColor(R.color.bg_eula));
+			eulaTextView.setBackgroundColor(getResources().getColor(R.color.bg_eula));
 			eulaTextView.setMovementMethod(LinkMovementMethod.getInstance());
 			eulaTextView.setPadding(padding, padding, padding, padding);
 			return new AlertDialog.Builder(getActivity()).setTitle(R.string.about_eula).setView(eulaTextView)
 					.setPositiveButton(R.string.btn_agree, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int whichButton) {
-									Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(true);
-									dialog.dismiss();
-								}
-							})
-					.setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int whichButton) {
-									Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(false);
-									getActivity().finish();
-								}
+						public void onClick(DialogInterface dialog, int whichButton) {
+							Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(true);
+							dialog.dismiss();
+						}
+					}).setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(false);
+							getActivity().finish();
+						}
 					}).create();
 		}
 	}

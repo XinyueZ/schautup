@@ -1,5 +1,6 @@
 package com.schautup.adapters;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.drawable.AnimationDrawable;
@@ -47,12 +48,30 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 
 	/**
 	 * Set data source, list of {@link com.schautup.data.ScheduleItem}.
+	 * <p/>
+	 * It's better to pass a  {@link java.util.LinkedList}.
 	 *
 	 * @param _itemList
 	 * 		The list of {@link com.schautup.data.ScheduleItem}.
 	 */
 	public void setItemList(List<ScheduleItem> _itemList) {
 		mItemList = _itemList;
+	}
+
+
+	@Override
+	public int getCount() {
+		return mItemList == null ? 0 : mItemList.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return mItemList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
 	}
 
 	@Override
@@ -70,7 +89,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		h.mStatusTv.setText(Utils.convertValue(item));
 		if (mWarningDrawable != null && mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
-			Utils.setBackgroundCompat(convertView,mWarningDrawable);
+			Utils.setBackgroundCompat(convertView, mWarningDrawable);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
 			convertView.setBackgroundResource(R.color.bg_list_item);
@@ -99,9 +118,12 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @param item
 	 * 		The item to search.
-	 * @return The index(position) of the item. If not found <b>return -1</b>
+	 * @return The index(position) of the item. If not found <b>return -1</b>.
 	 */
 	public int getItemPosition(ScheduleItem item) {
+		if (mItemList == null) {
+			return -1;
+		}
 		int index = -1;
 		int pos = 0;
 		for (ScheduleItem i : mItemList) {
@@ -115,7 +137,68 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	}
 
 	/**
+	 * Get the object of {@link com.schautup.data.ScheduleItem} whose "id" equals to {@code item} in the data-list.
+	 *
+	 * @param item
+	 * 		The item to search.
+	 * @return The object of the item. If not found <b>return null</b>.
+	 */
+	public ScheduleItem findItem(ScheduleItem item) {
+		if (mItemList == null) {
+			return null;
+		}
+		ScheduleItem ret = null;
+		for (ScheduleItem i : mItemList) {
+			if (i.getId() == item.getId()) {
+				ret = i;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Add item into cached data of this {@link android.widget.Adapter}.
+	 * <p/>
+	 * It calls <b>{@link #notifyDataSetChanged()}</b> internally.
+	 * <p/>
+	 * It will also create an internal {@link java.util.LinkedList} when there's no cache {@link java.util.List}
+	 * initialized.
+	 *
+	 * @param item
+	 * 		The item to add.
+	 */
+	public void addItem(ScheduleItem item) {
+		if (mItemList == null) {
+			mItemList = new LinkedList<ScheduleItem>();
+		}
+		mItemList.add(item);
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Edit a found item which has been cached by this {@link android.widget.Adapter}.
+	 * <p/>
+	 * It calls <b>{@link #notifyDataSetChanged()}</b> internally.
+	 *
+	 * @param itemFound
+	 * 		The item that has been cached.
+	 * @param newItem
+	 * 		The item to edit.
+	 */
+	public void editItem(ScheduleItem itemFound, ScheduleItem newItem) {
+		itemFound.setId(newItem.getId());
+		itemFound.setType(newItem.getType());
+		itemFound.setHour(newItem.getHour());
+		itemFound.setMinute(newItem.getMinute());
+		itemFound.setEditedTime(newItem.getEditedTime());
+		notifyDataSetChanged();
+	}
+
+	/**
 	 * Show a warning on the already shown item that might be duplicated by {@code item}.
+	 * <p/>
+	 * It calls <b>{@link #notifyDataSetChanged()}</b> internally.
 	 *
 	 * @param item
 	 * 		The item that might be inserted into DB or update in DB but it was rejected.

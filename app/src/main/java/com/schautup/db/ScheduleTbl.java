@@ -8,7 +8,9 @@ interface ScheduleTbl {
 	static final String EDIT_TIME = "_edited_time";
 	static final String TABLE_NAME = "schedules";
 
+	//We use rowId as key for each row.
+	//See. http://www.sqlite.org/autoinc.html
 	static final String SQL_CREATE =
-			"CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TYPE + " INTEGER, " +
+			"CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY, " + TYPE + " INTEGER, " +
 					HOUR + " INTEGER, " + MINUTE + " INTEGER, " + EDIT_TIME + " INTEGER" + ");";
 }

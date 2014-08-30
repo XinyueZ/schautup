@@ -1,6 +1,6 @@
 package com.schautup.db;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Application;
@@ -98,15 +98,16 @@ public final class DB {
 		try {
 			long rowId = -1;
 			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
-					ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
 					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
 					null, null, null);
 			if (c.getCount() == 1) {
 				//Find duplicated item and reject to update DB.
 				c.moveToNext();
-				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
-						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME))));
+				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)),
+						ScheduleType.fromCode(c.getInt(c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(
+						ScheduleTbl.HOUR)), c.getInt(c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(
+						ScheduleTbl.EDIT_TIME))));
 			} else {
 				//Do "insert" command.
 				ContentValues v = new ContentValues();
@@ -115,6 +116,7 @@ public final class DB {
 				v.put(ScheduleTbl.MINUTE, item.getMinute());
 				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
 				rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
+				item.setId(rowId);
 				success = rowId != -1;
 			}
 		} catch (AddSameDataException e) {
@@ -129,8 +131,8 @@ public final class DB {
 	}
 
 	/**
-	 * Update a schedule in DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user
-	 * tries to insert same data after being udpate.
+	 * Update a schedule in DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user tries to
+	 * insert same data after being udpate.
 	 *
 	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem} to insert.
@@ -152,9 +154,10 @@ public final class DB {
 			if (c.getCount() >= 1) {
 				//Find duplicated item and reject to update DB.
 				c.moveToNext();
-				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
-						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME))));
+				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)),
+						ScheduleType.fromCode(c.getInt(c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(
+						ScheduleTbl.HOUR)), c.getInt(c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(
+						ScheduleTbl.EDIT_TIME))));
 			} else {
 				//Do "update" command.
 				ContentValues v = new ContentValues();
@@ -162,7 +165,7 @@ public final class DB {
 				v.put(ScheduleTbl.HOUR, item.getHour());
 				v.put(ScheduleTbl.MINUTE, item.getMinute());
 				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
-				String[] args = new String[]{item.getId() + ""};
+				String[] args = new String[] { item.getId() + "" };
 				rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
 				success = rowId != -1;
 			}
@@ -183,13 +186,13 @@ public final class DB {
 	 *
 	 * @return All {@link com.schautup.data.ScheduleItem}s from DB.
 	 */
-	public synchronized  List<ScheduleItem> getAllSchedules() {
+	public synchronized List<ScheduleItem> getAllSchedules() {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
 		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, null);
 		ScheduleItem item = null;
-		List<ScheduleItem> list = new ArrayList<ScheduleItem>();
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(

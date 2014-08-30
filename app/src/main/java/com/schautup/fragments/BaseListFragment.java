@@ -55,10 +55,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * A button to load data when there's no data.
 	 */
 	private AnimImageButton mNoDataBtn;
-	/**
-	 * {@code true} if the adapter has pushed data on to list.
-	 */
-	private boolean mIsShowing = false;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -77,12 +73,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			mNoDataBtn.setVisibility(View.GONE);
 			mAdp.setItemList(e.getScheduleItemList());
 			//Show data.
-			if (mIsShowing) {
-				mAdp.notifyDataSetChanged();
-			} else {
-				((AdapterView) getListViewWidget()).setAdapter(mAdp);
-				mIsShowing = true;
-			}
+			mAdp.notifyDataSetChanged();
 		} else {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
@@ -105,7 +96,17 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link  com.schautup.bus.UpdatedItemEvent}.
 	 */
 	public void onEvent(UpdatedItemEvent e) {
-		refreshUI(e.getItem(), getResources().getDrawable(R.drawable.anim_list_warning_green));
+		if(mNoDataBtn.getVisibility() == View.VISIBLE) {
+			mNoDataBtn.setVisibility(View.GONE);
+		}
+		ScheduleItem item = e.getItem();
+		ScheduleItem itemFound = mAdp.findItem(item);
+		if (itemFound == null) {
+			mAdp.addItem(item);
+		} else {
+			mAdp.editItem(itemFound, item);
+		}
+		refreshUI(item, getResources().getDrawable(R.drawable.anim_list_warning_green));
 	}
 
 
@@ -134,6 +135,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				EventBus.getDefault().post(new AddNewScheduleItemEvent());
 			}
 		});
+
+
+		((AdapterView) mLv).setAdapter(mAdp);
 	}
 
 
@@ -231,16 +235,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
 	}
-
-	/**
-	 * Access on a widget extends from {@link android.widget.AbsListView}.
-	 *
-	 * @return An {@link android.widget.AbsListView} object.
-	 */
-	protected AbsListView getListViewWidget() {
-		return mLv;
-	}
-
 
 	/**
 	 * Create a {@link android.widget.AbsListView} object.

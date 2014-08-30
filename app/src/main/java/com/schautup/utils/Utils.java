@@ -135,8 +135,7 @@ public final class Utils {
 	 * A compatible method for setting {@link android.graphics.drawable.Drawable} object on the {@link
 	 * android.view.View}.
 	 * <p/>
-	 * Inspired by <a href="http://stackoverflow
-	 * .com/questions/11947603/setbackground-vs-setbackgrounddrawable-android">StackOverflow</a>.
+	 * Inspired by <a href="http://stackoverflow .com/questions/11947603/setbackground-vs-setbackgrounddrawable-android">StackOverflow</a>.
 	 *
 	 * @param v
 	 * 		The {@link android.view.View} that needs background.

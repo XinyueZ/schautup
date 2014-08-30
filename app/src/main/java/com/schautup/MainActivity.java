@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.bus.AddNewScheduleItemEvent;
-import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
@@ -203,8 +202,8 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 					 *
 					 * Should we refresh "data" in the adapter and notify the ListView or GridView ?
 					 */
-					EventBus.getDefault().post(new AllScheduleLoadedEvent(
-							(java.util.List<com.schautup.data.ScheduleItem>) obj));
+					//					EventBus.getDefault().post(new AllScheduleLoadedEvent(
+					//							(java.util.List<com.schautup.data.ScheduleItem>) obj));
 
 					if (!mEditMode) {
 						//Show a tip: long press to remove for first insert.

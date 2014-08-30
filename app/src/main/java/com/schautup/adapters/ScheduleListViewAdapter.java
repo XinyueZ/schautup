@@ -23,21 +23,6 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 
 
 	@Override
-	public int getCount() {
-		return getItemList().size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return getItemList().get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
 		((ViewHolder) convertView.getTag()).mOptionBtn.setOnClickListener(

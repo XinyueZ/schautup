@@ -61,7 +61,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	/**
 	 * The id of item if the item was inserted into DB before.
 	 */
-	private int mId;
+	private long mId;
 	/**
 	 * Pointer to selected {@link com.schautup.data.ScheduleType}.
 	 */
@@ -84,7 +84,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.SetTimeEvent}
+	 * Handler for {@link com.schautup.bus.SetTimeEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.SetTimeEvent}.
@@ -97,7 +97,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}
+	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}.
 	 *
 	 * @param e
 	 * 		Event {@link  com.schautup.bus.ShowSetOptionEvent}.
@@ -107,7 +107,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		ScheduleItem item = e.getScheduleItem();
 		mId = item.getId();
 		mHour = item.getHour();
-		mMinute =  item.getMinute();
+		mMinute = item.getMinute();
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
 
