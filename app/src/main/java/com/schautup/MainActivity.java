@@ -197,14 +197,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
 				} else {
 					//Refresh ListView or GridView.
-					/**
-					 * FIXME Does it really need to reload data from DB and refresh directly?
-					 *
-					 * Should we refresh "data" in the adapter and notify the ListView or GridView ?
-					 */
-					//					EventBus.getDefault().post(new AllScheduleLoadedEvent(
-					//							(java.util.List<com.schautup.data.ScheduleItem>) obj));
-
 					if (!mEditMode) {
 						//Show a tip: long press to remove for first insert.
 						Prefs prefs = Prefs.getInstance(getApplication());

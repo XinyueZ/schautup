@@ -16,6 +16,7 @@ import com.schautup.R;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowSetOptionEvent;
+import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
@@ -78,6 +79,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * {@code true} if the shown data should only be updated.
 	 */
 	private boolean mEditMode = false;
+	/**
+	 * A previous cache of item before user edits.
+	 */
+	private ScheduleItem mPreScheduleItem;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -105,11 +110,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	public void onEvent(ShowSetOptionEvent e) {
 		mEditMode = true;
 		ScheduleItem item = e.getScheduleItem();
+		mPreScheduleItem = item;
 		mId = item.getId();
 		mHour = item.getHour();
 		mMinute = item.getMinute();
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
+		mSelectedType = item.getType();
 
 		switch (item.getType()) {
 		case MUTE:
@@ -226,6 +233,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		mSelectedType = null;
+		mPreScheduleItem = null;
+	}
+
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
@@ -248,12 +262,24 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			break;
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
-				Utils.showLongToast(getActivity(), R.string.lbl_tip_selection);
+				//Warning, if no selection on setting type on schedule.
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_selection),
+						getResources().getColor(R.color.warning_green_1)));
 				((View) mSelMuteV.getParent()).setSelected(true);
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
 			} else {
+				if (mEditMode && mPreScheduleItem != null) {
+					//When no change on the item to edit, we do not send event to edit.
+					//Close dialog directly.
+					if (mPreScheduleItem.getType() == mSelectedType &&
+							mPreScheduleItem.getHour() == mHour &&
+							mPreScheduleItem.getMinute() == mMinute) {
+						dismiss();
+						break;
+					}
+				}
 				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mId, mSelectedType, mHour, mMinute),
 						mEditMode));
 				dismiss();

@@ -96,7 +96,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link  com.schautup.bus.UpdatedItemEvent}.
 	 */
 	public void onEvent(UpdatedItemEvent e) {
-		if(mNoDataBtn.getVisibility() == View.VISIBLE) {
+		if (mNoDataBtn.getVisibility() == View.VISIBLE) {
 			mNoDataBtn.setVisibility(View.GONE);
 		}
 		ScheduleItem item = e.getItem();
@@ -197,13 +197,13 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * Refresh UI after some Ops on DB. It could be fired after user has updated(added, edited) an item, or user tried
 	 * to add a duplicated data.
 	 *
-	 * @param _item
+	 * @param item
 	 * 		The item that user wanna do.
 	 * @param warningDrawable
 	 * 		The {@link android.support.annotation.DrawableRes} for waning animation-list.
 	 */
-	private void refreshUI(ScheduleItem _item, @DrawableRes Drawable warningDrawable) {
-		final int location = mAdp.getItemPosition(_item);
+	private void refreshUI(ScheduleItem item, @DrawableRes Drawable warningDrawable) {
+		final int location = mAdp.getItemPosition(item);
 		mLv.setSelection(location);
 
 		//This tricky is only for compatible impl. for the GridView. For ListView,
@@ -220,7 +220,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 		});
 		//Change the state of layout cased by mLv(AbsListView).
-		mAdp.showWarningOnItem(_item, warningDrawable);
+		mAdp.showWarningOnItem(item, warningDrawable);
 
 		//Dismiss bottom "add" button.
 		float translationY = ViewHelper.getTranslationY(mAddNewVG);
