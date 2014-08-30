@@ -6,7 +6,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
@@ -204,24 +203,16 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	private void refreshUI(ScheduleItem item, @DrawableRes Drawable warningDrawable) {
 		final int location = mAdp.getItemPosition(item);
-		mLv.setSelection(location);
-
-		//This tricky is only for compatible impl. for the GridView. For ListView,
-		//we can call mAdp.showWarningOnItem(item); directly after  mLv.setSelection(location);
-		ViewTreeObserver viewTreeObserver = mLv.getViewTreeObserver();
-		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				mLv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				View v = mLv.getChildAt(location);
-				if (v != null) {
-					v.setSelected(true);
-				}
-			}
-		});
 		//Change the state of layout cased by mLv(AbsListView).
 		mAdp.showWarningOnItem(item, warningDrawable);
-
+		//A tricky to jump to changed low.
+		//See. https://groups.google.com/forum/#!topic/android-developers/EnyldBQDUwE
+		mLv.post(new Runnable() {
+			@Override
+			public void run() {
+				mLv.setSelection(location);
+			}
+		});
 		//Dismiss bottom "add" button.
 		float translationY = ViewHelper.getTranslationY(mAddNewVG);
 		if (translationY == 0) {
