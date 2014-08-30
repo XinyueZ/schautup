@@ -1,5 +1,7 @@
 package com.schautup;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.schautup.bus.AddNewScheduleItemEvent;
+import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
@@ -212,6 +215,21 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			}
 		}.executeParallel();
 	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.AllScheduleLoadedEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.AllScheduleLoadedEvent}.
+	 */
+	public void onEvent(AllScheduleLoadedEvent e) {
+		// Show all saved schedules.
+		if (Prefs.getInstance(getApplication()).isLastAListView()) {
+			showListView();
+		} else {
+			showGridView();
+		}
+	}
 	//------------------------------------------------
 
 	@Override
@@ -223,17 +241,30 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		// Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
-		// Show all saved schedules.
-		if (Prefs.getInstance(getApplication()).isLastAListView()) {
-			showListView();
-		} else {
-			showGridView();
-		}
+
+		// Load all data from DB.
+		// We show "progress indicator" directly because onResume hasn't been
+		// called and bus can not registered.
+		mRefreshLayout.setRefreshing(true);
+		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return DB.getInstance(getApplication()).getAllSchedules();
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> _result) {
+				super.onPostExecute(_result);
+				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(_result));
+			}
+		}.executeParallel();
 	}
+
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		EventBus.getDefault().removeStickyEvent(AllScheduleLoadedEvent.class);
 		Prefs.getInstance(getApplication()).setLastAListView(mListViewCurrent);
 	}
 

@@ -19,7 +19,6 @@ import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
-import com.schautup.db.DB;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -76,6 +75,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		} else {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
+
+//		Utils.showShortToast(getActivity(), "load all.");
 	}
 
 	/**
@@ -155,8 +156,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		//				}
 		//				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
 		//----------------------------------------------------------
-		EventBus.getDefault().post(new AllScheduleLoadedEvent(DB.getInstance(getActivity().getApplication())
-				.getAllSchedules()));
 	}
 
 	@Override
@@ -207,6 +206,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mAdp.showWarningOnItem(item, warningDrawable);
 		//A tricky to jump to changed low.
 		//See. https://groups.google.com/forum/#!topic/android-developers/EnyldBQDUwE
+		mLv.clearFocus();
 		mLv.post(new Runnable() {
 			@Override
 			public void run() {

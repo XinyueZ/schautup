@@ -137,7 +137,7 @@ public final class Prefs {
 	 * @return {@code true} if a list-view, {@link false} is a grid-view.
 	 */
 	public boolean isLastAListView() {
-		return getBoolean(KEY_LAST_VIEW, true);
+		return getBoolean(KEY_LAST_VIEW, false);
 	}
 
 	/**

@@ -53,7 +53,7 @@ public abstract class BaseFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		EventBus.getDefault().register(this);
+		EventBus.getDefault().registerSticky(this);
 		super.onResume();
 	}
 
