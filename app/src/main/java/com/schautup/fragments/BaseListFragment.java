@@ -34,7 +34,8 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseListFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public abstract class BaseListFragment extends BaseFragment implements AbsListView.OnScrollListener,
+		AdapterView.OnItemLongClickListener {
 	/**
 	 * {@link android.widget.AbsListView} for all schedules.
 	 * <p/>
@@ -154,6 +155,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 
 		((AdapterView) mLv).setAdapter(mAdp);
+		mLv.setOnItemLongClickListener(this);
 	}
 
 
@@ -255,6 +257,14 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	protected void setAdapter(BaseScheduleAdapter adp) {
 		mAdp = adp;
+	}
+
+	/**
+	 * Get list adapter.
+	 * @return The adapter.
+	 */
+	protected BaseScheduleAdapter getAdapter() {
+		return mAdp;
 	}
 
 	@Override

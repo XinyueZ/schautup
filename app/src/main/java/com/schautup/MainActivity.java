@@ -267,6 +267,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		} else {
 			showGridView();
 		}
+
+		// Move the progress-indicator firstly under the ActionBar.
+		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 	}
 
 
@@ -386,20 +389,32 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	@Override
-	public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
+	public boolean onActionItemClicked(final android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
 		if (mItemSelected != null) {
 			switch (menuItem.getItemId()) {
 			case R.id.action_delete: {
-				int rowRemain =DB.getInstance(getApplication()).removeSchedule(mItemSelected );
-				if (rowRemain >= 0) {
-					EventBus.getDefault().post(new RemovedItemEvent(mItemSelected, rowRemain));
-					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
-							getResources().getColor(R.color.warning_green_1)));
-				} else {
-					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
-							getResources().getColor(R.color.warning_red_1)));
-				}
-				actionMode.finish();
+				new ParallelTask<Void, Void, Void>(true) {
+					private int mRowsRemain;
+					@Override
+					protected Void doInBackground(Void... params) {
+						mRowsRemain = DB.getInstance(getApplication()).removeSchedule(mItemSelected);
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void _result) {
+						super.onPostExecute(_result);
+						if (mRowsRemain >= 0) {
+							EventBus.getDefault().post(new RemovedItemEvent(mItemSelected, mRowsRemain));
+							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
+									getResources().getColor(R.color.warning_green_1)));
+						} else {
+							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
+									getResources().getColor(R.color.warning_red_1)));
+						}
+						actionMode.finish();
+					}
+				}.executeParallel();
 				break;
 			}
 			default:

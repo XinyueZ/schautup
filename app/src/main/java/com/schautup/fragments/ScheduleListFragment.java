@@ -12,10 +12,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.schautup.R;
 import com.schautup.adapters.ScheduleListViewAdapter;
+import com.schautup.bus.ShowActionModeEvent;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A list view for all schedules.
@@ -70,5 +74,13 @@ public final class ScheduleListFragment extends BaseListFragment {
 		listView.addHeaderView(headerV, null, false);
 		headerV.getLayoutParams().height = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		EventBus.getDefault().post(new ShowActionModeEvent(
+				(com.schautup.data.ScheduleItem) getAdapter().getItem(position - 1)));
+		view.setSelected(true);
+		return true;
 	}
 }

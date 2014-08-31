@@ -7,7 +7,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.ScheduleListFragment">
 
-    <include layout="@layout/inc_empty" />
 
     <ListView
         android:id="@+id/schedule_lv"
@@ -17,5 +16,7 @@
         android:dividerHeight="@dimen/height_divider"
         android:layout_height="wrap_content" />
 
+
+    <include layout="@layout/inc_empty" />
     <include layout="@layout/inc_add_item" />
 </FrameLayout>

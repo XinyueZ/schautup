@@ -7,10 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.schautup.R;
 import com.schautup.adapters.ScheduleGridViewAdapter;
+import com.schautup.bus.ShowActionModeEvent;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Show all schedules in a grid.
@@ -53,5 +57,14 @@ public final class ScheduleGridFragment extends BaseListFragment {
 		((ViewGroup) (view.findViewById(R.id.header_fl))).addView(headerV);
 		headerV.getLayoutParams().height = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
+	}
+
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		EventBus.getDefault().post(new ShowActionModeEvent(
+				(com.schautup.data.ScheduleItem) getAdapter().getItem(position)));
+		view.setSelected(true);
+		return true;
 	}
 }

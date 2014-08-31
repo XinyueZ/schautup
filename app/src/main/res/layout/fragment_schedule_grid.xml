@@ -31,8 +31,8 @@
             android:gravity="center"
             android:layoutAnimation="@anim/grid_wave_scale"/>
 
-        <include layout="@layout/inc_add_item" />
 
         <include layout="@layout/inc_empty" />
+        <include layout="@layout/inc_add_item" />
     </FrameLayout>
 </LinearLayout>

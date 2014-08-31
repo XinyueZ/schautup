@@ -14,11 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.bus.ShowActionModeEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.utils.Utils;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Abstract impl {@link android.widget.BaseAdapter} for all {@link android.widget.ListView}, {@link
@@ -97,14 +94,6 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		} else {
 			convertView.setBackgroundResource(R.drawable.selector_item_bg);
 		}
-		convertView.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				EventBus.getDefault().post(new ShowActionModeEvent(item));
-				v.setSelected(true);
-				return true;
-			}
-		});
 		return convertView;
 	}
 
