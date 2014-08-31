@@ -1,7 +1,5 @@
 package com.schautup;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -86,6 +84,10 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * The item that has been selected by the Action Mode.
 	 */
 	private ScheduleItem mItemSelected;
+	/**
+	 * {@code true} if current is at the Action Mode
+	 */
+	private boolean mActionModeOn;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -144,7 +146,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link com.schautup.bus.ShowSetOptionEvent}.
 	 */
 	public void onEvent(ShowSetOptionEvent e) {
-		showDialogFragment(OptionDialogFragment.newInstance(this), null);
+		if (!mActionModeOn) {
+			showDialogFragment(OptionDialogFragment.newInstance(this), null);
+		}
 	}
 
 	/**
@@ -154,7 +158,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * 		Event {@link  com.schautup.bus.AddNewScheduleItemEvent}.
 	 */
 	public void onEvent(AddNewScheduleItemEvent e) {
-		showDialogFragment(OptionDialogFragment.newInstance(this), null);
+		if (!mActionModeOn) {
+			showDialogFragment(OptionDialogFragment.newInstance(this), null);
+		}
 	}
 
 	/**
@@ -226,20 +232,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		}.executeParallel();
 	}
 
-	/**
-	 * Handler for {@link com.schautup.bus.AllScheduleLoadedEvent}.
-	 *
-	 * @param e
-	 * 		Event {@link  com.schautup.bus.AllScheduleLoadedEvent}.
-	 */
-	public void onEvent(AllScheduleLoadedEvent e) {
-		// Show all saved schedules.
-		if (Prefs.getInstance(getApplication()).isLastAListView()) {
-			showListView();
-		} else {
-			showGridView();
-		}
-	}
 
 	/**
 	 * Handler for {@link com.schautup.bus.ShowActionModeEvent}.
@@ -249,7 +241,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 */
 	public void onEvent(ShowActionModeEvent e) {
 		mItemSelected = e.getSelectedItem();
-		if(!getSupportActionBar().isShowing()) {
+		if (!getSupportActionBar().isShowing()) {
 			getSupportActionBar().show();
 		}
 		startSupportActionMode(this);
@@ -266,22 +258,15 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
 
-		// Load all data from DB.
-		// We show "progress indicator" directly because onResume hasn't been
-		// called and bus can not registered.
+		// Fragments will load data from DB, here we show the indicator directly.
 		mRefreshLayout.setRefreshing(true);
-		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
-			@Override
-			protected List<ScheduleItem> doInBackground(Void... params) {
-				return DB.getInstance(getApplication()).getAllSchedules();
-			}
 
-			@Override
-			protected void onPostExecute(List<ScheduleItem> _result) {
-				super.onPostExecute(_result);
-				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(_result));
-			}
-		}.executeParallel();
+		// Show all saved schedules.
+		if (Prefs.getInstance(getApplication()).isLastAListView()) {
+			showListView();
+		} else {
+			showGridView();
+		}
 	}
 
 
@@ -391,6 +376,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	@Override
 	public boolean onCreateActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
 		actionMode.getMenuInflater().inflate(ACTION_MODE_MENU, menu);
+		mActionModeOn = true;
 		return true;
 	}
 
@@ -404,8 +390,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		if (mItemSelected != null) {
 			switch (menuItem.getItemId()) {
 			case R.id.action_delete: {
-				if( DB.getInstance(getApplication()).removeSchedule(mItemSelected) ) {
-					EventBus.getDefault().post(new RemovedItemEvent(mItemSelected));
+				int rowRemain =DB.getInstance(getApplication()).removeSchedule(mItemSelected );
+				if (rowRemain >= 0) {
+					EventBus.getDefault().post(new RemovedItemEvent(mItemSelected, rowRemain));
 					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
 							getResources().getColor(R.color.warning_green_1)));
 				} else {
@@ -426,6 +413,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	@Override
 	public void onDestroyActionMode(android.support.v7.view.ActionMode actionMode) {
 		actionMode = null;
+		mActionModeOn = false;
 	}
 
 }

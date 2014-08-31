@@ -1,5 +1,7 @@
 package com.schautup.fragments;
 
+import java.util.List;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -20,6 +22,8 @@ import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
+import com.schautup.db.DB;
+import com.schautup.utils.ParallelTask;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -77,7 +81,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
 
-//		Utils.showShortToast(getActivity(), "load all.");
+		//		Utils.showShortToast(getActivity(), "load all.");
 	}
 
 	/**
@@ -118,6 +122,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	public void onEvent(RemovedItemEvent e) {
 		mAdp.removeItem(e.getItem());
+		mNoDataBtn.setVisibility(e.getRowsRemain() == 0 ? View.VISIBLE : View.GONE);
+		EventBus.getDefault().post(new ShowActionBarEvent(true));
 	}
 
 	//------------------------------------------------
@@ -155,17 +161,18 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onResume() {
 		super.onResume();
 
-		//----------------------------------------------------------
-		// Description: Test data block.
-		//
-		// Will be removed late.
-		//----------------------------------------------------------
-		//				List<ScheduleItem> items = new ArrayList<ScheduleItem>();
-		//				for (int i = 0; i < 100; i++) {
-		//					items.add(new ScheduleItem(ScheduleType.MUTE, i, i, System.currentTimeMillis()));
-		//				}
-		//				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
-		//----------------------------------------------------------
+		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return DB.getInstance(getActivity().getApplication()).getAllSchedules();
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> _result) {
+				super.onPostExecute(_result);
+				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(_result));
+			}
+		}.executeParallel();
 	}
 
 	@Override
@@ -230,7 +237,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			animator.translationY(getActionBarHeight()).setDuration(500);
 		}
 	}
-
 
 
 	/**

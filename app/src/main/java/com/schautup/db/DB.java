@@ -216,12 +216,15 @@ public final class DB {
 	 *
 	 * @param item
 	 * 		The item to remove.
-	 * @return {@code true} if remove is successful.
+	 * @return The count of rows remain in DB after removed item.
+	 * <p/>
+	 * Return -1 if there's error when removed data.
 	 */
-	public synchronized boolean removeSchedule(ScheduleItem item) {
+	public synchronized int removeSchedule(ScheduleItem item) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
+		int rowsRemain = -1;
 		boolean success = false;
 		try {
 			long rowId = -1;
@@ -229,9 +232,15 @@ public final class DB {
 			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
 			rowId = mDB.delete(ScheduleTbl.TABLE_NAME, whereClause, whereArgs);
 			success = rowId > 0;
+			if(success) {
+				Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, new String[]{ScheduleTbl.ID}, null, null, null, null, null);
+				rowsRemain = c.getCount();
+			} else {
+				rowsRemain = -1;
+			}
 		} finally {
 			close();
 		}
-		return success;
+		return rowsRemain;
 	}
 }
