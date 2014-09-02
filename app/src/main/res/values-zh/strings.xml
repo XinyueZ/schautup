@@ -25,7 +25,7 @@
     <string name="menu_about">关于</string>
 
     <!--Option dialog-->
-    <string name="lbl_option_title">选项</string>
+    <string name="option_dlg_title">选项</string>
     <string name="option_mute">静音</string>
     <string name="option_vibrate">震动</string>
     <string name="option_sound">铃声</string>
@@ -46,4 +46,15 @@
     <string name="msg_long_press_rmv">提示！长按选项，可以有机会移除预定。</string>
     <string name="msg_rmv_fail">糟糕！无法删除选项。</string>
     <string name="msg_rmv_success">成功删除选项。</string>
+
+    <!--Settings-->
+    <string name="settings_hungry_mode">精确</string>
+    <string name="settings_hungry_mode_desc">应用会保持执行任务精确到每一分钟。任务会在每分钟起始执行。本模式带来精确的用户体验，但是牺牲了能耗，慎重选择。</string>
+    <string name="settings_thirsty_mode">准确</string>
+    <string name="settings_thirsty_mode_desc">应用会准时执行任务，本模式依赖于系统时钟管理器的性能，执行性能和能耗完全取决于系统时钟管理器。</string>
+    <string name="settings_neutral_mode">中和</string>
+    <string name="settings_neutral_mode_desc">应用执行任务并尽力节省能耗，本模式依赖于系统时钟管理器，但是不能带来很好的精确即准时执行任务的效果。</string>
+
+    <!--Drawer-->
+    <string name="drawer_item_settings">设置</string>
 </resources>

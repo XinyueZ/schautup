@@ -18,6 +18,41 @@
         <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_holo_light</item>
     </style>
 
+
+    <style name="AppThemeNoOverlay" parent="AppTheme">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:textColorPrimary">@color/text_common_black</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">false</item>
+    </style>
+
+    <!--SettingsActivity, a PreferenceActivity.-->
+    <style name="PrefsTheme" parent="AppThemeNoOverlay">
+        <item name="android:textColor">@color/text_common_black</item>
+        <item name="android:listViewStyle">@style/PrefsListStyle</item>
+        <item name="android:listSeparatorTextViewStyle">@style/PrefsListHeader</item>
+        <item name="android:logo">@drawable/ic_action_settings</item>
+        <!-- Support library compatibility -->
+        <item name="logo">@drawable/ic_action_settings</item>
+    </style>
+    <style name="PrefsListHeader" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/text_common_black</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="PrefsListStyle" parent="@android:style/Widget.ListView">
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:divider">@drawable/lv_divider</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:textColor">@color/text_common_black</item>
+    </style>
+
     <!--Support ActionBar-->
     <style name="AbStyle" parent="@style/Widget.AppCompat.Base.ActionBar">
         <item name="android:background">@color/bg_actionbar</item>

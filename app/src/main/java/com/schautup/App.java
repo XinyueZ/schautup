@@ -1,7 +1,3 @@
-package com.schautup;
-
-import android.app.Application;
-
 /*
                    _ooOoo_
                   o8888888o
@@ -33,10 +29,15 @@ import android.app.Application;
 //                  奔驰宝马贵者趣，公交自行程序员。
 //                  别人笑我忒疯癫，我笑自己命太贱。
 
+package com.schautup;
+
+import android.app.Application;
+
+
 /**
  * The app-object of the project.
  *
  * @author Xinyue Zhao
  */
-public final class App extends Application{
+public final class App extends Application {
 }

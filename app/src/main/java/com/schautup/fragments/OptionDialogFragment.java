@@ -217,7 +217,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
 					}
 				});
-		getDialog().setTitle(R.string.lbl_option_title);
+		getDialog().setTitle(R.string.option_dlg_title);
 	}
 
 	@Override

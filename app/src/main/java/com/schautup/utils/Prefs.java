@@ -28,7 +28,7 @@ public final class Prefs {
 	 * <p/>
 	 * It should be a boolean, when {@code true}, it is a list-view.
 	 */
-	private static final String KEY_LAST_VIEW = "key.last.view";
+	private static final String KEY_LAST_VIEW = "key_last_view";
 	/**
 	 * Storage. Whether the "End User License Agreement" has been shown and agreed at application's first start.
 	 * <p/>
@@ -41,6 +41,11 @@ public final class Prefs {
 	 * {@code true} if has been shown.
 	 */
 	private static final String KEY_TIP_LONG_PRESS_RMV = "key_long_press_rmv";
+	/**
+	 * Storage. For schedule modes.
+	 */
+	public static final String KEY_SCHEDULE_MODE = "key_schedule_mode";
+
 	//----------------------------------------------------------
 
 	private Prefs(Context cxt) {
@@ -191,5 +196,21 @@ public final class Prefs {
 	 */
 	public void setTipLongPressRmvShown(boolean isShown) {
 		setBoolean(KEY_TIP_LONG_PRESS_RMV, isShown);
+	}
+
+	/**
+	 * Set current schedule mode.
+	 * @param modeValue The mode value.
+	 */
+	public void setScheduleMode(String modeValue) {
+		setString(KEY_SCHEDULE_MODE, modeValue);
+	}
+
+	/**
+	 * Get current schedule mode, default is "1" the "thirsty" mode.
+	 * @return The current schedule mode.
+	 */
+	public String getScheduleMode() {
+		return getString(KEY_SCHEDULE_MODE, "1");
 	}
 }

@@ -1,51 +1,100 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/content_fl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/content_srl"
-        android:layout_gravity="top"
-        android:layout_width="match_parent"
-        android:layout_height="3dp">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
-    <LinearLayout
-        android:id="@+id/sticky_fl"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="@dimen/height_sticky">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_horn" />
-
-        <TextView
-            android:id="@+id/sticky_msg_tv"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textColor="@color/text_common_black"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/msg_long_press_rmv"
+        <FrameLayout
+            android:id="@+id/content_fl"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </LinearLayout>
-</FrameLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/content_srl"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
+            android:layout_height="3dp">
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+        <LinearLayout
+            android:id="@+id/sticky_fl"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="@dimen/height_sticky">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_horn" />
+
+            <TextView
+                android:id="@+id/sticky_msg_tv"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textColor="@color/text_common_black"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/msg_long_press_rmv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_menu_ll"
+        android:layout_width="@dimen/width_drawer"
+        android:background="@drawable/bg_drawer"
+        android:orientation="vertical"
+        android:layout_gravity="left"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/drawer_header_v"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/drawer_item_settings_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/selector_bg1_btn"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_settings"
+                android:layout_weight="0.5" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/drawer_item_settings"
+                android:textColor="@color/text_common_black"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_weight="1.5" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/lv_divider" />
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
 

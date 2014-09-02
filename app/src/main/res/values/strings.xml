@@ -27,7 +27,7 @@
     <string name="menu_about">About</string>
 
     <!--Option dialog-->
-    <string name="lbl_option_title">Option</string>
+    <string name="option_dlg_title">Option</string>
     <string name="option_mute">Mute</string>
     <string name="option_vibrate">Vibrate</string>
     <string name="option_sound">Sound</string>
@@ -53,4 +53,30 @@
     <string name="msg_long_press_rmv">Tip! Long press on item, you can remove a schedule.</string>
     <string name="msg_rmv_fail">Sorry! I can not remove the selected item.</string>
     <string name="msg_rmv_success">You have removed item successfully.</string>
+
+    <!--Settings-->
+    <string name="settings_category_schedule_mode">Schedule mode</string>
+    <string-array name="settings_schedule_modes">
+        <item>@string/settings_hungry_mode</item>
+        <item>@string/settings_thirsty_mode</item>
+        <item>@string/settings_neutral_mode</item>
+    </string-array>
+    <string-array name="settings_schedule_modes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="settings_hungry_mode">Hungry</string>
+    <string name="settings_hungry_mode_desc">The application tries to schedule all tasks as exact as possible against
+        every minute. The scheduled Task will be fired at every minute beginning which means that it is independent from
+        when you added the schedule in order to bring the best user feelings. This mode might maximize battery use.</string>
+    <string name="settings_thirsty_mode">Thirsty</string>
+    <string name="settings_thirsty_mode_desc">The application tries to schedule all tasks as nearly as possible. The
+        schedule effect and power use of device rely on OS\'s AlarmManager.</string>
+    <string name="settings_neutral_mode">Neutral</string>
+    <string name="settings_neutral_mode_desc">The application tries to schedule all tasks and minimize
+        battery use. It relies on OS\'s AlarmManager and mightn\'t bring exact user feelings.</string>
+
+    <!--Drawer-->
+    <string name="drawer_item_settings">Settings</string>
 </resources>

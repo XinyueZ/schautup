@@ -74,6 +74,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoOverlay"
+            android:label="@string/drawer_item_settings"/>
     </application>
 
 </manifest>
