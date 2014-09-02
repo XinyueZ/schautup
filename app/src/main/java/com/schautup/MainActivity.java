@@ -1,13 +1,10 @@
 package com.schautup;
 
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,10 +88,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	 * {@code true} if current is at the Action Mode
 	 */
 	private boolean mActionModeOn;
-	/**
-	 * Use navigation-drawer for this fork.
-	 */
-	private ActionBarDrawerToggle mDrawerToggle;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -259,7 +252,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
-		initDrawer();
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
 		// Progress-indicator.
@@ -280,14 +272,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 	}
 
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mDrawerToggle != null) {
-			mDrawerToggle.syncState();
-		}
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -312,10 +296,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-
 		switch (item.getItemId()) {
 		case R.id.action_add:
 			EventBus.getDefault().post(new AddNewScheduleItemEvent());
@@ -327,6 +307,9 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			} else {
 				showGridView();
 			}
+			break;
+		case R.id.action_settings:
+			SettingsActivity.showInstance(this);
 			break;
 		case R.id.action_sort_by_schedule:
 			break;
@@ -452,39 +435,5 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		mActionModeOn = false;
 	}
 
-	/**
-	 * Initialize the navigation drawer.
-	 */
-	private void initDrawer() {
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.app_name,
-					R.string.app_name) {
-				@Override
-				public void onDrawerSlide(View drawerView, float slideOffset) {
-					super.onDrawerSlide(drawerView, slideOffset);
-					if(!getSupportActionBar().isShowing()) {
-						getSupportActionBar().show();
-					}
-				}
-			};
-			drawerLayout.setDrawerListener(mDrawerToggle);
 
-			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight() + getActionBarHeight()
-					/ 2;
-
-			View drawerItemSettings = findViewById(R.id.drawer_item_settings_ll);
-			drawerItemSettings.getLayoutParams().height = getActionBarHeight();
-			drawerItemSettings.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					drawerLayout.closeDrawers();
-					SettingsActivity.showInstance(MainActivity.this);
-				}
-			});
-		}
-	}
 }

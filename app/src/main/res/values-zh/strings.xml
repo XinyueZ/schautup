@@ -23,6 +23,7 @@
     <string name="menu_sort_by_edited_time">按照被编辑时间排序</string>
     <string name="menu_share_app">分享App</string>
     <string name="menu_about">关于</string>
+    <string name="menu_settings">设置</string>
 
     <!--Option dialog-->
     <string name="option_dlg_title">选项</string>
@@ -56,5 +57,5 @@
     <string name="settings_neutral_mode_desc">应用执行任务并尽力节省能耗，本模式依赖于系统时钟管理器，但是不能带来很好的精确即准时执行任务的效果。</string>
 
     <!--Drawer-->
-    <string name="drawer_item_settings">设置</string>
+    <string name="drawer_item_settings">@string/menu_settings</string>
 </resources>
