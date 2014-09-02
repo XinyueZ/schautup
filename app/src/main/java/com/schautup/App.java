@@ -32,6 +32,9 @@
 package com.schautup;
 
 import android.app.Application;
+import android.content.Intent;
+
+import com.schautup.scheduler.Hungry;
 
 
 /**
@@ -40,4 +43,11 @@ import android.app.Application;
  * @author Xinyue Zhao
  */
 public final class App extends Application {
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		//Currently, we start "Hungry" mode as mode for development.
+		//See BootReceiver as well.
+		startService(new Intent(this, Hungry.class));
+	}
 }

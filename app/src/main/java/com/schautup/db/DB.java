@@ -212,6 +212,41 @@ public final class DB {
 	}
 
 	/**
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
+	 *
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
+	 */
+	public synchronized List<ScheduleItem> getSchedules(int hour, int minute) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+				new String[] { hour + "", minute + "" }, null, null, null, null);
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+
+				list.add(item);
+			}
+
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+	/**
 	 * Remove one schedule item from DB.
 	 *
 	 * @param item
@@ -232,8 +267,9 @@ public final class DB {
 			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
 			rowId = mDB.delete(ScheduleTbl.TABLE_NAME, whereClause, whereArgs);
 			success = rowId > 0;
-			if(success) {
-				Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, new String[]{ScheduleTbl.ID}, null, null, null, null, null);
+			if (success) {
+				Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, null, null, null, null,
+						null);
 				rowsRemain = c.getCount();
 			} else {
 				rowsRemain = -1;

@@ -3,7 +3,10 @@
     package="com.schautup"
     android:installLocation="preferExternal">
 
+    <!--For a lot functions that need vibration.-->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--The application runs as soon as possible when device starts.-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <supports-screens android:xlargeScreens="true" />
 
@@ -81,6 +84,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoOverlay"
             android:label="@string/drawer_item_settings"/>
+
+        <service
+            android:name=".scheduler.Hungry"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver android:name=".BootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
