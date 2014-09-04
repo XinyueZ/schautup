@@ -7,8 +7,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
@@ -125,13 +127,19 @@ public final class ScheduleManager {
 	private NotificationCompat.Builder buildNotificationCommon(Context cxt, String ticker, @DrawableRes int smallIcon,
 			String contentTitle, String content, int id) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(cxt).setWhen(System.currentTimeMillis())
-				.setTicker(ticker).setAutoCancel(true).setSmallIcon(smallIcon).setContentIntent(createMainPendingIntent(
-						cxt, id)).setContentTitle(contentTitle).setContentText(content);
+				.setTicker(ticker).setAutoCancel(true).setSmallIcon(smallIcon).setLargeIcon(
+						BitmapFactory.decodeResource(cxt.getResources(), R.drawable.ic_action_logo)).setContentIntent(
+						createMainPendingIntent(cxt, id)).setContentTitle(contentTitle).setContentText(content);
 
-		builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+		AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
+		if (audioManager.getRingerMode() == RINGER_MODE_VIBRATE) {
+			builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000, 1000, 1000 });
+		}
+		if (audioManager.getRingerMode() == RINGER_MODE_NORMAL) {
+			builder.setSound(Uri.parse(String.format("android.resource://%s/%s", cxt.getPackageName(),
+					R.raw.sound_bell)));
+		}
 		builder.setLights(Color.RED, 3000, 3000);
-		//builder.setSound(Uri.parse(tone));
-
 		return builder;
 	}
 
@@ -194,26 +202,20 @@ public final class ScheduleManager {
 				switch (item.getType()) {
 				case MUTE:
 					audioManager.setRingerMode(RINGER_MODE_SILENT);
-					sendNotification(cxt, new Result(
-							cxt.getString(R.string.notify_mute_simple_content),
-							cxt.getString(R.string.notify_mute_headline),
-							cxt.getString( R.string.notify_mute_content),
+					sendNotification(cxt, new Result(cxt.getString(R.string.notify_mute_simple_content), cxt.getString(
+							R.string.notify_mute_headline), cxt.getString(R.string.notify_mute_content),
 							R.drawable.ic_mute_notify));
 					break;
 				case VIBRATE:
 					audioManager.setRingerMode(RINGER_MODE_VIBRATE);
-					sendNotification(cxt, new Result(
-							cxt.getString(R.string.notify_vibrate_simple_content),
-							cxt.getString( R.string.notify_vibrate_headline),
-							cxt.getString( R.string.notify_vibrate_content),
-							R.drawable.ic_vibrate_notify));
+					sendNotification(cxt, new Result(cxt.getString(R.string.notify_vibrate_simple_content),
+							cxt.getString(R.string.notify_vibrate_headline), cxt.getString(
+							R.string.notify_vibrate_content), R.drawable.ic_vibrate_notify));
 					break;
 				case SOUND:
 					audioManager.setRingerMode(RINGER_MODE_NORMAL);
-					sendNotification(cxt, new Result(
-							cxt.getString(R.string.notify_sound_simple_content),
-							cxt.getString( R.string.notify_sound_headline),
-							cxt.getString( R.string.notify_sound_content),
+					sendNotification(cxt, new Result(cxt.getString(R.string.notify_sound_simple_content), cxt.getString(
+							R.string.notify_sound_headline), cxt.getString(R.string.notify_sound_content),
 							R.drawable.ic_sound_notify));
 					break;
 				}
