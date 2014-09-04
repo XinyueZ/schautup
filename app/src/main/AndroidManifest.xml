@@ -79,9 +79,15 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/drawer_item_settings"
+            android:label="@string/menu_settings"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoOverlay" />
+
+        <activity
+            android:name=".QuickSettingsActivity"
+            android:label="@string/settings_quick_title"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog"/>
 
         <service
             android:name=".scheduler.Hungry"
@@ -99,8 +105,7 @@
         <service
             android:name=".scheduler.Foreground"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="false" />
     </application>
 
 </manifest>

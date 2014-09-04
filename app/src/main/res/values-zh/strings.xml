@@ -55,6 +55,10 @@
     <string name="settings_thirsty_mode_desc">应用会准时执行任务，本模式依赖于系统时钟管理器的性能，执行性能和能耗完全取决于系统时钟管理器。</string>
     <string name="settings_neutral_mode">中和</string>
     <string name="settings_neutral_mode_desc">应用执行任务并尽力节省能耗，本模式依赖于系统时钟管理器，但是不能带来很好的精确即准时执行任务的效果。</string>
+    <string name="settings_pause_resume">让我暂停还是继续工作?</string>
+    <string name="settings_pause">暂停</string>
+    <string name="settings_resume">工作</string>
+    <string name="settings_quick_title">快捷设置</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

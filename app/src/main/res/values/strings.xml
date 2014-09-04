@@ -77,6 +77,10 @@
     <string name="settings_neutral_mode">Neutral</string>
     <string name="settings_neutral_mode_desc">The application tries to schedule all tasks and minimize
         battery use. It relies on OS\'s AlarmManager and mightn\'t bring exact user feelings.</string>
+    <string name="settings_pause_resume">Let me pause or resume work\?</string>
+    <string name="settings_pause">pause</string>
+    <string name="settings_resume">work</string>
+    <string name="settings_quick_title">Quick settings</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

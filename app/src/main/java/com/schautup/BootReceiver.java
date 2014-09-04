@@ -19,10 +19,13 @@ public final class BootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			Application cxt = (Application) context.getApplicationContext();
+			Prefs prefs = Prefs.getInstance(cxt);
 			//Currently, we start "Hungry" mode as mode for development.
 			//See App as well.
-			cxt.startService(new Intent(cxt, Hungry.class));
-			if (Prefs.getInstance(cxt).isEULAOnceConfirmed()) {
+			if(!prefs.isPause()) {
+				cxt.startService(new Intent(cxt, Hungry.class));
+			}
+			if (prefs.isEULAOnceConfirmed()) {
 				cxt.startService(new Intent(cxt, Foreground.class));
 			}
 		}

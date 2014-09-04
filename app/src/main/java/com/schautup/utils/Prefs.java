@@ -45,6 +45,13 @@ public final class Prefs {
 	 * Storage. For schedule modes.
 	 */
 	public static final String KEY_SCHEDULE_MODE = "key_schedule_mode";
+	/**
+	 * Storage. Whether to pause or resume schedules.
+	 * <p/>
+	 * {@code true} if pause.
+	 */
+	private static final String KEY_PAUSE_RESUME = "key_pause_resume";
+
 
 	//----------------------------------------------------------
 
@@ -58,6 +65,7 @@ public final class Prefs {
 	 *
 	 * @param _context
 	 * 		{@link android.app.Application}.
+	 *
 	 * @return The {@link com.schautup.utils.Prefs} singleton.
 	 */
 	public static Prefs getInstance(Application _context) {
@@ -200,7 +208,9 @@ public final class Prefs {
 
 	/**
 	 * Set current schedule mode.
-	 * @param modeValue The mode value.
+	 *
+	 * @param modeValue
+	 * 		The mode value.
 	 */
 	public void setScheduleMode(String modeValue) {
 		setString(KEY_SCHEDULE_MODE, modeValue);
@@ -208,9 +218,30 @@ public final class Prefs {
 
 	/**
 	 * Get current schedule mode, default is "1" the "thirsty" mode.
+	 *
 	 * @return The current schedule mode.
 	 */
 	public String getScheduleMode() {
 		return getString(KEY_SCHEDULE_MODE, "1");
+	}
+
+	/**
+	 * {@code true} if pause the schedules.
+	 *
+	 * @return {@code true} if pause the schedules. <b>Default is {@code false}.</b>
+	 */
+	public boolean isPause() {
+		return getBoolean(KEY_PAUSE_RESUME, false);
+	}
+
+	/**
+	 * Set storage. Whether to pause or resume schedules.
+	 * <p/>
+	 *
+	 * @param pause
+	 * 		{@code true} if pause.
+	 */
+	public void setPause(boolean pause) {
+		setBoolean(KEY_PAUSE_RESUME, pause);
 	}
 }

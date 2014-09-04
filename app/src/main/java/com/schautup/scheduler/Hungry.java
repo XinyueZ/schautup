@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.schautup.utils.ParallelTask;
 
@@ -43,6 +44,7 @@ public final class Hungry extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d("SchautUp", "Start Hungry.");
 		registerReceiver(mReceiver, mIntentFilter);
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -51,6 +53,7 @@ public final class Hungry extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(mReceiver);
+		Log.d("SchautUp", "Stop Hungry.");
 	}
 
 	/**

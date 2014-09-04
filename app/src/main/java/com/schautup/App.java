@@ -48,10 +48,13 @@ public final class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Prefs prefs = Prefs.getInstance(this);
 		//Currently, we start "Hungry" mode as mode for development.
 		//See BootReceiver as well.
-		startService(new Intent(this, Hungry.class));
-		if (Prefs.getInstance(this).isEULAOnceConfirmed()) {
+		if(!prefs.isPause()) {
+			startService(new Intent(this, Hungry.class));
+		}
+		if (prefs.isEULAOnceConfirmed()) {
 			startService(new Intent(this, Foreground.class));
 		}
 	}
