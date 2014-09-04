@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/quick_settings_pause_resume_ll"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_common_white"
+            android:text="@string/settings_pause_resume" />
+
+        <Switch
+            android:id="@+id/pause_resume_cb"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textOff="@string/settings_pause"
+            android:textOn="@string/settings_resume"
+            android:checked="true" />
+    </LinearLayout>
+</merge>

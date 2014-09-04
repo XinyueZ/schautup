@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/bg_app"
-    android:layout_width="match_parent"
-    android:padding="5dp"
-    android:layout_height="match_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"  >
 
     <LinearLayout
+        android:id="@+id/quick_settings_pause_resume_ll"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:weightSum="2"
@@ -21,7 +17,7 @@
             android:textColor="@color/text_common_white"
             android:text="@string/settings_pause_resume" />
 
-        <Switch
+        <ToggleButton
             android:id="@+id/pause_resume_cb"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -30,5 +26,4 @@
             android:textOn="@string/settings_resume"
             android:checked="true" />
     </LinearLayout>
-
-</LinearLayout>
+</merge>

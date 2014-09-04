@@ -45,6 +45,7 @@
     <color name="bg_app">@color/c6</color>
     <color name="bg_eula">@color/c0</color>
     <color name="bg_selected_item">@color/c25</color>
+    <color name="bg_quick_settings">@color/bg_app</color>
 
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>

@@ -1,5 +1,7 @@
 package com.schautup;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -246,7 +248,19 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		}
 		startSupportActionMode(this);
 	}
+
 	//------------------------------------------------
+
+	/**
+	 * Show single instance of {@link MainActivity}.
+	 *
+	 * @param cxt {@link android.content.Context}.
+	 */
+	public static void showInstance(Context cxt) {
+		Intent intent = new Intent(cxt, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		cxt.startActivity(intent);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

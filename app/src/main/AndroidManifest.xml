@@ -87,7 +87,8 @@
             android:name=".QuickSettingsActivity"
             android:label="@string/settings_quick_title"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:noHistory="true"
+            android:theme="@style/ActivityDialog"/>
 
         <service
             android:name=".scheduler.Hungry"

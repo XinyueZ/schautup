@@ -49,6 +49,7 @@ public final class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Prefs prefs = Prefs.getInstance(this);
+		//TODO start all schedules.
 		//Currently, we start "Hungry" mode as mode for development.
 		//See BootReceiver as well.
 		if(!prefs.isPause()) {

@@ -20,6 +20,7 @@ public final class BootReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			Application cxt = (Application) context.getApplicationContext();
 			Prefs prefs = Prefs.getInstance(cxt);
+			//TODO start all schedules.
 			//Currently, we start "Hungry" mode as mode for development.
 			//See App as well.
 			if(!prefs.isPause()) {

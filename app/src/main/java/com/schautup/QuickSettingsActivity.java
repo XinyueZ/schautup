@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
@@ -45,6 +46,7 @@ public final class QuickSettingsActivity extends Activity implements OnCheckedCh
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		//TODO start all schedules.
 		//Pause or resume the schedules according to status of CompoundButton.
 		//Currently we support only Hungry.
 		Prefs.getInstance(getApplication()).setPause(!isChecked);
@@ -55,5 +57,15 @@ public final class QuickSettingsActivity extends Activity implements OnCheckedCh
 			//pause
 			stopService(new Intent(this, Hungry.class));
 		}
+	}
+
+	/**
+	 * Resume the task of application.
+	 *
+	 * @param view
+	 * 		Do nothing.
+	 */
+	public void openApp(View view) {
+		MainActivity.showInstance(this);
 	}
 }

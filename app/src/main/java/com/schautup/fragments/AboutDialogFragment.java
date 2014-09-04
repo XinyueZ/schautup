@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.scheduler.Foreground;
+import com.schautup.scheduler.Hungry;
 import com.schautup.utils.Prefs;
 
 /**
@@ -47,6 +48,7 @@ public final class AboutDialogFragment extends DialogFragment {
 	 *
 	 * @param context
 	 * 		A {@link android.content.Context} object.
+	 *
 	 * @return An instance of {@link com.schautup.fragments.AboutDialogFragment}.
 	 */
 	public static DialogFragment newInstance(Context context) {
@@ -212,6 +214,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		 *
 		 * @param context
 		 * 		A {@link android.content.Context} object.
+		 *
 		 * @return An instance of {@link com.schautup.fragments.AboutDialogFragment.EulaConfirmationDialog}.
 		 */
 		public static DialogFragment newInstance(Context context) {
@@ -239,11 +242,18 @@ public final class AboutDialogFragment extends DialogFragment {
 							Application cxt = getActivity().getApplication();
 							prefs.setEULAOnceConfirmed(true);
 							cxt.startService(new Intent(cxt, Foreground.class));
+							//TODO Start the schedules.
+							//Currently we support only Hungry.
+							cxt.startService(new Intent(cxt, Hungry.class));
 							dialog.dismiss();
 						}
 					}).setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(false);
+							Application cxt = getActivity().getApplication();
+							//TODO Pause the schedules.
+							//Currently we support only Hungry.
+							cxt.stopService(new Intent(cxt, Hungry.class));
 							getActivity().finish();
 						}
 					}).create();
