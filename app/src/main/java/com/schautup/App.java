@@ -34,7 +34,9 @@ package com.schautup;
 import android.app.Application;
 import android.content.Intent;
 
+import com.schautup.scheduler.Foreground;
 import com.schautup.scheduler.Hungry;
+import com.schautup.utils.Prefs;
 
 
 /**
@@ -49,5 +51,8 @@ public final class App extends Application {
 		//Currently, we start "Hungry" mode as mode for development.
 		//See BootReceiver as well.
 		startService(new Intent(this, Hungry.class));
+		if (Prefs.getInstance(this).isEULAOnceConfirmed()) {
+			startService(new Intent(this, Foreground.class));
+		}
 	}
 }

@@ -1,9 +1,11 @@
 package com.schautup.fragments;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.schautup.R;
+import com.schautup.scheduler.Foreground;
 import com.schautup.utils.Prefs;
 
 /**
@@ -194,24 +197,6 @@ public final class AboutDialogFragment extends DialogFragment {
 		}
 	}
 
-	/**
-	 * Dialog to open showing the confirmation of "End User License Agreement".
-	 * <p/>
-	 * When user does not agree, user can not use the application.
-	 *
-	 * @author Xinyue Zhao
-	 */
-	public static void showEulaConfirmation(FragmentActivity activity) {
-		FragmentManager fm = activity.getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		Fragment prev = fm.findFragmentByTag("dialog_eula_confirmation");
-		if (prev != null) {
-			ft.remove(prev);
-		}
-		ft.addToBackStack(null);
-
-		new EulaDialog().show(ft, "dialog_eula_confirmation");
-	}
 
 	/**
 	 * Dialog to open showing the "End User License Agreement".
@@ -250,7 +235,10 @@ public final class AboutDialogFragment extends DialogFragment {
 			return new AlertDialog.Builder(getActivity()).setTitle(R.string.about_eula).setView(eulaTextView)
 					.setPositiveButton(R.string.btn_agree, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(true);
+							Prefs prefs = Prefs.getInstance(getActivity().getApplication());
+							Application cxt = getActivity().getApplication();
+							prefs.setEULAOnceConfirmed(true);
+							cxt.startService(new Intent(cxt, Foreground.class));
 							dialog.dismiss();
 						}
 					}).setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -124,7 +125,8 @@ public final class ScheduleManager {
 	 *
 	 * @return A {@link android.support.v4.app.NotificationCompat.Builder}.
 	 */
-	private NotificationCompat.Builder buildNotificationCommon(Context cxt, String ticker, @DrawableRes int smallIcon,
+	private static NotificationCompat.Builder buildNotificationCommon(Context cxt, String ticker,
+			@DrawableRes int smallIcon,
 			String contentTitle, String content, int id) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(cxt).setWhen(System.currentTimeMillis())
 				.setTicker(ticker).setAutoCancel(true).setSmallIcon(smallIcon).setLargeIcon(
@@ -153,7 +155,7 @@ public final class ScheduleManager {
 	 *
 	 * @return A {@link android.app.PendingIntent}  clicking  the {@link android.app.Notification}.
 	 */
-	private PendingIntent createMainPendingIntent(Context cxt, int reqCode) {
+	 static PendingIntent createMainPendingIntent(Context cxt, int reqCode) {
 		Intent intent = new Intent(cxt, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		return PendingIntent.getActivity(cxt, reqCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -222,4 +224,5 @@ public final class ScheduleManager {
 			}
 		}
 	}
+
 }
