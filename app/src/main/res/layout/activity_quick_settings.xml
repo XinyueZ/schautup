@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/bg_app"
     android:layout_width="match_parent"
-    android:padding="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
@@ -12,8 +13,13 @@
     <Button
         android:id="@+id/open_app_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/btn_open_app"
+        android:background="@drawable/selector_bg2_btn"
         android:layout_gravity="center_horizontal"
         android:onClick="openApp" />
 </LinearLayout>

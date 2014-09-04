@@ -25,8 +25,8 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.schautup.R;
-import com.schautup.scheduler.Foreground;
 import com.schautup.scheduler.Hungry;
+import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
 
 /**
@@ -241,18 +241,13 @@ public final class AboutDialogFragment extends DialogFragment {
 							Prefs prefs = Prefs.getInstance(getActivity().getApplication());
 							Application cxt = getActivity().getApplication();
 							prefs.setEULAOnceConfirmed(true);
-							cxt.startService(new Intent(cxt, Foreground.class));
-							//TODO Start the schedules.
-							//Currently we support only Hungry.
-							cxt.startService(new Intent(cxt, Hungry.class));
+							cxt.startService(new Intent(cxt, ScheduleManager.class));
 							dialog.dismiss();
 						}
 					}).setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							Prefs.getInstance(getActivity().getApplication()).setEULAOnceConfirmed(false);
 							Application cxt = getActivity().getApplication();
-							//TODO Pause the schedules.
-							//Currently we support only Hungry.
+							Prefs.getInstance(cxt).setEULAOnceConfirmed(false);
 							cxt.stopService(new Intent(cxt, Hungry.class));
 							getActivity().finish();
 						}

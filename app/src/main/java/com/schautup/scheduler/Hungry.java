@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.util.Log;
 
-import com.schautup.utils.ParallelTask;
+import com.schautup.bus.DoSchedulesAtTimeEvent;
+import com.schautup.utils.LL;
 
 import org.joda.time.DateTime;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A {@link android.app.Service} that controls a {@link android.content.BroadcastReceiver} to handle OS's time-tick (pro
@@ -30,21 +32,19 @@ public final class Hungry extends Service {
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context cxt, Intent intent) {
-			ScheduleManager scheduleManager = new ScheduleManager(cxt);
-			new ParallelTask<ScheduleManager, Void, Void>(false) {
-				@Override
-				protected Void doInBackground(ScheduleManager... params) {
-					ScheduleManager sm = params[0];
-					sm.workAt(DateTime.now());
-					return null;
-				}
-			}.executeParallel(scheduleManager);
+			EventBus.getDefault().post(new DoSchedulesAtTimeEvent(DateTime.now()));
 		}
 	};
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+		LL.i( "Hungry#Create.");
+	}
+
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d("SchautUp", "Start Hungry.");
+		LL.i("Hungry#StartCommand.");
 		registerReceiver(mReceiver, mIntentFilter);
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -53,7 +53,7 @@ public final class Hungry extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(mReceiver);
-		Log.d("SchautUp", "Stop Hungry.");
+		LL.i( "Hungry#Destroy.");
 	}
 
 	/**

@@ -104,7 +104,7 @@
         </receiver>
 
         <service
-            android:name=".scheduler.Foreground"
+            android:name=".scheduler.ScheduleManager"
             android:enabled="true"
             android:exported="false" />
     </application>

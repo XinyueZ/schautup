@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.schautup.scheduler.Hungry;
+import com.schautup.bus.ScheduleManagerPauseEvent;
+import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.utils.Prefs;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * An {@link android.app.Activity} which shows as a dialog for user to set some options directly instead of opening the
@@ -46,16 +49,13 @@ public final class QuickSettingsActivity extends Activity implements OnCheckedCh
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		//TODO start all schedules.
-		//Pause or resume the schedules according to status of CompoundButton.
-		//Currently we support only Hungry.
 		Prefs.getInstance(getApplication()).setPause(!isChecked);
 		if (isChecked) {
 			//work
-			startService(new Intent(this, Hungry.class));
+			EventBus.getDefault().post(new ScheduleManagerWorkEvent());
 		} else {
 			//pause
-			stopService(new Intent(this, Hungry.class));
+			EventBus.getDefault().post(new ScheduleManagerPauseEvent());
 		}
 	}
 

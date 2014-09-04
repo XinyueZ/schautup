@@ -1,6 +1,5 @@
 package com.schautup.scheduler;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import android.app.NotificationManager;
@@ -12,27 +11,157 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
-import com.schautup.App;
 import com.schautup.MainActivity;
+import com.schautup.QuickSettingsActivity;
 import com.schautup.R;
+import com.schautup.bus.DoSchedulesAtTimeEvent;
+import com.schautup.bus.ScheduleManagerPauseEvent;
+import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
+import com.schautup.utils.LL;
+import com.schautup.utils.ParallelTask;
 
 import org.joda.time.DateTime;
+
+import de.greenrobot.event.EventBus;
 
 import static android.media.AudioManager.RINGER_MODE_NORMAL;
 import static android.media.AudioManager.RINGER_MODE_SILENT;
 import static android.media.AudioManager.RINGER_MODE_VIBRATE;
 
 /**
- * The manager do all schedules with different methods.
+ * A {@link android.app.Service} that hosts a ongoing notification that gives user some shortcut operations to control
+ * the application when the notification's clicked. It might keep the application long time in background.
  *
  * @author Xinyue Zhao
  */
-public final class ScheduleManager {
+public class ScheduleManager extends Service {
+
+	//------------------------------------------------
+	//Subscribes, event-handlers
+	//------------------------------------------------
+
+	/**
+	 * Handler for {@link com.schautup.bus.DoSchedulesAtTimeEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.DoSchedulesAtTimeEvent}.
+	 */
+	public void onEvent(DoSchedulesAtTimeEvent e) {
+		new ParallelTask<DateTime, Void, Void>(false) {
+			@Override
+			protected Void doInBackground(DateTime... params) {
+				doSchedules(params[0]);
+				return null;
+			}
+		}.executeParallel(e.getTime());
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.ScheduleManagerWorkEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ScheduleManagerWorkEvent}.
+	 */
+	public void onEvent(ScheduleManagerWorkEvent e) {
+		work();
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.ScheduleManagerPauseEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ScheduleManagerPauseEvent}.
+	 */
+	public void onEvent(ScheduleManagerPauseEvent e) {
+		pause();
+	}
+
+
+	//------------------------------------------------
+
+	/**
+	 * Provide an ongoing {@link android.app.Notification} that keeps the application running long time in background.
+	 */
+	private void sendForegroundNotification() {
+		Intent intent = new Intent(this, QuickSettingsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setWhen(System.currentTimeMillis())
+				.setTicker(getText(R.string.notify_foreground_simple_content)).setAutoCancel(true).setSmallIcon(
+						R.drawable.ic_action_logo).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+						R.drawable.ic_action_logo)).setContentTitle(getString(R.string.notify_foreground_headline))
+				.setContentText(getString(R.string.notify_foreground_content)).setContentIntent(pendingIntent);
+		startForeground((int) System.currentTimeMillis(), builder.build());
+	}
+
+
+	public ScheduleManager() {
+		//Do nothing.
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	@Override
+	public void onCreate() {
+		EventBus.getDefault().register(this);
+		super.onCreate();
+		LL.i("ScheduleManager#Create.");
+	}
+
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		LL.i("ScheduleManager#StartCommand.");
+		sendForegroundNotification();
+		work();
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	@Override
+	public void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		pause();
+		super.onDestroy();
+		LL.i("ScheduleManager#Destroy.");
+	}
+
+	/**
+	 * {@link com.schautup.scheduler.ScheduleManager} works.
+	 */
+	private void work() {
+		LL.i("ScheduleManager#work");
+		//TODO start all schedules.
+		//Resume to work on schedules according to status of CompoundButton.
+		//Currently we support only Hungry.
+		startService(new Intent(this, Hungry.class));
+	}
+
+	/**
+	 * {@link com.schautup.scheduler.ScheduleManager} do pause.
+	 */
+	private void pause() {
+		LL.i("ScheduleManager#pause");
+		//TODO stop all schedules.
+		//Pause the schedules according to status of CompoundButton.
+		//Currently we support only Hungry.
+		stopService(new Intent(this, Hungry.class));
+	}
+
+	/**
+	 * A bundle that contains information about a being set schedule item.
+	 *
+	 * @author Xinyue Zhao
+	 */
 	private static class Result {
 		/**
 		 * Simple information about a finished scheduled item.
@@ -52,7 +181,7 @@ public final class ScheduleManager {
 		private int mIcon;
 
 		/**
-		 * Constructor of {@link com.schautup.scheduler.ScheduleManager.Result}.
+		 * Constructor of {@link Result}.
 		 *
 		 * @param _simpleContent
 		 * 		Simple information about a finished scheduled item.
@@ -101,11 +230,6 @@ public final class ScheduleManager {
 		}
 	}
 
-	/**
-	 * {@link android.content.Context}, but it is protected.
-	 */
-	private WeakReference<Context> mContextRef;
-
 
 	/**
 	 * Get the {@link android.support.v4.app.NotificationCompat.Builder} of {@link android.app.Notification}.
@@ -126,8 +250,7 @@ public final class ScheduleManager {
 	 * @return A {@link android.support.v4.app.NotificationCompat.Builder}.
 	 */
 	private static NotificationCompat.Builder buildNotificationCommon(Context cxt, String ticker,
-			@DrawableRes int smallIcon,
-			String contentTitle, String content, int id) {
+			@DrawableRes int smallIcon, String contentTitle, String content, int id) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(cxt).setWhen(System.currentTimeMillis())
 				.setTicker(ticker).setAutoCancel(true).setSmallIcon(smallIcon).setLargeIcon(
 						BitmapFactory.decodeResource(cxt.getResources(), R.drawable.ic_action_logo)).setContentIntent(
@@ -155,7 +278,7 @@ public final class ScheduleManager {
 	 *
 	 * @return A {@link android.app.PendingIntent}  clicking  the {@link android.app.Notification}.
 	 */
-	 static PendingIntent createMainPendingIntent(Context cxt, int reqCode) {
+	static PendingIntent createMainPendingIntent(Context cxt, int reqCode) {
 		Intent intent = new Intent(cxt, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		return PendingIntent.getActivity(cxt, reqCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -179,50 +302,37 @@ public final class ScheduleManager {
 	}
 
 	/**
-	 * Constructor of {@link com.schautup.scheduler.ScheduleManager}.
-	 *
-	 * @param cxt
-	 * 		{@link android.content.Context}.
-	 */
-	public ScheduleManager(Context cxt) {
-		mContextRef = new WeakReference<Context>(cxt);
-	}
-
-	/**
-	 * The  {@link com.schautup.scheduler.ScheduleManager} does schedule at {@code time}.
+	 * Do schedules at {@code time}.
 	 *
 	 * @param time
 	 * 		A time point.
 	 */
-	public void workAt(DateTime time) {
-		Context cxt = mContextRef.get();
-		if (cxt != null) {
-			List<ScheduleItem> items = DB.getInstance((App) cxt.getApplicationContext()).getSchedules(
-					time.getHourOfDay(), time.getMinuteOfHour());
-			AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
-			for (ScheduleItem item : items) {
-				switch (item.getType()) {
-				case MUTE:
-					audioManager.setRingerMode(RINGER_MODE_SILENT);
-					sendNotification(cxt, new Result(cxt.getString(R.string.notify_mute_simple_content), cxt.getString(
-							R.string.notify_mute_headline), cxt.getString(R.string.notify_mute_content),
-							R.drawable.ic_mute_notify));
-					break;
-				case VIBRATE:
-					audioManager.setRingerMode(RINGER_MODE_VIBRATE);
-					sendNotification(cxt, new Result(cxt.getString(R.string.notify_vibrate_simple_content),
-							cxt.getString(R.string.notify_vibrate_headline), cxt.getString(
-							R.string.notify_vibrate_content), R.drawable.ic_vibrate_notify));
-					break;
-				case SOUND:
-					audioManager.setRingerMode(RINGER_MODE_NORMAL);
-					sendNotification(cxt, new Result(cxt.getString(R.string.notify_sound_simple_content), cxt.getString(
-							R.string.notify_sound_headline), cxt.getString(R.string.notify_sound_content),
-							R.drawable.ic_sound_notify));
-					break;
-				}
+	private void doSchedules(DateTime time) {
+		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(time.getHourOfDay(),
+				time.getMinuteOfHour());
+		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		for (ScheduleItem item : items) {
+			switch (item.getType()) {
+			case MUTE:
+				audioManager.setRingerMode(RINGER_MODE_SILENT);
+				sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
+						R.string.notify_mute_headline), getString(R.string.notify_mute_content),
+						R.drawable.ic_mute_notify));
+				break;
+			case VIBRATE:
+				audioManager.setRingerMode(RINGER_MODE_VIBRATE);
+				sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
+						R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
+						R.drawable.ic_vibrate_notify));
+				break;
+			case SOUND:
+				audioManager.setRingerMode(RINGER_MODE_NORMAL);
+				sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
+						R.string.notify_sound_headline), getString(R.string.notify_sound_content),
+						R.drawable.ic_sound_notify));
+				break;
 			}
+
 		}
 	}
-
 }

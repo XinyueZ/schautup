@@ -3,19 +3,19 @@
     <!--Foreground-->
     <string name="notify_foreground_simple_content">Hi! Here is SchautUp。</string>
     <string name="notify_foreground_headline">SchautUp</string>
-    <string name="notify_foreground_content">SchautUp schedules your device with different status(sound,
+    <string name="notify_foreground_content">Schedule your device with different status(sound,
         vibrate, mute).</string>
     <!--mute-->
     <string name="notify_mute_simple_content">Mute is ON!</string>
     <string name="notify_mute_headline">SchautUp</string>
-    <string name="notify_mute_content">I\'ve switch your device to Mute status, we keep in silence.</string>
+    <string name="notify_mute_content">I\'ve switched your device to Mute status, we keep in silence.</string>
     <!--vibrate-->
     <string name="notify_vibrate_simple_content">Vibrate is ON!</string>
     <string name="notify_vibrate_headline">SchautUp</string>
-    <string name="notify_vibrate_content">I\'ve switch your device to Vibrate status, we keep in silence and
+    <string name="notify_vibrate_content">I\'ve switched your device to Vibrate status, we keep in silence and
         vibrate your device.</string>
     <!--sound-->
     <string name="notify_sound_simple_content">Sound is ON!</string>
     <string name="notify_sound_headline">SchautUp</string>
-    <string name="notify_sound_content">I\'ve switch your device to Sound status.</string>
+    <string name="notify_sound_content">I\'ve switched your device to Sound status.</string>
 </resources>
