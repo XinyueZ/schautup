@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--mute-->
+    <string name="notify_mute_simple_content">静音 开启！</string>
+    <string name="notify_mute_headline">SchautUp</string>
+    <string name="notify_mute_content">我已经打开了静音状态。</string>
+    <!--vibrate-->
+    <string name="notify_vibrate_simple_content">震动 开启！</string>
+    <string name="notify_vibrate_headline">SchautUp</string>
+    <string name="notify_vibrate_content">我已经打开了震动状态。</string>
+    <!--sound-->
+    <string name="notify_sound_simple_content">响铃 开启！</string>
+    <string name="notify_sound_headline">SchautUp</string>
+    <string name="notify_sound_content">我已经打开了响铃状态。</string>
+</resources>

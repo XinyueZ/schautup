@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--mute-->
+    <string name="notify_mute_simple_content">Mute is ON!</string>
+    <string name="notify_mute_headline">SchautUp</string>
+    <string name="notify_mute_content">I\'ve switch your device to Mute status, we keep in silence.</string>
+    <!--vibrate-->
+    <string name="notify_vibrate_simple_content">Vibrate is ON!</string>
+    <string name="notify_vibrate_headline">SchautUp</string>
+    <string name="notify_vibrate_content">I\'ve switch your device to Vibrate status, we keep in silence and
+        vibrate your device.</string>
+    <!--sound-->
+    <string name="notify_sound_simple_content">Sound is ON!</string>
+    <string name="notify_sound_headline">SchautUp</string>
+    <string name="notify_sound_content">I\'ve switch your device to Sound status.</string>
+</resources>
