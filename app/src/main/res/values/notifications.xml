@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Foreground-->
+    <string name="notify_foreground_simple_content">Hi! Here is SchautUp。</string>
+    <string name="notify_foreground_headline">SchautUp</string>
+    <string name="notify_foreground_content">SchautUp schedules your device with different status(sound,
+        vibrate, mute).</string>
     <!--mute-->
     <string name="notify_mute_simple_content">Mute is ON!</string>
     <string name="notify_mute_headline">SchautUp</string>

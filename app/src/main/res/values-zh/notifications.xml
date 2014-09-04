@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Foreground-->
+    <string name="notify_foreground_simple_content">SchautUp已经启动。</string>
+    <string name="notify_foreground_headline">SchautUp</string>
+    <string name="notify_foreground_content">SchautUp会安排您的响铃，静音及震动状态。</string>
     <!--mute-->
     <string name="notify_mute_simple_content">静音 开启！</string>
     <string name="notify_mute_headline">SchautUp</string>
