@@ -1,5 +1,7 @@
 package com.schautup;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -254,7 +256,8 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	/**
 	 * Show single instance of {@link MainActivity}.
 	 *
-	 * @param cxt {@link android.content.Context}.
+	 * @param cxt
+	 * 		{@link android.content.Context}.
 	 */
 	public static void showInstance(Context cxt) {
 		Intent intent = new Intent(cxt, MainActivity.class);
@@ -309,7 +312,7 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_add:
 			EventBus.getDefault().post(new AddNewScheduleItemEvent());
@@ -326,8 +329,31 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			SettingsActivity.showInstance(this);
 			break;
 		case R.id.action_sort_by_schedule:
-			break;
-		case R.id.action_sort_by_creation_time:
+		case R.id.action_sort_by_edit_time:
+			new ParallelTask<Void, Void, AllScheduleLoadedEvent>(true) {
+				@Override
+				protected AllScheduleLoadedEvent doInBackground(Void[] params) {
+					DB db= DB.getInstance(getApplication());
+					List<ScheduleItem> list =  item.getItemId() ==  R.id.action_sort_by_schedule
+							?
+							db.getAllSchedulesOrderByScheduleTime()
+							:
+							db.getAllSchedulesOrderByEditTime();
+					if (list.size() > 0) {
+						return new AllScheduleLoadedEvent(list);
+					} else {
+						return null;
+					}
+				}
+
+				@Override
+				protected void onPostExecute(AllScheduleLoadedEvent e) {
+					super.onPostExecute(e);
+					if (e != null) {
+						EventBus.getDefault().post(e);
+					}
+				}
+			}.executeParallel();
 			break;
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);

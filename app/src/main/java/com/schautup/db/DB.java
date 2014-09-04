@@ -212,6 +212,66 @@ public final class DB {
 	}
 
 	/**
+	 * Returns all {@link com.schautup.data.ScheduleItem}s from DB order by the edited time.
+	 *
+	 * @return All {@link com.schautup.data.ScheduleItem}s from DB order by the edited time.
+	 */
+	public synchronized List<ScheduleItem> getAllSchedulesOrderByEditTime() {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, ScheduleTbl.EDIT_TIME + " DESC");
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+
+				list.add(item);
+			}
+
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+	/**
+	 * Returns all {@link com.schautup.data.ScheduleItem}s from DB order by the time.
+	 *
+	 * @return All {@link com.schautup.data.ScheduleItem}s from DB order by the time.
+	 */
+	public synchronized List<ScheduleItem> getAllSchedulesOrderByScheduleTime() {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, ScheduleTbl.HOUR + " DESC," +  ScheduleTbl.MINUTE + " DESC");
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+
+				list.add(item);
+			}
+
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+	/**
 	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
 	 *
 	 * @param hour
