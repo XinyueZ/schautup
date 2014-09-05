@@ -13,11 +13,11 @@
         android:icon="@drawable/ic_action_listview"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/menu_settings"
-        android:icon="@drawable/ic_action_settings"
-        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/action_settings"-->
+        <!--android:title="@string/menu_settings"-->
+        <!--android:icon="@drawable/ic_action_settings"-->
+        <!--app:showAsAction="always" />-->
     <item
         android:id="@+id/action_sort_by_schedule"
         android:title="@string/menu_sort_by_schedule"

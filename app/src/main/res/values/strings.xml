@@ -85,4 +85,6 @@
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>
+    <string name="drawer_item_log">Schedule Log</string>
+    <string name="drawer_item_home_page">Home</string>
 </resources>

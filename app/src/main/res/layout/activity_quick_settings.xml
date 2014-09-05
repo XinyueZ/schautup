@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    android:paddingBottom="10dp"
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
@@ -17,7 +18,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
         android:text="@string/btn_open_app"
         android:background="@drawable/selector_bg2_btn"
         android:layout_gravity="center_horizontal"
