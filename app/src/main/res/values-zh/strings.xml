@@ -16,6 +16,7 @@
     <string name="lbl_share_app_title">分享一个不错的App：SchautUp</string>
     <string name="lbl_share_app_content">你好！\n\u00A0\u00A0\u00A0\u00A0希望设备一些功能被定时启动吗，比如：声音，震动，静音？\n\n下载: market://details?id=com.schautup </string>
     <string name="lbl_about">关于</string>
+    <string name="lbl_boot_start">SchautUp已经启动。</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -25,6 +26,8 @@
     <string name="menu_share_app">分享App</string>
     <string name="menu_about">关于</string>
     <string name="menu_settings">设置</string>
+    <string name="menu_forward">向前</string>
+    <string name="menu_backward">后退</string>
 
     <!--Option dialog-->
     <string name="option_dlg_title">选项</string>
@@ -56,10 +59,14 @@
     <string name="settings_thirsty_mode_desc">应用会准时执行任务，本模式依赖于系统时钟管理器的性能，执行性能和能耗完全取决于系统时钟管理器。</string>
     <string name="settings_neutral_mode">中和</string>
     <string name="settings_neutral_mode_desc">应用执行任务并尽力节省能耗，本模式依赖于系统时钟管理器，但是不能带来很好的精确即准时执行任务的效果。</string>
-    <string name="settings_pause_resume">让我暂停还是继续工作?</string>
+    <string name="settings_pause_resume">暂停还是继续工作?</string>
     <string name="settings_pause">暂停</string>
     <string name="settings_resume">工作</string>
     <string name="settings_quick_title">快捷设置</string>
+    <string name="settings_category_run_boot">开机启动</string>
+    <string name="settings_run_boot">是否在启动机器后，立即开始按计划触发所有预定项目？</string>
+    <string name="settings_run_boot_on">是</string>
+    <string name="settings_run_boot_off">不</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

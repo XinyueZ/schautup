@@ -15,8 +15,8 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
-import com.schautup.MainActivity;
-import com.schautup.QuickSettingsActivity;
+import com.schautup.activities.MainActivity;
+import com.schautup.activities.QuickSettingsActivity;
 import com.schautup.R;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;

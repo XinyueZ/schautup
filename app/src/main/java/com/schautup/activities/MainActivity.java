@@ -1,4 +1,4 @@
-package com.schautup;
+package com.schautup.activities;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
@@ -513,12 +514,20 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 					getActionBarHeight()  ;
 
 			View drawerItemSettings = findViewById(R.id.drawer_item_settings_ll);
-			drawerItemSettings.getLayoutParams().height = getActionBarHeight();
 			drawerItemSettings.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					drawerLayout.closeDrawers();
 					SettingsActivity.showInstance(MainActivity.this);
+				}
+			});
+
+			View drawerItemHomePage = findViewById(R.id.drawer_item_home_page_ll);
+			drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					drawerLayout.closeDrawers();
+					HomePageWebViewActivity.showInstance(MainActivity.this);
 				}
 			});
 		}

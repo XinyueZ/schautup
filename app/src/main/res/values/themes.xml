@@ -26,13 +26,17 @@
 
 
     <style name="AppThemeNoOverlay" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:textColorPrimary">@color/text_common_black</item>
         <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="windowActionBarOverlay">false</item>
     </style>
 
-    <!--SettingsActivity, a PreferenceActivity.--><style name="PrefsTheme" parent="AppThemeNoOverlay">
+    <!--SettingsActivity, a PreferenceActivity.-->
+
+    <style name="PrefsTheme" parent="AppThemeNoOverlay">
     <item name="android:textColor">@color/text_common_black</item>
     <item name="android:listViewStyle">@style/PrefsListStyle</item>
     <item name="android:listSeparatorTextViewStyle">@style/PrefsListHeader</item>
@@ -77,6 +81,12 @@
         <item name="android:displayOptions">showHome|useLogo</item>
         <!-- Support library compatibility -->
         <item name="displayOptions">showHome|useLogo</item>
+    </style>
+
+    <style name="AbStyleHomeUp" parent="@style/AbStyle">
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <!-- Support library compatibility -->
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
 
     <!--Actionbar background of popover-->

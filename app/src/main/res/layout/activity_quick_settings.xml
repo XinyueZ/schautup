@@ -5,21 +5,21 @@
     android:layout_width="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingBottom="10dp"
+    android:paddingBottom="5dp"
     android:orientation="vertical"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.schautup.activities.QuickSettingsActivity">
 
-    <include layout="@layout/inc_pause_resume" />
+    <include layout="@layout/inc_pause_resume"   />
 
     <Button
         android:id="@+id/open_app_btn"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="@string/btn_open_app"
+        android:text="@string/btn_open_app" android:gravity="center"
         android:background="@drawable/selector_bg2_btn"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:onClick="openApp" />
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
+import com.schautup.utils.Utils;
 
 /**
  * Handling device boot by {@link android.content.BroadcastReceiver}.
@@ -22,6 +23,7 @@ public final class BootReceiver extends BroadcastReceiver {
 			if (prefs.isEULAOnceConfirmed()) {
 				cxt.startService(new Intent(cxt, ScheduleManager.class));
 			}
+			Utils.showShortToast(context, R.string.lbl_boot_start);
 		}
 	}
 }

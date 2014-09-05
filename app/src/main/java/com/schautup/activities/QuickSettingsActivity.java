@@ -1,4 +1,4 @@
-package com.schautup;
+package com.schautup.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.schautup.R;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.utils.Prefs;

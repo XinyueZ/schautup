@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
-import com.schautup.BaseActivity;
+import com.schautup.activities.BaseActivity;
 import com.schautup.R;
 
 import de.greenrobot.event.EventBus;

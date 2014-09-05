@@ -1,4 +1,4 @@
-package com.schautup;
+package com.schautup.activities;
 
 import java.lang.reflect.Field;
 
@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.ViewConfiguration;
 
+import com.schautup.R;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.utils.Prefs;
 
@@ -118,5 +120,16 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	protected int getActionBarHeight() {
 		return mActionBarHeight;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

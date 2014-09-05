@@ -51,8 +51,10 @@ public final class Prefs {
 	 * {@code true} if pause.
 	 */
 	private static final String KEY_PAUSE_RESUME = "key_pause_resume";
-
-
+	/**
+	 * Storage. Weather the application works since boot.
+	 */
+	public static final String KEY_RUN_BOOT = "key_run_boot";
 	//----------------------------------------------------------
 
 	private Prefs(Context cxt) {
@@ -243,5 +245,24 @@ public final class Prefs {
 	 */
 	public void setPause(boolean pause) {
 		setBoolean(KEY_PAUSE_RESUME, pause);
+	}
+
+	/**
+	 * {@coee true}. Receiver for boot is available.
+	 *
+	 * @return {@code true}. Receiver for boot is available.
+	 */
+	public boolean isRunBoot() {
+		return getBoolean(KEY_RUN_BOOT, true);
+	}
+
+	/**
+	 * To allow receiver for boot to be available.
+	 *
+	 * @param runBoot
+	 * 		{@code true}. Receiver for boot is available.
+	 */
+	public void setRunBoot(Boolean runBoot) {
+
 	}
 }

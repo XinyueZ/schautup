@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  >
-    <PreferenceCategory android:title="@string/settings_category_schedule_mode" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_category_schedule_mode">
         <ListPreference
             android:key="key_schedule_mode"
             android:title="@string/settings_thirsty_mode"
             android:summary="@string/settings_thirsty_mode_desc"
             android:entries="@array/settings_schedule_modes"
             android:entryValues="@array/settings_schedule_modes_values"
-            />
+            android:defaultValue="1"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_run_boot">
+        <CheckBoxPreference
+            android:key="key_run_boot"
+            android:title="@string/settings_run_boot"
+            android:summaryOn="@string/settings_run_boot_on"
+            android:summaryOff="@string/settings_run_boot_off"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>
