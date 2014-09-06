@@ -9,7 +9,7 @@
     <string name="btn_ok">Ok</string>
     <string name="btn_agree">I agree.</string>
     <string name="btn_not_agree">I do not agree.</string>
-    <string name="btn_open_app">Open App</string>
+
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
