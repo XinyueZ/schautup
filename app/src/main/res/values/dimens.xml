@@ -1,4 +1,5 @@
 <resources>
+    <dimen name="recurrence_picker_height">250dp</dimen>
     <dimen name="height_item">75dp</dimen>
     <dimen name="height_drawer_item">70dp</dimen>
     <dimen name="height_divider">1dp</dimen>

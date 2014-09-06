@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.schautup.R;
+import com.schautup.bus.OpenRepeatPickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowSetOptionEvent;
@@ -22,6 +23,7 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
+import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
 import com.schautup.views.AnimImageTextView;
 
 import org.joda.time.DateTime;
@@ -217,6 +219,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
 					}
 				});
+		view.findViewById(R.id.open_repeat_btn).setOnClickListener(new OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				EventBus.getDefault().post(new OpenRepeatPickerEvent());
+			}
+		});
 		getDialog().setTitle(R.string.option_dlg_title);
 	}
 

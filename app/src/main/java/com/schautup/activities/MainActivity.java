@@ -12,22 +12,29 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.view.ActionMode.Callback;
 import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
+import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
+import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.FindDuplicatedItemEvent;
+import com.schautup.bus.OpenRepeatPickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.RemovedItemEvent;
@@ -42,6 +49,7 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.exceptions.AddSameDataException;
 import com.schautup.fragments.AboutDialogFragment;
+import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
@@ -58,8 +66,8 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class MainActivity extends BaseActivity implements RadialTimePickerDialog.OnTimeSetListener,
-		Animation.AnimationListener, android.support.v7.view.ActionMode.Callback {
+public final class MainActivity extends BaseActivity implements OnTimeSetListener,
+		AnimationListener, Callback, OnRecurrenceSetListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -185,6 +193,25 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(this, e.getHour(), e.getMinute(),
 				DateFormat.is24HourFormat(this));
 		timePickerDialog.show(getSupportFragmentManager(), null);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.OpenRepeatPickerEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.OpenRepeatPickerEvent}.
+	 */
+	public void onEvent(OpenRepeatPickerEvent e) {
+		Bundle b = new Bundle();
+		Time t = new Time();
+		t.setToNow();
+		b.putLong(RecurrencePickerDialog.BUNDLE_START_TIME_MILLIS, t.toMillis(false));
+		b.putString(RecurrencePickerDialog.BUNDLE_TIME_ZONE, t.timezone);
+		b.putString(RecurrencePickerDialog.BUNDLE_RRULE, "FREQ=WEEKLY;WKST=SU;BYDAY=SA");
+		RecurrencePickerDialog rpd = new MyRecurrencePickerDialog();
+		rpd.setArguments(b);
+		rpd.setOnRecurrenceSetListener(this);
+		rpd.show(getSupportFragmentManager(), null);
 	}
 
 	/**
@@ -393,6 +420,11 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 		EventBus.getDefault().post(new SetTimeEvent(hourOfDay, minute));
 	}
 
+	@Override
+	public void onRecurrenceSet(String rrule) {
+
+	}
+
 	/**
 	 * Show list view of all schedules.
 	 */
@@ -532,4 +564,6 @@ public final class MainActivity extends BaseActivity implements RadialTimePicker
 			});
 		}
 	}
+
+
 }

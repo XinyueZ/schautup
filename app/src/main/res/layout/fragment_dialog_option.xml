@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:weightSum="4"
+            android:weightSum="5"
             android:layout_width="match_parent"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="6dp"
@@ -60,6 +60,15 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_timepicker_btn"
+                android:background="@android:color/transparent" />
+
+            <com.schautup.views.AnimImageButton
+                android:id="@+id/open_repeat_btn"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_repeat_btn"
                 android:background="@android:color/transparent" />
 
         </LinearLayout>
