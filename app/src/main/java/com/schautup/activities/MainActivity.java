@@ -422,7 +422,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	@Override
 	public void onRecurrenceSet(String rrule) {
-
+		Utils.showLongToast(this, rrule);
 	}
 
 	/**

@@ -34,4 +34,14 @@ public final class MyRecurrencePickerDialog extends RecurrencePickerDialog {
 				.recurrence_picker_height);
 		return v;
 	}
+
+	@Override
+	public void updateDialog() {
+		super.updateDialog();
+		View view = getView();
+		if (view != null) {
+			Button doneBtn = (Button) view.findViewById(R.id.done);
+			doneBtn.setEnabled(true);
+		}
+	}
 }
