@@ -12,15 +12,18 @@ import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
-import com.schautup.bus.OpenRepeatPickerEvent;
+import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
+import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
+import com.schautup.db.DB;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
@@ -85,6 +88,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * A previous cache of item before user edits.
 	 */
 	private ScheduleItem mPreScheduleItem;
+	/**
+	 * The recurrence settings.
+	 */
+	private EventRecurrence mEventRecurrence;
+	/**
+	 * Open setting dialog for recurrence.
+	 */
+	private View mRecurrenceV;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -104,6 +115,17 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	}
 
 	/**
+	 * Handler for {@link com.schautup.bus.SetRecurrenceEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.SetRecurrenceEvent}.
+	 */
+	public void onEvent(SetRecurrenceEvent e) {
+		mEventRecurrence = e.getEventRecurrence();
+		mRecurrenceV.setSelected(false);
+	}
+
+	/**
 	 * Handler for {@link com.schautup.bus.ShowSetOptionEvent}.
 	 *
 	 * @param e
@@ -119,6 +141,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
 		mSelectedType = item.getType();
+		mEventRecurrence = item.getEventRecurrence();
 
 		switch (item.getType()) {
 		case MUTE:
@@ -142,6 +165,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 *
 	 * @param context
 	 * 		A {@link android.content.Context} object.
+	 *
 	 * @return An instance of {@link com.schautup.fragments.OptionDialogFragment}.
 	 */
 	public static DialogFragment newInstance(Context context) {
@@ -219,10 +243,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
 					}
 				});
-		view.findViewById(R.id.open_repeat_btn).setOnClickListener(new OnAnimImageButtonClickedListener() {
+		mRecurrenceV = view.findViewById(R.id.open_recurrence_btn);
+		mRecurrenceV.setOnClickListener(new OnAnimImageButtonClickedListener() {
 			@Override
 			public void onClick() {
-				EventBus.getDefault().post(new OpenRepeatPickerEvent());
+				EventBus.getDefault().post(new OpenRecurrencePickerEvent(
+						mEventRecurrence == null ? null : mEventRecurrence.toString()));
 			}
 		});
 		getDialog().setTitle(R.string.option_dlg_title);
@@ -277,19 +303,54 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
+			} else if (mEventRecurrence == null || (mEventRecurrence != null &&
+					(mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
+				//Warning, we must select "repeat".
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_recurrence),
+						getResources().getColor(R.color.warning_green_1)));
+				mRecurrenceV.setSelected(true);
 			} else {
 				if (mEditMode && mPreScheduleItem != null) {
-					//When no change on the item to edit, we do not send event to edit.
+					//When no change on the item to edit, we don't send event to edit.
 					//Close dialog directly.
 					if (mPreScheduleItem.getType() == mSelectedType &&
 							mPreScheduleItem.getHour() == mHour &&
-							mPreScheduleItem.getMinute() == mMinute) {
+							mPreScheduleItem.getMinute() == mMinute &&
+							mPreScheduleItem.getEventRecurrence().equals(mEventRecurrence)) {
 						dismiss();
 						break;
 					}
 				}
-				EventBus.getDefault().post(new UpdateDBEvent(new ScheduleItem(mId, mSelectedType, mHour, mMinute),
-						mEditMode));
+
+				if (!mEditMode) {
+					//Add mode, we should check whether the new item has been in DB or not.
+					if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
+							mMinute)) {
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_duplicated,
+								mSelectedType.name(), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
+								getResources().getColor(R.color.warning_red_1)));
+						break;
+					}
+				} else {
+					//Edit mode, we should check whether the "updated" item(different hour,
+					//minute or type) has been in DB or not.
+					if (mPreScheduleItem.getType() != mSelectedType ||
+							mPreScheduleItem.getHour() != mHour ||
+							mPreScheduleItem.getMinute() != mMinute) {
+						//Any different value that has been set cases to check once on DB.
+						if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
+								mMinute)) {
+							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_duplicated,
+									mSelectedType.name(), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
+									getResources().getColor(R.color.warning_red_1)));
+							break;
+						}
+					}
+				}
+
+				ScheduleItem scheduleItem = new ScheduleItem(mId, mSelectedType, mHour, mMinute);
+				scheduleItem.setEventRecurrence(mEventRecurrence);
+				EventBus.getDefault().post(new UpdateDBEvent(scheduleItem, mEditMode));
 				dismiss();
 			}
 			break;

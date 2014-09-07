@@ -37,6 +37,61 @@
         android:paddingLeft="5dp"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/su_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_su" />
+
+        <TextView
+            android:id="@+id/mo_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_mo" />
+
+        <TextView
+            android:id="@+id/tu_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_tu" />
+
+        <TextView
+            android:id="@+id/we_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_we" />
+
+        <TextView
+            android:id="@+id/th_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_th" />
+
+        <TextView
+            android:id="@+id/fr_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_fr" />
+
+        <TextView
+            android:id="@+id/sa_tv"
+            style="@style/WeekDayTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_sa" />
+    </LinearLayout>
+
     <com.schautup.views.AnimImageButton
         android:id="@+id/status_option_btn"
         android:layout_width="0dp"

@@ -13,6 +13,7 @@ import android.widget.GridView;
 import com.schautup.R;
 import com.schautup.adapters.ScheduleGridViewAdapter;
 import com.schautup.bus.ShowActionModeEvent;
+import com.schautup.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -50,6 +51,8 @@ public final class ScheduleGridFragment extends BaseListFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		GridView gridView = (GridView) view.findViewById(R.id.schedule_gv);
+		int screenWidth = Utils.getScreenSize(getActivity(), 0).Width;
+		gridView.setColumnWidth(screenWidth / 3);
 		setListViewWidget(gridView);
 		setAdapter(new ScheduleGridViewAdapter());
 		//Add header.

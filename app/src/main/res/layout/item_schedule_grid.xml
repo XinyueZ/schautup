@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/status_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_list_grid_item_img"
+            android:layout_height="@dimen/size_list_grid_item_img"
             android:contentDescription="@string/app_name"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
@@ -34,7 +34,61 @@
             android:textColor="@color/text_common_black"
             android:layout_height="wrap_content" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="bottom|center_horizontal">
 
+            <TextView
+                android:id="@+id/su_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_su" />
+
+            <TextView
+                android:id="@+id/mo_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_mo" />
+
+            <TextView
+                android:id="@+id/tu_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_tu" />
+
+            <TextView
+                android:id="@+id/we_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_we" />
+
+            <TextView
+                android:id="@+id/th_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_th" />
+
+            <TextView
+                android:id="@+id/fr_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_fr" />
+
+            <TextView
+                android:id="@+id/sa_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_sa" />
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -46,4 +100,7 @@
         android:layout_marginRight="@dimen/margin_padding_status_level"
         android:layout_marginLeft="@dimen/margin_padding_status_level"
         android:layout_height="@dimen/size_status_level" />
+
+
+
 </FrameLayout>

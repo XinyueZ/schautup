@@ -29,6 +29,7 @@
 
     <color name="text_common_black">@color/c7</color>
     <color name="text_common_white">@color/c0</color>
+    <color name="text_common_blue">@color/c13</color>
     <color name="bg_list_item">@color/c0</color>
     <color name="bg_pressed_status">@color/c3</color>
     <color name="bg_actionbar">@color/c9</color>

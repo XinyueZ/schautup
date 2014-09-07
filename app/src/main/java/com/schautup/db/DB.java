@@ -9,9 +9,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
-import com.schautup.exceptions.AddSameDataException;
 
 /**
  * Defines methods that operate on database.
@@ -55,6 +55,7 @@ public final class DB {
 	 *
 	 * @param _context
 	 * 		{@link android.app.Application}.
+	 *
 	 * @return The {@link com.schautup.db.DB} singleton.
 	 */
 	public static DB getInstance(Application _context) {
@@ -81,15 +82,14 @@ public final class DB {
 
 
 	/**
-	 * Add a schedule into DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user tries to
-	 * insert same data.
+	 * Add a schedule into DB.
 	 *
 	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem} to insert.
+	 *
 	 * @return {@code true} if insert is success.
-	 * @throws AddSameDataException
 	 */
-	public synchronized boolean addSchedule(ScheduleItem item) throws AddSameDataException {
+	public synchronized boolean addSchedule(ScheduleItem item)   {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -97,30 +97,16 @@ public final class DB {
 		Cursor c = null;
 		try {
 			long rowId = -1;
-			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
-							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
-					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
-					null, null, null);
-			if (c.getCount() == 1) {
-				//Find duplicated item and reject to update DB.
-				c.moveToNext();
-				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)),
-						ScheduleType.fromCode(c.getInt(c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(
-						ScheduleTbl.HOUR)), c.getInt(c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(
-						ScheduleTbl.EDIT_TIME))));
-			} else {
-				//Do "insert" command.
-				ContentValues v = new ContentValues();
-				v.put(ScheduleTbl.TYPE, item.getType().toCode());
-				v.put(ScheduleTbl.HOUR, item.getHour());
-				v.put(ScheduleTbl.MINUTE, item.getMinute());
-				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
-				rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
-				item.setId(rowId);
-				success = rowId != -1;
-			}
-		} catch (AddSameDataException e) {
-			throw e;
+			//Do "insert" command.
+			ContentValues v = new ContentValues();
+			v.put(ScheduleTbl.TYPE, item.getType().toCode());
+			v.put(ScheduleTbl.HOUR, item.getHour());
+			v.put(ScheduleTbl.MINUTE, item.getMinute());
+			v.put(ScheduleTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
+			rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
+			item.setId(rowId);
+			success = rowId != -1;
 		} finally {
 			if (c != null) {
 				c.close();
@@ -131,15 +117,14 @@ public final class DB {
 	}
 
 	/**
-	 * Update a schedule in DB. {@link com.schautup.exceptions.AddSameDataException} might be caught when user tries to
-	 * insert same data after being updated.
+	 * Update a schedule in DB.
 	 *
 	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem} to insert.
+	 *
 	 * @return {@code true} if insert is success.
-	 * @throws AddSameDataException
 	 */
-	public synchronized boolean updateSchedule(ScheduleItem item) throws AddSameDataException {
+	public synchronized boolean updateSchedule(ScheduleItem item)  {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -147,30 +132,16 @@ public final class DB {
 		Cursor c = null;
 		try {
 			long rowId = -1;
-			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
-							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
-					new String[] { item.getType().toCode() + "", item.getHour() + "", item.getMinute() + "" }, null,
-					null, null, null);
-			if (c.getCount() >= 1) {
-				//Find duplicated item and reject to update DB.
-				c.moveToNext();
-				throw new AddSameDataException(new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)),
-						ScheduleType.fromCode(c.getInt(c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(
-						ScheduleTbl.HOUR)), c.getInt(c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(
-						ScheduleTbl.EDIT_TIME))));
-			} else {
-				//Do "update" command.
-				ContentValues v = new ContentValues();
-				v.put(ScheduleTbl.TYPE, item.getType().toCode());
-				v.put(ScheduleTbl.HOUR, item.getHour());
-				v.put(ScheduleTbl.MINUTE, item.getMinute());
-				v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
-				String[] args = new String[] { item.getId() + "" };
-				rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
-				success = rowId != -1;
-			}
-		} catch (AddSameDataException e) {
-			throw e;
+			//Do "update" command.
+			ContentValues v = new ContentValues();
+			v.put(ScheduleTbl.TYPE, item.getType().toCode());
+			v.put(ScheduleTbl.HOUR, item.getHour());
+			v.put(ScheduleTbl.MINUTE, item.getMinute());
+			v.put(ScheduleTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
+			String[] args = new String[] { item.getId() + "" };
+			rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
+			success = rowId != -1;
 		} finally {
 			if (c != null) {
 				c.close();
@@ -178,6 +149,38 @@ public final class DB {
 			close();
 		}
 		return success;
+	}
+
+	/**
+	 * Find whether there's a stored item that has same type, hour, minute.
+	 *
+	 * @param type
+	 * 		Type of item.
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 *
+	 * @return {@code true} if there's an item that is duplicated.
+	 */
+	public synchronized boolean findDuplicatedItem(ScheduleType type, int hour, int minute) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean duplicated = false;
+		Cursor c = null;
+		try {
+			c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.TYPE + " = ? AND " +
+							ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+					new String[] { type.toCode() + "", hour + "", minute + "" }, null, null, null, null);
+			duplicated = c.getCount() >= 1;
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+		}
+		return duplicated;
 	}
 
 
@@ -194,14 +197,16 @@ public final class DB {
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
+			EventRecurrence er;
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
-
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
 				list.add(item);
 			}
-
 		} finally {
 			if (c != null) {
 				c.close();
@@ -224,14 +229,16 @@ public final class DB {
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
+			EventRecurrence er;
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
-
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
 				list.add(item);
 			}
-
 		} finally {
 			if (c != null) {
 				c.close();
@@ -250,18 +257,21 @@ public final class DB {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, ScheduleTbl.HOUR + " DESC," +  ScheduleTbl.MINUTE + " DESC");
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null,
+				ScheduleTbl.HOUR + " DESC," + ScheduleTbl.MINUTE + " DESC");
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
+			EventRecurrence er;
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
-
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
 				list.add(item);
 			}
-
 		} finally {
 			if (c != null) {
 				c.close();
@@ -278,25 +288,31 @@ public final class DB {
 	 * 		Hour.
 	 * @param minute
 	 * 		Minute.
+	 * @param byDay
+	 * 		Recurrence day in week.
+	 *
 	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
 	 */
-	public synchronized List<ScheduleItem> getSchedules(int hour, int minute) {
+	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, String byDay) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = ?",
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
+						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%'",
 				new String[] { hour + "", minute + "" }, null, null, null, null);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
+			EventRecurrence er;
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
-
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
 				list.add(item);
 			}
-
 		} finally {
 			if (c != null) {
 				c.close();
@@ -311,6 +327,7 @@ public final class DB {
 	 *
 	 * @param item
 	 * 		The item to remove.
+	 *
 	 * @return The count of rows remain in DB after removed item.
 	 * <p/>
 	 * Return -1 if there's error when removed data.

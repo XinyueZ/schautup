@@ -28,16 +28,17 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.bus.FindDuplicatedItemEvent;
-import com.schautup.bus.OpenRepeatPickerEvent;
+import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.RemovedItemEvent;
+import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowActionModeEvent;
@@ -47,7 +48,6 @@ import com.schautup.bus.UpdateDBEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
-import com.schautup.exceptions.AddSameDataException;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
@@ -66,8 +66,8 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class MainActivity extends BaseActivity implements OnTimeSetListener,
-		AnimationListener, Callback, OnRecurrenceSetListener {
+public final class MainActivity extends BaseActivity implements OnTimeSetListener, AnimationListener, Callback,
+		OnRecurrenceSetListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -196,18 +196,18 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.OpenRepeatPickerEvent}.
+	 * Handler for {@link com.schautup.bus.OpenRecurrencePickerEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.OpenRepeatPickerEvent}.
+	 * 		Event {@link com.schautup.bus.OpenRecurrencePickerEvent}.
 	 */
-	public void onEvent(OpenRepeatPickerEvent e) {
+	public void onEvent(OpenRecurrencePickerEvent e) {
 		Bundle b = new Bundle();
 		Time t = new Time();
 		t.setToNow();
 		b.putLong(RecurrencePickerDialog.BUNDLE_START_TIME_MILLIS, t.toMillis(false));
 		b.putString(RecurrencePickerDialog.BUNDLE_TIME_ZONE, t.timezone);
-		b.putString(RecurrencePickerDialog.BUNDLE_RRULE, "FREQ=WEEKLY;WKST=SU;BYDAY=SA");
+		b.putString(RecurrencePickerDialog.BUNDLE_RRULE, e.getRule());
 		RecurrencePickerDialog rpd = new MyRecurrencePickerDialog();
 		rpd.setArguments(b);
 		rpd.setOnRecurrenceSetListener(this);
@@ -231,14 +231,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				mEditMode = e.isEditMode();
 				mItem = e.getItem();
 				DB db = DB.getInstance(getApplication());
-				try {
-					if (mEditMode) {
-						db.updateSchedule(mItem);
-					} else {
-						db.addSchedule(mItem);
-					}
-				} catch (AddSameDataException e1) {
-					return e1;
+
+				if (mEditMode) {
+					db.updateSchedule(mItem);
+				} else {
+					db.addSchedule(mItem);
 				}
 				return db.getAllSchedules();
 			}
@@ -246,27 +243,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			@Override
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
-				if (obj instanceof AddSameDataException) {
-					//Show warning sticky for duplicated updating.
-					EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_try_to_add_schedule_fail),
-							getResources().getColor(R.color.warning_red_1)));
-					//Highlight item that might be duplicated by the updating.
-					AddSameDataException exp = (AddSameDataException) obj;
-					EventBus.getDefault().post(new FindDuplicatedItemEvent(exp.getDuplicatedItem()));
-				} else {
-					//Refresh ListView or GridView.
-					if (!mEditMode) {
-						//Show a tip: long press to remove for first insert.
-						Prefs prefs = Prefs.getInstance(getApplication());
-						if (!prefs.isTipLongPressRmvShown()) {
-							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
-									R.color.warning_green_1)));
-							prefs.setTipLongPressRmvShown(true);
-						}
+
+				//Refresh ListView or GridView.
+				if (!mEditMode) {
+					//Show a tip: long press to remove for first insert.
+					Prefs prefs = Prefs.getInstance(getApplication());
+					if (!prefs.isTipLongPressRmvShown()) {
+						onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
+								R.color.warning_green_1)));
+						prefs.setTipLongPressRmvShown(true);
 					}
-					//It lets UI show warning(green) on the item that has been added or edited.
-					EventBus.getDefault().post(new UpdatedItemEvent(mItem));
 				}
+				//It lets UI show warning(green) on the item that has been added or edited.
+				EventBus.getDefault().post(new UpdatedItemEvent(mItem));
+
 			}
 		}.executeParallel();
 	}
@@ -422,7 +412,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	@Override
 	public void onRecurrenceSet(String rrule) {
-		Utils.showLongToast(this, rrule);
+		EventRecurrence e = new EventRecurrence();
+		e.parse(rrule);
+		//		Utils.showLongToast(this, e.toString());
+		EventBus.getDefault().post(new SetRecurrenceEvent(e));
 	}
 
 	/**
@@ -542,8 +535,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			};
 			drawerLayout.setDrawerListener(mDrawerToggle);
 
-			findViewById(R.id.drawer_header_v).getLayoutParams().height =
-					getActionBarHeight()  ;
+			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight();
 
 			View drawerItemSettings = findViewById(R.id.drawer_item_settings_ll);
 			drawerItemSettings.setOnClickListener(new View.OnClickListener() {

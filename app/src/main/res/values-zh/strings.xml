@@ -12,11 +12,20 @@
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">数据顶端</string>
-    <string name="lbl_tip_selection">请选择一种类型!</string>
+    <string name="lbl_tip_selection">请选择一种类型！</string>
+    <string name="lbl_tip_recurrence">必须指定事件发生周期！</string>
+    <string name="lbl_tip_duplicated">注意! 您想要设置的 %1$s ， %2$s : %3$s 已经有了，本次设置无法进行，请继续修改。</string>
     <string name="lbl_share_app_title">分享一个不错的App：SchautUp</string>
     <string name="lbl_share_app_content">你好！\n\u00A0\u00A0\u00A0\u00A0希望设备一些功能被定时启动吗，比如：声音，震动，静音？\n\n下载: market://details?id=com.schautup </string>
     <string name="lbl_about">关于</string>
     <string name="lbl_boot_start">SchautUp已经启动。</string>
+    <string name="lbl_su">日</string>
+    <string name="lbl_mo">一</string>
+    <string name="lbl_tu">二</string>
+    <string name="lbl_we">三</string>
+    <string name="lbl_th">四</string>
+    <string name="lbl_fr">五</string>
+    <string name="lbl_sa">六</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -34,7 +43,7 @@
     <string name="option_mute">静音</string>
     <string name="option_vibrate">震动</string>
     <string name="option_sound">铃声</string>
-    <string name="option_repeat_dlg_title">重复</string>
+    <string name="option_recurrence_dlg_title">重复</string>
 
     <!-- Shown in the 'About' window of the app. -->
     <string name="about_body">&lt;b&gt;SchautUp &lt;/b&gt;&lt;br&gt;版本%s &lt;br&gt;</string>

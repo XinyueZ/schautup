@@ -11,6 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.support.v4.hardware.display.DisplayManagerCompat;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 /**
  * Util tool.
@@ -186,5 +190,65 @@ public final class Utils {
 	 */
 	public static void showShortToast(Context context, String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Converts one of the internal day constants (SU, MO, etc.) to the two-letter string representing that constant.
+	 *
+	 * @param day one the internal constants SU, MO, etc.
+	 * @return the two-letter string for the day ("SU", "MO", etc.)
+	 * @throws IllegalArgumentException Thrown if the day argument is not one of the defined day constants.
+	 */
+	public static String day2String(int day) {
+		switch (day) {
+		case DateTimeConstants.SUNDAY:
+			return "SU";
+		case DateTimeConstants.MONDAY:
+			return "MO";
+		case DateTimeConstants.TUESDAY:
+			return "TU";
+		case DateTimeConstants.WEDNESDAY:
+			return "WE";
+		case DateTimeConstants.THURSDAY:
+			return "TH";
+		case DateTimeConstants.FRIDAY:
+			return "FR";
+		case DateTimeConstants.SATURDAY:
+			return "SA";
+		default:
+			throw new IllegalArgumentException("bad day argument: " + day);
+		}
+	}
+
+
+	/**
+	 * Get {@link ScreenSize} with different {@code displayIndex} .
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context} .
+	 * @param displayIndex
+	 * 		The index of display.
+	 *
+	 * @return A {@link ScreenSize}.
+	 */
+	public static ScreenSize getScreenSize(Context cxt, int displayIndex) {
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		Display[] displays = DisplayManagerCompat.getInstance(cxt).getDisplays();
+		Display display = displays[displayIndex];
+		display.getMetrics(displaymetrics);
+		return new ScreenSize(displaymetrics.widthPixels, displaymetrics.heightPixels);
+	}
+
+	/**
+	 * Screen-size in pixels.
+	 */
+	public static class ScreenSize {
+		public int Width;
+		public int Height;
+
+		public ScreenSize(int _width, int _height) {
+			Width = _width;
+			Height = _height;
+		}
 	}
 }

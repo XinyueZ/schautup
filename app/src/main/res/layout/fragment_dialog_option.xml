@@ -63,13 +63,13 @@
                 android:background="@android:color/transparent" />
 
             <com.schautup.views.AnimImageButton
-                android:id="@+id/open_repeat_btn"
+                android:id="@+id/open_recurrence_btn"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_repeat_btn"
-                android:background="@android:color/transparent" />
+                android:background="@drawable/selector_warning" />
 
         </LinearLayout>
 

@@ -23,7 +23,7 @@
             android:id="@+id/schedule_gv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:columnWidth="100dp"
+            android:columnWidth="130dp"
             android:numColumns="auto_fit"
             android:stretchMode="columnWidth"
             android:horizontalSpacing="3dp"

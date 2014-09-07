@@ -1,5 +1,7 @@
 package com.schautup.data;
 
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
+
 /**
  * Data structure of a schedule item.
  */
@@ -24,6 +26,10 @@ public final class ScheduleItem {
 	 * Edited time.
 	 */
 	private long mEditedTime;
+	/**
+	 * The {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 */
+	private EventRecurrence mEventRecurrence;
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
@@ -186,5 +192,22 @@ public final class ScheduleItem {
 	 */
 	public void setId(long id) {
 		mId = id;
+	}
+
+	/**
+	 * Set {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 * @param eventRecurrence
+	 */
+	public void setEventRecurrence(EventRecurrence eventRecurrence) {
+		mEventRecurrence = eventRecurrence;
+	}
+
+	/**
+	 * Get {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 *
+	 * @return {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 */
+	public EventRecurrence getEventRecurrence() {
+		return mEventRecurrence;
 	}
 }

@@ -17,7 +17,6 @@ import com.schautup.R;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.bus.FindDuplicatedItemEvent;
 import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
@@ -85,15 +84,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		//		Utils.showShortToast(getActivity(), "load all.");
 	}
 
-	/**
-	 * Handler for {@link com.schautup.bus.FindDuplicatedItemEvent}.
-	 *
-	 * @param e
-	 * 		Event {@link  com.schautup.bus.FindDuplicatedItemEvent}.
-	 */
-	public void onEvent(FindDuplicatedItemEvent e) {
-		refreshUI(e.getDuplicatedItem(), getResources().getDrawable(R.drawable.anim_list_warning_red));
-	}
+
 
 	/**
 	 * Handler for {@link com.schautup.bus.UpdatedItemEvent}.

@@ -3,6 +3,7 @@ package com.schautup.adapters;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
@@ -13,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 import com.schautup.utils.Utils;
@@ -94,6 +96,48 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		} else {
 			convertView.setBackgroundResource(R.drawable.selector_item_bg);
 		}
+
+		h.mSuTv.setSelected(false);h.mSuTv.setTypeface(null, Typeface.NORMAL);
+		h.mMoTv.setSelected(false);h.mMoTv.setTypeface(null, Typeface.NORMAL);
+		h.mTuTv.setSelected(false);h.mTuTv.setTypeface(null, Typeface.NORMAL);
+		h.mWeTv.setSelected(false);h.mWeTv.setTypeface(null, Typeface.NORMAL);
+		h.mThTv.setSelected(false);h.mThTv.setTypeface(null, Typeface.NORMAL);
+		h.mFrTv.setSelected(false);h.mFrTv.setTypeface(null, Typeface.NORMAL);
+		h.mSaTv.setSelected(false);h.mSaTv.setTypeface(null, Typeface.NORMAL);
+		EventRecurrence er = item.getEventRecurrence();
+		int[] byday = er.byday;
+		for (int i : byday) {
+			switch (i) {
+			case EventRecurrence.SU:
+				h.mSuTv.setSelected(true);
+				h.mSuTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.MO:
+				h.mMoTv.setSelected(true);
+				h.mMoTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.TU:
+				h.mTuTv.setSelected(true);
+				h.mTuTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.WE:
+				h.mWeTv.setSelected(true);
+				h.mWeTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.TH:
+				h.mThTv.setSelected(true);
+				h.mThTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.FR:
+				h.mFrTv.setSelected(true);
+				h.mFrTv.setTypeface(null, Typeface.BOLD);
+				break;
+			case EventRecurrence.SA:
+				h.mSaTv.setSelected(true);
+				h.mSaTv.setTypeface(null, Typeface.BOLD);
+				break;
+			}
+		}
 		return convertView;
 	}
 
@@ -109,6 +153,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @param convertView
 	 * 		The root {@link android.view.View} of item.
+	 *
 	 * @return A {@link com.schautup.adapters.BaseScheduleAdapter.ViewHolder} object.
 	 */
 	protected abstract ViewHolder createViewHolder(View convertView);
@@ -118,6 +163,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @param item
 	 * 		The item to search.
+	 *
 	 * @return The index(position) of the item. If not found <b>return -1</b>.
 	 */
 	public int getItemPosition(ScheduleItem item) {
@@ -141,6 +187,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 *
 	 * @param item
 	 * 		The item to search.
+	 *
 	 * @return The object of the item. If not found <b>return null</b>.
 	 */
 	public ScheduleItem findItem(ScheduleItem item) {
@@ -208,7 +255,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 	 * 		The item to remove.
 	 */
 	public void removeItem(ScheduleItem itemFound) {
-		if(itemFound != null) {
+		if (itemFound != null) {
 			for (ScheduleItem i : mItemList) {
 				if (i.getId() == itemFound.getId()) {
 					mItemList.remove(i);
@@ -254,10 +301,26 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		private ImageView mStatusIv;
 		private TextView mStatusTv;
 
+		private TextView mSuTv;
+		private TextView mMoTv;
+		private TextView mTuTv;
+		private TextView mWeTv;
+		private TextView mThTv;
+		private TextView mFrTv;
+		private TextView mSaTv;
+
 		protected ViewHolder(View convertView) {
 			mStatusLevelV = convertView.findViewById(R.id.status_level_v);
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
+
+			mSuTv = (TextView) convertView.findViewById(R.id.su_tv);
+			mMoTv = (TextView) convertView.findViewById(R.id.mo_tv);
+			mTuTv = (TextView) convertView.findViewById(R.id.tu_tv);
+			mWeTv = (TextView) convertView.findViewById(R.id.we_tv);
+			mThTv = (TextView) convertView.findViewById(R.id.th_tv);
+			mFrTv = (TextView) convertView.findViewById(R.id.fr_tv);
+			mSaTv = (TextView) convertView.findViewById(R.id.sa_tv);
 		}
 	}
 }

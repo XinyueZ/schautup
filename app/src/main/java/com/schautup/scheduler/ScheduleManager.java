@@ -15,9 +15,9 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
+import com.schautup.R;
 import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
-import com.schautup.R;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
@@ -25,6 +25,7 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.LL;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Utils;
 
 import org.joda.time.DateTime;
 
@@ -309,7 +310,8 @@ public class ScheduleManager extends Service {
 	 */
 	private void doSchedules(DateTime time) {
 		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(time.getHourOfDay(),
-				time.getMinuteOfHour());
+				time.getMinuteOfHour(), Utils.day2String(time.getDayOfWeek()));
+
 		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		for (ScheduleItem item : items) {
 			switch (item.getType()) {
