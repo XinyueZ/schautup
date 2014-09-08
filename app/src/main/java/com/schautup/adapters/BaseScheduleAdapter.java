@@ -239,6 +239,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		itemFound.setHour(newItem.getHour());
 		itemFound.setMinute(newItem.getMinute());
 		itemFound.setEditedTime(newItem.getEditedTime());
+		itemFound.setEventRecurrence(newItem.getEventRecurrence());
 		notifyDataSetChanged();
 	}
 
