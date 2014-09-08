@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
+import com.schautup.data.HistoryItem;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
 
@@ -89,7 +90,7 @@ public final class DB {
 	 *
 	 * @return {@code true} if insert is success.
 	 */
-	public synchronized boolean addSchedule(ScheduleItem item)   {
+	public synchronized boolean addSchedule(ScheduleItem item) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -124,7 +125,7 @@ public final class DB {
 	 *
 	 * @return {@code true} if insert is success.
 	 */
-	public synchronized boolean updateSchedule(ScheduleItem item)  {
+	public synchronized boolean updateSchedule(ScheduleItem item) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -150,6 +151,101 @@ public final class DB {
 		}
 		return success;
 	}
+
+	/**
+	 * Log a history.
+	 *
+	 * @param item
+	 * 		An item to log.
+	 *
+	 * @return {@code} The log is successfully.
+	 */
+	public synchronized boolean logHistory(HistoryItem item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		Cursor c = null;
+		try {
+			long rowId = -1;
+			//Do "insert" command.
+			ContentValues v = new ContentValues();
+			v.put(LogHistoryTbl.TYPE, item.getType().toCode());
+			v.put(LogHistoryTbl.EDIT_TIME, System.currentTimeMillis());
+			rowId = mDB.insert(LogHistoryTbl.TABLE_NAME, null, v);
+			success = rowId != -1;
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+		}
+		return success;
+	}
+
+
+	/**
+	 * Remove one history from DB.
+	 *
+	 * @param item
+	 * 		The item to remove.
+	 *
+	 * @return The count of rows remain in DB after removed item.
+	 * <p/>
+	 * Return -1 if there's error when removed data.
+	 */
+	public synchronized int removeHistory(HistoryItem item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		int rowsRemain = -1;
+		boolean success;
+		try {
+			long rowId;
+			String whereClause = LogHistoryTbl.ID + "=?";
+			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
+			rowId = mDB.delete(LogHistoryTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+			if (success) {
+				Cursor c = mDB.query(LogHistoryTbl.TABLE_NAME, new String[] { LogHistoryTbl.ID }, null, null, null,
+						null, null);
+				rowsRemain = c.getCount();
+			} else {
+				rowsRemain = -1;
+			}
+		} finally {
+			close();
+		}
+		return rowsRemain;
+	}
+
+	/**
+	 * Returns all {@link com.schautup.data.HistoryItem}s from DB.
+	 *
+	 * @return All {@link com.schautup.data.HistoryItem}s from DB.
+	 */
+	public synchronized List<HistoryItem> getAllHistories() {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(LogHistoryTbl.TABLE_NAME, null, null, null, null, null, LogHistoryTbl.EDIT_TIME + " DESC");
+		HistoryItem item = null;
+		List<HistoryItem> list = new LinkedList<HistoryItem>();
+		try {
+			while (c.moveToNext()) {
+				item = new HistoryItem(c.getInt(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getInt(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
 
 	/**
 	 * Find whether there's a stored item that has same type, hour, minute.
@@ -337,10 +433,10 @@ public final class DB {
 			open();
 		}
 		int rowsRemain = -1;
-		boolean success = false;
+		boolean success;
 		try {
-			long rowId = -1;
-			String whereClause = ScheduleTbl.ID + " = ?";
+			long rowId;
+			String whereClause = ScheduleTbl.ID + "=?";
 			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
 			rowId = mDB.delete(ScheduleTbl.TABLE_NAME, whereClause, whereArgs);
 			success = rowId > 0;

@@ -23,7 +23,7 @@ public final class BootReceiver extends BroadcastReceiver {
 			if (prefs.isEULAOnceConfirmed()) {
 				cxt.startService(new Intent(cxt, ScheduleManager.class));
 			}
-			Utils.showShortToast(context, R.string.lbl_boot_start);
+			Utils.showShortToast(context, R.string.msg_boot_start);
 		}
 	}
 }

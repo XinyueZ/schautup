@@ -297,7 +297,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
 				//Warning, if no selection on setting type on schedule.
-				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_selection),
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_selection),
 						getResources().getColor(R.color.warning_green_1)));
 				((View) mSelMuteV.getParent()).setSelected(true);
 				mSelMuteV.setSelected(false);
@@ -306,7 +306,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			} else if (mEventRecurrence == null || (mEventRecurrence != null &&
 					(mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
 				//Warning, we must select "repeat".
-				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_recurrence),
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_recurrence),
 						getResources().getColor(R.color.warning_green_1)));
 				mRecurrenceV.setSelected(true);
 			} else {
@@ -326,8 +326,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					//Add mode, we should check whether the new item has been in DB or not.
 					if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 							mMinute)) {
-						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_duplicated,
-								mSelectedType.name(), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated,
+								getString(mSelectedType.getNameResId()), Utils.convertValue(mHour),
+								Utils.convertValue(mMinute)),
 								getResources().getColor(R.color.warning_red_1)));
 						break;
 					}
@@ -340,8 +341,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						//Any different value that has been set cases to check once on DB.
 						if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 								mMinute)) {
-							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.lbl_tip_duplicated,
-									mSelectedType.name(), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
+							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated,
+									getString(mSelectedType.getNameResId()), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
 									getResources().getColor(R.color.warning_red_1)));
 							break;
 						}

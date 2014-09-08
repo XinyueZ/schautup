@@ -13,15 +13,10 @@
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
-    <string name="lbl_tip_selection">Please select a type!</string>
-    <string name="lbl_tip_recurrence">Recurrence must be defined!</string>
-    <string name="lbl_tip_duplicated">Warning! Set %1$s at %2$s : %3$s has been defined, your change can\'t be
-        proceed, please edit again.</string>
     <string name="lbl_share_app_title">A good App you should have: SchautUp</string>
     <string name="lbl_share_app_content">Hello!\n\n\u00A0\u00A0\u00A0\u00A0Manage some features like mute, vibrate,
         sound of your devices with schedule, a timer, improve your daily life.\n\nDownload: market://details?id=com.schautup </string>
     <string name="lbl_about">About</string>
-    <string name="lbl_boot_start">SchautUp has been started.</string>
     <string name="lbl_su">Su</string>
     <string name="lbl_mo">Mo</string>
     <string name="lbl_tu">Tu</string>
@@ -29,7 +24,8 @@
     <string name="lbl_th">Th</string>
     <string name="lbl_fr">Fr</string>
     <string name="lbl_sa">Sa</string>
-
+    <string name="lbl_no_history">There\'s still no logged data.</string>
+    <string name="lbl_log_at">\@%1$s</string>
 
 
     <!--Menu-->
@@ -45,9 +41,9 @@
 
     <!--Option dialog-->
     <string name="option_dlg_title">Option</string>
-    <string name="option_mute">Mute</string>
-    <string name="option_vibrate">Vibrate</string>
-    <string name="option_sound">Sound</string>
+    <string name="option_mute">@string/type_mute</string>
+    <string name="option_vibrate">@string/type_vibrate</string>
+    <string name="option_sound">@string/type_sound</string>
     <string name="option_recurrence_dlg_title">Recurrence</string>
 
     <!-- Shown in the 'About' window of the app. -->
@@ -71,6 +67,12 @@
     <string name="msg_long_press_rmv">Tip! Long press on item, you can remove a schedule.</string>
     <string name="msg_rmv_fail">Sorry! I can not remove the selected item.</string>
     <string name="msg_rmv_success">You have removed item successfully.</string>
+    <string name="msg_err">Operation is failed.</string>
+    <string name="msg_tip_selection">Please select a type!</string>
+    <string name="msg_tip_recurrence">Recurrence must be defined!</string>
+    <string name="msg_tip_duplicated">Warning! Set %1$s at %2$s:%3$s has been defined, your change can\'t be
+        proceed, please edit again.</string>
+    <string name="msg_boot_start">SchautUp has been started.</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>
@@ -105,6 +107,11 @@
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>
-    <string name="drawer_item_log">Schedule Log</string>
+    <string name="drawer_item_log_history">Log history</string>
     <string name="drawer_item_home_page">Home</string>
+
+    <!--Type names-->
+    <string name="type_mute">Mute</string>
+    <string name="type_vibrate">Vibrate</string>
+    <string name="type_sound">Sound</string>
 </resources>

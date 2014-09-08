@@ -232,31 +232,39 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				mItem = e.getItem();
 				DB db = DB.getInstance(getApplication());
 
+				boolean success;
 				if (mEditMode) {
-					db.updateSchedule(mItem);
+					success = db.updateSchedule(mItem);
 				} else {
-					db.addSchedule(mItem);
+					success = db.addSchedule(mItem);
 				}
-				return db.getAllSchedules();
+				if (!success) {
+					return null;
+				} else {
+					return db.getAllSchedules();
+				}
 			}
 
 			@Override
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
-
-				//Refresh ListView or GridView.
-				if (!mEditMode) {
-					//Show a tip: long press to remove for first insert.
-					Prefs prefs = Prefs.getInstance(getApplication());
-					if (!prefs.isTipLongPressRmvShown()) {
-						onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
-								R.color.warning_green_1)));
-						prefs.setTipLongPressRmvShown(true);
+				if (obj == null) {
+					onEvent(new ShowStickyEvent(getString(R.string.msg_err), getResources().getColor(
+							R.color.warning_red_1)));
+				} else {
+					//Refresh ListView or GridView.
+					if (!mEditMode) {
+						//Show a tip: long press to remove for first insert.
+						Prefs prefs = Prefs.getInstance(getApplication());
+						if (!prefs.isTipLongPressRmvShown()) {
+							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
+									R.color.warning_green_1)));
+							prefs.setTipLongPressRmvShown(true);
+						}
 					}
+					//It lets UI show warning(green) on the item that has been added or edited.
+					EventBus.getDefault().post(new UpdatedItemEvent(mItem));
 				}
-				//It lets UI show warning(green) on the item that has been added or edited.
-				EventBus.getDefault().post(new UpdatedItemEvent(mItem));
-
 			}
 		}.executeParallel();
 	}
@@ -554,8 +562,15 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					HomePageWebViewActivity.showInstance(MainActivity.this);
 				}
 			});
+
+			View drawerItemLogHistory = findViewById(R.id.drawer_item_log_history_ll);
+			drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					drawerLayout.closeDrawers();
+					LogHistoryActivity.showInstance(MainActivity.this);
+				}
+			});
 		}
 	}
-
-
 }

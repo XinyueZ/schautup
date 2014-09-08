@@ -100,7 +100,7 @@
 
         <!--Log.-->
         <LinearLayout
-            android:id="@+id/drawer_item_log_ll"
+            android:id="@+id/drawer_item_log_history_ll"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_item"
             android:orientation="horizontal"
@@ -117,7 +117,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/drawer_item_log"
+                android:text="@string/drawer_item_log_history"
                 android:textColor="@color/text_common_black"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceMedium"

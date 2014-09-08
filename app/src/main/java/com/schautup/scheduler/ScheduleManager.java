@@ -21,6 +21,7 @@ import com.schautup.activities.QuickSettingsActivity;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
+import com.schautup.data.HistoryItem;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.LL;
@@ -313,6 +314,8 @@ public class ScheduleManager extends Service {
 				time.getMinuteOfHour(), Utils.day2String(time.getDayOfWeek()));
 
 		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		DB db= DB.getInstance(getApplication());
+		HistoryItem historyItem;
 		for (ScheduleItem item : items) {
 			switch (item.getType()) {
 			case MUTE:
@@ -334,7 +337,8 @@ public class ScheduleManager extends Service {
 						R.drawable.ic_sound_notify));
 				break;
 			}
-
+			historyItem = new HistoryItem(item.getType());
+			db.logHistory(historyItem);
 		}
 	}
 }
