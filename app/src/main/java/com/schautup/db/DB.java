@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.HistoryItem;
@@ -95,7 +96,6 @@ public final class DB {
 			open();
 		}
 		boolean success = false;
-		Cursor c = null;
 		try {
 			long rowId = -1;
 			//Do "insert" command.
@@ -109,9 +109,6 @@ public final class DB {
 			item.setId(rowId);
 			success = rowId != -1;
 		} finally {
-			if (c != null) {
-				c.close();
-			}
 			close();
 		}
 		return success;
@@ -130,7 +127,6 @@ public final class DB {
 			open();
 		}
 		boolean success = false;
-		Cursor c = null;
 		try {
 			long rowId = -1;
 			//Do "update" command.
@@ -144,9 +140,6 @@ public final class DB {
 			rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
 			success = rowId != -1;
 		} finally {
-			if (c != null) {
-				c.close();
-			}
 			close();
 		}
 		return success;
@@ -165,19 +158,17 @@ public final class DB {
 			open();
 		}
 		boolean success = false;
-		Cursor c = null;
 		try {
 			long rowId = -1;
 			//Do "insert" command.
 			ContentValues v = new ContentValues();
 			v.put(LogHistoryTbl.TYPE, item.getType().toCode());
-			v.put(LogHistoryTbl.EDIT_TIME, System.currentTimeMillis());
+			long t = System.currentTimeMillis();
+			v.put(LogHistoryTbl.EDIT_TIME, t);
+			Log.d("schautup", "->getTimeInMillis: " + t);
 			rowId = mDB.insert(LogHistoryTbl.TABLE_NAME, null, v);
 			success = rowId != -1;
 		} finally {
-			if (c != null) {
-				c.close();
-			}
 			close();
 		}
 		return success;
@@ -234,7 +225,7 @@ public final class DB {
 		try {
 			while (c.moveToNext()) {
 				item = new HistoryItem(c.getInt(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
-						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getInt(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
+						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getLong(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
 				list.add(item);
 			}
 		} finally {
@@ -297,7 +288,7 @@ public final class DB {
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
@@ -329,7 +320,7 @@ public final class DB {
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
@@ -362,7 +353,7 @@ public final class DB {
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
@@ -403,7 +394,7 @@ public final class DB {
 			while (c.moveToNext()) {
 				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getInt(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
