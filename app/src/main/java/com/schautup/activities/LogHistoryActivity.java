@@ -6,15 +6,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.adapters.HistoryListAdapter;
@@ -24,7 +33,6 @@ import com.schautup.data.HistoryItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
-import com.schautup.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -33,12 +41,16 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class LogHistoryActivity extends BaseActivity implements OnItemLongClickListener, Callback {
+public final class LogHistoryActivity extends BaseActivity implements OnScrollListener, OnItemLongClickListener,
+		Callback, AnimationListener {
 	/**
 	 * Main layout for this component.
 	 */
 	private static final int LAYOUT = R.layout.activity_log_history;
-
+	/**
+	 * Header layout.
+	 */
+	private static final int LAYOUT_HEADER = R.layout.inc_lv_header;
 	/**
 	 * The progress indicator.
 	 */
@@ -64,7 +76,18 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	 * Status of ActionMode.
 	 */
 	private ActionMode mActionMode;
-
+	/**
+	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mLv}.
+	 */
+	private int mLastFirstVisibleItem;
+	/**
+	 * Message sticky.
+	 */
+	private View mStickyV;
+	/**
+	 * {@link android.widget.TextView} where message to be shown.
+	 */
+	private TextView mStickyMsgTv;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -99,15 +122,24 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+		getSupportActionBar().setIcon(R.drawable.ic_action_log);
 		mNoDataV = findViewById(R.id.no_history_tv);
 		mLv = (ListView) findViewById(R.id.history_lv);
-
+		mLv.setOnScrollListener(this);
+		//Sticky message box.
+		mStickyV = findViewById(R.id.sticky_fl);
+		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
+		//Add header.
+		View headerV = getLayoutInflater().inflate(LAYOUT_HEADER, mLv, false);
+		mLv.addHeaderView(headerV, null, false);
+		headerV.getLayoutParams().height = getActionBarHeight();
 		//Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
-
 		//Long press to the ActionMode.
 		mLv.setOnItemLongClickListener(this);
+		//Move the progress-indicator firstly under the ActionBar.
+		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 	}
 
 	@Override
@@ -141,8 +173,12 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 		}.executeParallel();
 
 		Prefs prefs = Prefs.getInstance(getApplication());
-		if(!prefs.isTipLongPressRmvLogHistoryShown()) {
-			Utils.showLongToast(this,R.string.msg_long_press_rmv_log_history);
+		if (!prefs.isTipLongPressRmvLogHistoryShown() &&
+				mAdapter != null &&
+				mAdapter.getCount() > 0) {
+			//For first log-items, we show a message on sticky.
+			showStickyMsg(getString(R.string.msg_long_press_rmv_log_history), getResources().getColor(
+					R.color.warning_green_1));
 			prefs.setTipLongPressRmvLogHistoryShown(true);
 		}
 	}
@@ -162,7 +198,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		//Starting the ActionMode.
 		startSupportActionMode(this);
-		if(mAdapter != null) {
+		if (mAdapter != null) {
 			mAdapter.actionModeBegin();
 		}
 		return true;
@@ -204,7 +240,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 				protected void onPostExecute(LongSparseArray<HistoryItem> result) {
 					super.onPostExecute(result);
 					if (result == null) {
-						if(mAdapter !=null) {
+						if (mAdapter != null) {
 							mAdapter.notifyDataSetChanged();
 						}
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
@@ -227,9 +263,71 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	@Override
 	public void onDestroyActionMode(ActionMode actionMode) {
 		mActionMode = null;
-		if(mAdapter != null) {
+		if (mAdapter != null) {
 			mAdapter.actionModeEnd();
 		}
 		mLv.setOnItemLongClickListener(this);
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if (view.getId() == mLv.getId()) {
+			final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRefreshLayout.getLayoutParams();
+			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
+			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+				if (getSupportActionBar().isShowing()) {
+					getSupportActionBar().hide();
+					ViewCompat.setY(mRefreshLayout, 0);
+				}
+			} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+				if (!getSupportActionBar().isShowing()) {
+					getSupportActionBar().show();
+					ViewCompat.setY(mRefreshLayout, getActionBarHeight());
+				}
+			}
+			mLastFirstVisibleItem = currentFirstVisibleItem;
+		}
+	}
+
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+	}
+
+	/**
+	 * Show message on sticky box.
+	 *
+	 * @param msg
+	 * 		Message.
+	 * @param colorRes
+	 * 		{@link android.support.annotation.ColorRes} for sticky background.
+	 */
+	private void showStickyMsg(String msg, int colorRes) {
+		if (getSupportActionBar().isShowing()) {
+			getSupportActionBar().hide();
+		}
+		mStickyMsgTv.setText(msg);
+		mStickyV.setVisibility(View.VISIBLE);
+		mStickyV.setBackgroundColor(colorRes);
+		AnimationSet animSet = (AnimationSet) AnimationUtils.loadAnimation(this, R.anim.slide_in_and_out);
+		animSet.setAnimationListener(this);
+		mStickyV.startAnimation(animSet);
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		mStickyV.setVisibility(View.GONE);
+		getSupportActionBar().show();
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+
 	}
 }

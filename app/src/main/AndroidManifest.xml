@@ -72,7 +72,7 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/NoTitleTextTheme" >
+            android:theme="@style/NoTitleTextOverlayTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,7 +95,7 @@
             android:name=".activities.LogHistoryActivity"
             android:label="@string/drawer_item_log_history"
             android:screenOrientation="portrait"
-            android:theme="@style/NoOverlayTheme" />
+            android:theme="@style/OverlayTheme" />
 
         <activity
             android:name=".activities.QuickSettingsActivity"

@@ -25,32 +25,7 @@
                 android:layout_height="0dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
-
-        <LinearLayout
-            android:id="@+id/sticky_fl"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="@dimen/height_sticky">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_horn" />
-
-            <TextView
-                android:id="@+id/sticky_msg_tv"
-                android:padding="10dp"
-                android:gravity="center"
-                android:textColor="@color/text_common_black"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/msg_long_press_rmv_schedule"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
+        <include layout="@layout/inc_sticky" />
     </FrameLayout>
 
     <LinearLayout

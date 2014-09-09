@@ -37,4 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/inc_sticky" />
 </FrameLayout>

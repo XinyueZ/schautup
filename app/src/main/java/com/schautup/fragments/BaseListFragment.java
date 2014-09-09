@@ -131,7 +131,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			mAdp.actionModeEnd();
 		}
 		mLv.setOnItemLongClickListener(this);
-		//The ActionMode is ending.
+		//The ActionMode is ending,  add-button should work again.
 		mLv.setOnScrollListener(this);
 		mAddNewVG.setVisibility(View.VISIBLE);
 	}
@@ -186,7 +186,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		if(mAdp !=null) {
 			mAdp.actionModeBegin();
 		}
-		//The ActionMode is starting.
+		//The ActionMode is starting, add-button should not work.
 		mLv.setOnScrollListener(null);
 		mAddNewVG.setVisibility(View.GONE);
 		return false;

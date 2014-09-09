@@ -105,9 +105,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private ActionBarDrawerToggle mDrawerToggle;
 	/**
-	 *
+	 * {@link android.support.v7.view.ActionMode} on the list-view then it is not null.
 	 */
 	private ActionMode mActionMode;
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -256,9 +257,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 						//Show a tip: long press to remove for first insert.
 						Prefs prefs = Prefs.getInstance(getApplication());
 						if (!prefs.isTipLongPressRmvScheduleShown()) {
-							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv_schedule), getResources().getColor(
-									R.color.warning_green_1)));
-//							Utils.showLongToast(MainActivity.this, R.string.msg_long_press_rmv_schedule);
+							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv_schedule),
+									getResources().getColor(R.color.warning_green_1)));
+							//							Utils.showLongToast(MainActivity.this, R.string.msg_long_press_rmv_schedule);
 							prefs.setTipLongPressRmvScheduleShown(true);
 						}
 					}
@@ -291,11 +292,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	public void onEvent(GivenRemovedScheduleItemsEvent e) {
 		LongSparseArray<ScheduleItem> items = e.getItems();
-		if (mActionMode != null &&  items != null) {
+		if (mActionMode != null && items != null) {
 			new ParallelTask<LongSparseArray<ScheduleItem>, Void, LongSparseArray<ScheduleItem>>(true) {
 				@Override
 				protected LongSparseArray<ScheduleItem> doInBackground(LongSparseArray<ScheduleItem>... params) {
-					if(params.length<0) {
+					if (params.length < 0) {
 						return null;
 					}
 					DB db = DB.getInstance(getApplication());
@@ -345,22 +346,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
 		initDrawer();
+		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
-		// Progress-indicator.
+		//Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
-
-		// Fragments will load data from DB, here we show the indicator directly.
+		//Fragments will load data from DB, here we show the indicator directly.
 		mRefreshLayout.setRefreshing(true);
-
-		// Show all saved schedules.
+		//Show all saved schedules.
 		if (Prefs.getInstance(getApplication()).isLastAListView()) {
 			showListView();
 		} else {
 			showGridView();
 		}
-
 		// Move the progress-indicator firstly under the ActionBar.
 		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 	}

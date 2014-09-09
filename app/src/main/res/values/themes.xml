@@ -18,20 +18,27 @@
         <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_holo_light</item>
     </style>
 
-    <style name="NoTitleTextTheme" parent="@style/AppTheme">
+    <style name="NoTitleTextOverlayTheme" parent="@AppTheme">
         <item name="android:actionBarStyle">@style/AbStyleNoTitleText</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyleNoTitleText</item>
     </style>
 
 
-    <style name="NoOverlayTheme" parent="AppTheme">
+    <style name="NoOverlayTheme" parent="@AppTheme">
         <item name="android:actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:textColorPrimary">@color/text_common_black</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="windowActionBarOverlay">false</item>
+    </style>
+
+    <style name="OverlayTheme" parent="@AppTheme">
+        <item name="android:actionBarStyle">@style/AbStyleHomeUp</item>
+        <item name="android:textColorPrimary">@color/text_common_black</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/AbStyleHomeUp</item>
     </style>
 
     <!--SettingsActivity, a PreferenceActivity.-->

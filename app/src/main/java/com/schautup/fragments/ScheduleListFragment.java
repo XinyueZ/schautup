@@ -57,7 +57,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		ListView listView = (ListView) view.findViewById(R.id.schedule_lv);
-
+		//Animation for the list-view.
 		AnimationSet set = new AnimationSet(true);
 		Animation animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(500);
@@ -68,6 +68,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 		set.addAnimation(animation);
 		LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
 		listView.setLayoutAnimation(controller);
+
 		setListViewWidget(listView);
 		setAdapter(new ScheduleListViewAdapter());
 		//Add header.

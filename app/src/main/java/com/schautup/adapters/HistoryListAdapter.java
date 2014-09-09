@@ -46,7 +46,7 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 
 	@Override
 	public int getCount() {
-		return mHistoryItems.size();
+		return mHistoryItems != null ? mHistoryItems.size() : 0;
 	}
 
 	@Override
