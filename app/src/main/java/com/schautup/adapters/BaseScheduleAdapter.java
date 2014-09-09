@@ -10,7 +10,6 @@ import android.support.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.schautup.utils.Utils;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseScheduleAdapter extends BaseAdapter {
+public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<ScheduleItem> {
 	/**
 	 * Data source.
 	 */
@@ -138,6 +137,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 				break;
 			}
 		}
+		super.getView(position, convertView, parent);
 		return convertView;
 	}
 
@@ -294,10 +294,22 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		}
 	}
 
+	@Override
+	protected List<ScheduleItem> getDataSource() {
+		return mItemList;
+	}
+
+	@Override
+	protected long getItemKey(ScheduleItem item) {
+		return item.getId();
+	}
+
 	/**
 	 * ViewHolder patter for {@link com.schautup.R.layout#item_schedule_grid}.
-	 */
-	protected static class ViewHolder {
+	 *
+	 * @author Xinyue Zhao
+	 * */
+	protected static class ViewHolder extends ViewHolderActionMode{
 		private View mStatusLevelV;
 		private ImageView mStatusIv;
 		private TextView mStatusTv;
@@ -311,6 +323,7 @@ public abstract class BaseScheduleAdapter extends BaseAdapter {
 		private TextView mSaTv;
 
 		protected ViewHolder(View convertView) {
+			super(convertView);
 			mStatusLevelV = convertView.findViewById(R.id.status_level_v);
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);

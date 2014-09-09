@@ -64,7 +64,8 @@
     <string name="msg_try_to_add_schedule">Add a new schedule.</string>
     <string name="msg_try_to_add_schedule_fail">Sorry! Can not add a new item, because you\'ve scheduled
         same item at the same time point before.</string>
-    <string name="msg_long_press_rmv">Tip! Long press on item, you can remove a schedule.</string>
+    <string name="msg_long_press_rmv_schedule">Tip! Long press on item, you can remove a schedule.</string>
+    <string name="msg_long_press_rmv_log_history">Tip! Long press on item, you can remove a log.</string>
     <string name="msg_rmv_fail">Sorry! I can not remove the selected item.</string>
     <string name="msg_rmv_success">You have removed item successfully.</string>
     <string name="msg_err">Operation is failed.</string>

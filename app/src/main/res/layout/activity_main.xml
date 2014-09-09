@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:textColor="@color/text_common_black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/msg_long_press_rmv"
+                android:text="@string/msg_long_press_rmv_schedule"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

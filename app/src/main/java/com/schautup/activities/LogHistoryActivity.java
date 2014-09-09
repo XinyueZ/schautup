@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.SparseArrayCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
@@ -23,6 +23,8 @@ import com.schautup.bus.ShowStickyEvent;
 import com.schautup.data.HistoryItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Prefs;
+import com.schautup.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -137,6 +139,12 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 				}
 			}
 		}.executeParallel();
+
+		Prefs prefs = Prefs.getInstance(getApplication());
+		if(!prefs.isTipLongPressRmvLogHistoryShown()) {
+			Utils.showLongToast(this,R.string.msg_long_press_rmv_log_history);
+			prefs.setTipLongPressRmvLogHistoryShown(true);
+		}
 	}
 
 	@Override
@@ -154,7 +162,9 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		//Starting the ActionMode.
 		startSupportActionMode(this);
-		mAdapter.actionModeBegin();
+		if(mAdapter != null) {
+			mAdapter.actionModeBegin();
+		}
 		return true;
 	}
 
@@ -175,13 +185,13 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 	public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case R.id.action_delete: {
-			new ParallelTask<Void, Void, SparseArrayCompat<HistoryItem>>(true) {
+			new ParallelTask<Void, Void, LongSparseArray<HistoryItem>>(true) {
 				@Override
-				protected SparseArrayCompat<HistoryItem> doInBackground(Void... params) {
+				protected LongSparseArray<HistoryItem> doInBackground(Void... params) {
 					DB db = DB.getInstance(getApplication());
-					int key;
+					long key;
 					HistoryItem item;
-					SparseArrayCompat<HistoryItem> removedItems = mAdapter.removeItems();
+					LongSparseArray<HistoryItem> removedItems = mAdapter.removeItems();
 					for (int i = 0; removedItems != null && i < removedItems.size(); i++) {
 						key = removedItems.keyAt(i);
 						item = removedItems.get(key);
@@ -191,10 +201,12 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 				}
 
 				@Override
-				protected void onPostExecute(SparseArrayCompat<HistoryItem> result) {
+				protected void onPostExecute(LongSparseArray<HistoryItem> result) {
 					super.onPostExecute(result);
 					if (result == null) {
-						mAdapter.notifyDataSetChanged();
+						if(mAdapter !=null) {
+							mAdapter.notifyDataSetChanged();
+						}
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
 								getResources().getColor(R.color.warning_green_1)));
 					} else {
@@ -214,8 +226,10 @@ public final class LogHistoryActivity extends BaseActivity implements OnItemLong
 
 	@Override
 	public void onDestroyActionMode(ActionMode actionMode) {
-		mAdapter.actionModeEnd();
 		mActionMode = null;
-		mLv.setOnItemLongClickListener(null);
+		if(mAdapter != null) {
+			mAdapter.actionModeEnd();
+		}
+		mLv.setOnItemLongClickListener(this);
 	}
 }

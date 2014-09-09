@@ -25,13 +25,16 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
-		((ViewHolder) convertView.getTag()).mOptionBtn.setOnClickListener(
+		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+		viewHolder.mOptionBtn.setOnClickListener(
 				new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
 					public void onClick() {
 						EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
 					}
 				});
+
+		viewHolder.mOptionBtn.setVisibility(!isActionMode() ? View.VISIBLE : View.GONE);
 		return convertView;
 	}
 

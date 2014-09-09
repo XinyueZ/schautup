@@ -17,6 +17,9 @@ import com.schautup.R;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
+import com.schautup.bus.AskRemovedScheduleItemsEvent;
+import com.schautup.bus.GivenRemovedScheduleItemsEvent;
+import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
@@ -85,7 +88,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 
-
 	/**
 	 * Handler for {@link com.schautup.bus.UpdatedItemEvent}.
 	 *
@@ -118,6 +120,37 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		EventBus.getDefault().post(new ShowActionBarEvent(true));
 	}
 
+	/**
+	 * Handler for {@link com.schautup.bus.HideActionModeEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.HideActionModeEvent}.
+	 */
+	public void onEvent(HideActionModeEvent e) {
+		if (mAdp != null) {
+			mAdp.actionModeEnd();
+		}
+		mLv.setOnItemLongClickListener(this);
+		//The ActionMode is ending.
+		mLv.setOnScrollListener(this);
+		mAddNewVG.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.AskRemovedScheduleItemsEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.AskRemovedScheduleItemsEvent}.
+	 */
+	public void onEvent(AskRemovedScheduleItemsEvent e) {
+		if (mAdp != null) {
+			EventBus.getDefault().post(new GivenRemovedScheduleItemsEvent(mAdp.removeItems()));
+			if(mAdp!=null) {
+				mAdp.notifyDataSetChanged();
+			}
+		}
+	}
+
 	//------------------------------------------------
 
 	@Override
@@ -143,12 +176,21 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				EventBus.getDefault().post(new AddNewScheduleItemEvent());
 			}
 		});
-
-
 		((AdapterView) mLv).setAdapter(mAdp);
 		mLv.setOnItemLongClickListener(this);
 	}
 
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		mLv.setOnItemLongClickListener(null);
+		if(mAdp !=null) {
+			mAdp.actionModeBegin();
+		}
+		//The ActionMode is starting.
+		mLv.setOnScrollListener(null);
+		mAddNewVG.setVisibility(View.GONE);
+		return false;
+	}
 
 	@Override
 	public void onResume() {
@@ -169,6 +211,14 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 	@Override
+	public void onPause() {
+		super.onPause();
+		if (mAdp != null) {
+			mAdp.actionModeEnd();
+		}
+	}
+
+	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		float translationY = ViewHelper.getTranslationY(mAddNewVG);
 		if (scrollState == 0) {
@@ -184,7 +234,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				animator.translationY(getActionBarHeight()).setDuration(500);
 			}
 		}
-		if (view.getId() == view.getId()) {
+		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
 				if (getSupportActionBar().isShowing()) {
@@ -252,6 +302,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 	/**
 	 * Get list adapter.
+	 *
 	 * @return The adapter.
 	 */
 	protected BaseScheduleAdapter getAdapter() {

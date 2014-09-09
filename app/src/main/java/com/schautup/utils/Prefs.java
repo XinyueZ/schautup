@@ -36,11 +36,17 @@ public final class Prefs {
 	 */
 	private static final String KEY_EULA_SHOWN = "key_eula_shown";
 	/**
-	 * Storage. Whether the tip of "long press to remove" has been shown before or not.
+	 * Storage. Whether the tip of "long press to remove a schedule" has been shown before or not.
 	 * <p/>
 	 * {@code true} if has been shown.
 	 */
-	private static final String KEY_TIP_LONG_PRESS_RMV = "key_long_press_rmv";
+	private static final String KEY_TIP_LONG_PRESS_RMV_SCHEDULE = "key_long_press_rmv_schedule";
+	/**
+	 * Storage. Whether the tip of "long press to remove a log" has been shown before or not.
+	 * <p/>
+	 * {@code true} if has been shown.
+	 */
+	private static final String KEY_TIP_LONG_PRESS_RMV_LOG = "key_long_press_rmv_log";
 	/**
 	 * Storage. For schedule modes.
 	 */
@@ -188,25 +194,47 @@ public final class Prefs {
 	}
 
 	/**
-	 * Get whether the tip of "long press to remove" has been shown before or not.
+	 * Get whether the tip of "long press to remove schedule" has been shown before or not.
 	 * <p/>
 	 *
 	 * @return {@code true} if has been shown.
 	 */
-	public boolean isTipLongPressRmvShown() {
-		return getBoolean(KEY_TIP_LONG_PRESS_RMV, false);
+	public boolean isTipLongPressRmvScheduleShown() {
+		return getBoolean(KEY_TIP_LONG_PRESS_RMV_SCHEDULE, false);
 	}
 
 	/**
-	 * Set whether the tip of "long press to remove" has been shown before or not.
+	 * Set whether the tip of "long press to remove schedule" has been shown before or not.
 	 * <p/>
 	 *
 	 * @param isShown
 	 * 		{@code true} if has been shown.
 	 */
-	public void setTipLongPressRmvShown(boolean isShown) {
-		setBoolean(KEY_TIP_LONG_PRESS_RMV, isShown);
+	public void setTipLongPressRmvScheduleShown(boolean isShown) {
+		setBoolean(KEY_TIP_LONG_PRESS_RMV_SCHEDULE, isShown);
 	}
+
+	/**
+	 * Get whether the tip of "long press to remove log" has been shown before or not.
+	 * <p/>
+	 *
+	 * @return {@code true} if has been shown.
+	 */
+	public boolean isTipLongPressRmvLogHistoryShown() {
+		return getBoolean(KEY_TIP_LONG_PRESS_RMV_LOG, false);
+	}
+
+	/**
+	 * Set whether the tip of "long press to remove log" has been shown before or not.
+	 * <p/>
+	 *
+	 * @param isShown
+	 * 		{@code true} if has been shown.
+	 */
+	public void setTipLongPressRmvLogHistoryShown(boolean isShown) {
+		setBoolean(KEY_TIP_LONG_PRESS_RMV_LOG, isShown);
+	}
+
 
 	/**
 	 * Set current schedule mode.

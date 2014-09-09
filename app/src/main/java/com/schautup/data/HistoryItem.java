@@ -9,7 +9,7 @@ public final class HistoryItem {
 	/**
 	 * The row Id of {@link com.schautup.data.HistoryItem} when the item has been inserted and fetched from DB.
 	 */
-	private int mId;
+	private long mId;
 	/**
 	 * The type of scheduled item.
 	 */
@@ -29,7 +29,7 @@ public final class HistoryItem {
 	 * @param logTime
 	 * 		The time that the data was logged.
 	 */
-	public HistoryItem(int id, ScheduleType type, long logTime) {
+	public HistoryItem(long id, ScheduleType type, long logTime) {
 		this(type, logTime);
 		mId = id;
 	}
@@ -80,7 +80,7 @@ public final class HistoryItem {
 	 *
 	 * @return The row Id.
 	 */
-	public int getId() {
+	public long getId() {
 		return mId;
 	}
 }

@@ -7,6 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item">
 
+    <CheckBox
+        android:id="@id/delete_cb"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <View
         android:id="@+id/status_level_v"
         android:background="@color/level_6"
@@ -14,6 +21,7 @@
         android:layout_marginBottom="@dimen/margin_padding_status_level"
         android:layout_height="match_parent"
         android:layout_width="@dimen/size_status_level" />
+
 
     <ImageView
         android:id="@+id/status_iv"

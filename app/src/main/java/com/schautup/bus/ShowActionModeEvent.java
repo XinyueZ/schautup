@@ -1,7 +1,7 @@
 package com.schautup.bus;
 
 /**
- * Event when wanna open the Action-mode.
+ * Event when wanna open {@link android.support.v7.view.ActionMode}.
  *
  * @author Xinyue Zhao
  */

@@ -41,7 +41,7 @@
             android:shrinkColumns="*"
             android:stretchColumns="*"
             android:layout_marginTop="5dp"
-            android:layout_gravity="bottom|center_horizontal" >
+            android:layout_gravity="bottom|center_horizontal">
 
             <TableRow
                 android:background="@android:color/transparent"
@@ -101,9 +101,15 @@
             </TableRow>
         </TableLayout>
 
-
     </LinearLayout>
 
+
+    <CheckBox
+        android:id="@id/delete_cb"
+        android:visibility="gone"
+        android:layout_gravity="right|top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <View
         android:id="@+id/status_level_v"

@@ -221,7 +221,7 @@ public final class DB {
 		List<HistoryItem> list = new LinkedList<HistoryItem>();
 		try {
 			while (c.moveToNext()) {
-				item = new HistoryItem(c.getInt(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
+				item = new HistoryItem(c.getLong(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getLong(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
 				list.add(item);
 			}
@@ -283,7 +283,7 @@ public final class DB {
 		try {
 			EventRecurrence er;
 			while (c.moveToNext()) {
-				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
@@ -315,7 +315,7 @@ public final class DB {
 		try {
 			EventRecurrence er;
 			while (c.moveToNext()) {
-				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
@@ -348,7 +348,7 @@ public final class DB {
 		try {
 			EventRecurrence er;
 			while (c.moveToNext()) {
-				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();
@@ -389,7 +389,7 @@ public final class DB {
 		try {
 			EventRecurrence er;
 			while (c.moveToNext()) {
-				item = new ScheduleItem(c.getInt(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
 						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
 				er = new EventRecurrence();

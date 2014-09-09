@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
 import android.text.format.DateFormat;
 import android.text.format.Time;
@@ -34,10 +36,12 @@ import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
+import com.schautup.bus.AskRemovedScheduleItemsEvent;
+import com.schautup.bus.GivenRemovedScheduleItemsEvent;
+import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
-import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
@@ -97,18 +101,13 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private TextView mStickyMsgTv;
 	/**
-	 * The item that has been selected by the Action Mode.
-	 */
-	private ScheduleItem mItemSelected;
-	/**
-	 * {@code true} if current is at the Action Mode
-	 */
-	private boolean mActionModeOn;
-	/**
 	 * Use navigation-drawer for this fork.
 	 */
 	private ActionBarDrawerToggle mDrawerToggle;
-
+	/**
+	 *
+	 */
+	private ActionMode mActionMode;
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -166,7 +165,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowSetOptionEvent}.
 	 */
 	public void onEvent(ShowSetOptionEvent e) {
-		if (!mActionModeOn) {
+		if (mActionMode == null) {
 			showDialogFragment(OptionDialogFragment.newInstance(this), null);
 		}
 	}
@@ -178,7 +177,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link  com.schautup.bus.AddNewScheduleItemEvent}.
 	 */
 	public void onEvent(AddNewScheduleItemEvent e) {
-		if (!mActionModeOn) {
+		if (mActionMode == null) {
 			showDialogFragment(OptionDialogFragment.newInstance(this), null);
 		}
 	}
@@ -256,10 +255,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					if (!mEditMode) {
 						//Show a tip: long press to remove for first insert.
 						Prefs prefs = Prefs.getInstance(getApplication());
-						if (!prefs.isTipLongPressRmvShown()) {
-							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv), getResources().getColor(
+						if (!prefs.isTipLongPressRmvScheduleShown()) {
+							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv_schedule), getResources().getColor(
 									R.color.warning_green_1)));
-							prefs.setTipLongPressRmvShown(true);
+//							Utils.showLongToast(MainActivity.this, R.string.msg_long_press_rmv_schedule);
+							prefs.setTipLongPressRmvScheduleShown(true);
 						}
 					}
 					//It lets UI show warning(green) on the item that has been added or edited.
@@ -277,11 +277,53 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowActionModeEvent}.
 	 */
 	public void onEvent(ShowActionModeEvent e) {
-		mItemSelected = (ScheduleItem) e.getSelectedItem();
 		if (!getSupportActionBar().isShowing()) {
 			getSupportActionBar().show();
 		}
 		startSupportActionMode(this);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.GivenRemovedScheduleItemsEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.GivenRemovedScheduleItemsEvent}.
+	 */
+	public void onEvent(GivenRemovedScheduleItemsEvent e) {
+		LongSparseArray<ScheduleItem> items = e.getItems();
+		if (mActionMode != null &&  items != null) {
+			new ParallelTask<LongSparseArray<ScheduleItem>, Void, LongSparseArray<ScheduleItem>>(true) {
+				@Override
+				protected LongSparseArray<ScheduleItem> doInBackground(LongSparseArray<ScheduleItem>... params) {
+					if(params.length<0) {
+						return null;
+					}
+					DB db = DB.getInstance(getApplication());
+					long key;
+					ScheduleItem item;
+					LongSparseArray<ScheduleItem> removedItems = params[0];
+					for (int i = 0; removedItems != null && i < removedItems.size(); i++) {
+						key = removedItems.keyAt(i);
+						item = removedItems.get(key);
+						db.removeSchedule(item);
+					}
+					return removedItems;
+				}
+
+				@Override
+				protected void onPostExecute(LongSparseArray<ScheduleItem> result) {
+					super.onPostExecute(result);
+					if (result != null) {
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
+								getResources().getColor(R.color.warning_green_1)));
+					} else {
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
+								getResources().getColor(R.color.warning_red_1)));
+					}
+					mActionMode.finish();
+				}
+			}.executeParallel(items);
+		}
 	}
 
 	//------------------------------------------------
@@ -328,6 +370,14 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onResume();
 		if (mDrawerToggle != null) {
 			mDrawerToggle.syncState();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mActionMode != null) {
+			mActionMode.finish();
 		}
 	}
 
@@ -469,7 +519,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	@Override
 	public boolean onCreateActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
 		actionMode.getMenuInflater().inflate(ACTION_MODE_MENU, menu);
-		mActionModeOn = true;
+		mActionMode = actionMode;
 		return true;
 	}
 
@@ -480,46 +530,21 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	@Override
 	public boolean onActionItemClicked(final android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
-		if (mItemSelected != null) {
-			switch (menuItem.getItemId()) {
-			case R.id.action_delete: {
-				new ParallelTask<Void, Void, Void>(true) {
-					private int mRowsRemain;
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						mRowsRemain = DB.getInstance(getApplication()).removeSchedule(mItemSelected);
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void _result) {
-						super.onPostExecute(_result);
-						if (mRowsRemain >= 0) {
-							EventBus.getDefault().post(new RemovedItemEvent(mItemSelected, mRowsRemain));
-							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
-									getResources().getColor(R.color.warning_green_1)));
-						} else {
-							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
-									getResources().getColor(R.color.warning_red_1)));
-						}
-						actionMode.finish();
-					}
-				}.executeParallel();
-				break;
-			}
-			default:
-				return false;
-			}
-			return true;
+		switch (menuItem.getItemId()) {
+		case R.id.action_delete: {
+			EventBus.getDefault().post(new AskRemovedScheduleItemsEvent());
+			break;
 		}
-		return false;
+		default:
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public void onDestroyActionMode(android.support.v7.view.ActionMode actionMode) {
-		actionMode = null;
-		mActionModeOn = false;
+		mActionMode = null;
+		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 
 	/**
