@@ -25,7 +25,7 @@
     <string name="lbl_fr">Fr</string>
     <string name="lbl_sa">Sa</string>
     <string name="lbl_no_history">There\'s still no logged data.</string>
-    <string name="lbl_log_at">\@%1$s</string>
+    <string name="lbl_log_at">%1$s</string>
 
 
     <!--Menu-->
