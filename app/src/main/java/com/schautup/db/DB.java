@@ -8,7 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.HistoryItem;
@@ -163,9 +162,7 @@ public final class DB {
 			//Do "insert" command.
 			ContentValues v = new ContentValues();
 			v.put(LogHistoryTbl.TYPE, item.getType().toCode());
-			long t = System.currentTimeMillis();
-			v.put(LogHistoryTbl.EDIT_TIME, t);
-			Log.d("schautup", "->getTimeInMillis: " + t);
+			v.put(LogHistoryTbl.EDIT_TIME, System.currentTimeMillis());
 			rowId = mDB.insert(LogHistoryTbl.TABLE_NAME, null, v);
 			success = rowId != -1;
 		} finally {

@@ -1,7 +1,5 @@
 package com.schautup.bus;
 
-import com.schautup.data.ScheduleItem;
-
 /**
  * Event when wanna open the Action-mode.
  *
@@ -11,16 +9,16 @@ public final class ShowActionModeEvent {
 	/**
 	 * The item that has been selected by action-mode.
 	 */
-	private ScheduleItem mSelectedItem;
+	private Object mSelectedItem;
 
 	/**
 	 * Constructor of {@link com.schautup.bus.ShowActionModeEvent}.
 	 *
-	 * @param scheduleItem
+	 * @param item
 	 * 		The item that has been selected by action-mode.
 	 */
-	public ShowActionModeEvent(ScheduleItem scheduleItem) {
-		mSelectedItem = scheduleItem;
+	public ShowActionModeEvent(Object item) {
+		mSelectedItem = item;
 	}
 
 	/**
@@ -28,7 +26,7 @@ public final class ShowActionModeEvent {
 	 *
 	 * @return The item selected.
 	 */
-	public ScheduleItem getSelectedItem() {
+	public Object getSelectedItem() {
 		return mSelectedItem;
 	}
 }

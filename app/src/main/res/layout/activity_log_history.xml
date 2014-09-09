@@ -14,7 +14,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:layout_width="match_parent"
         android:divider="@drawable/lv_divider"
-        android:dividerHeight="1dp"
+        android:dividerHeight="1dp"   android:choiceMode="singleChoice"
         android:layout_height="match_parent" />
 
     <TextView

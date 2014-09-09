@@ -42,6 +42,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 	 *
 	 * @param context
 	 * 		A {@link android.content.Context} object.
+	 *
 	 * @return An instance of {@link com.schautup.fragments.ScheduleListFragment}.
 	 */
 	public static Fragment newInstance(Context context) {
@@ -78,8 +79,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		EventBus.getDefault().post(new ShowActionModeEvent(
-				(com.schautup.data.ScheduleItem) getAdapter().getItem(position - 1)));
+		EventBus.getDefault().post(new ShowActionModeEvent(getAdapter().getItem(position - 1)));
 		view.setSelected(true);
 		return true;
 	}

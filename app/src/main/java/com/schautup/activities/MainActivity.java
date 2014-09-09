@@ -277,7 +277,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowActionModeEvent}.
 	 */
 	public void onEvent(ShowActionModeEvent e) {
-		mItemSelected = e.getSelectedItem();
+		mItemSelected = (ScheduleItem) e.getSelectedItem();
 		if (!getSupportActionBar().isShowing()) {
 			getSupportActionBar().show();
 		}
