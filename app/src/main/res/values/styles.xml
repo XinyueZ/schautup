@@ -8,9 +8,13 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="LogTimeTextStyle" parent="WeekDayTextStyle">
+    <style name="LogTimeTextStyle" parent="@style/WeekDayTextStyle">
         <item name="android:textColor">@color/text_common_blue</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="ScheduleEditedTimeTextStyle" parent="@style/LogTimeTextStyle">
         <item name="android:gravity">left</item>
     </style>
 </resources>

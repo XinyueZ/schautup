@@ -9,7 +9,7 @@
 
     <CheckBox
         android:id="@id/delete_cb"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -47,57 +47,88 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
+        android:layout_height="match_parent"
+        android:weightSum="2"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/su_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_su" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_weight="1.3"
+            android:layout_height="0dp">
 
-        <TextView
-            android:id="@+id/mo_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_mo" />
+            <ImageView
+                android:layout_width="0dp"
+                android:src="@drawable/ic_edited"
+                android:layout_weight="0.7"
+                android:layout_gravity="right|bottom"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent" />
 
-        <TextView
-            android:id="@+id/tu_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_tu" />
+            <TextView
+                android:id="@+id/edited_at_tv"
+                style="@style/ScheduleEditedTimeTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_weight="1.3" android:text="asdfasdf"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/we_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_we" />
+            <TextView
+                android:id="@+id/su_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_su" />
 
-        <TextView
-            android:id="@+id/th_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_th" />
+            <TextView
+                android:id="@+id/mo_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_mo" />
 
-        <TextView
-            android:id="@+id/fr_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_fr" />
+            <TextView
+                android:id="@+id/tu_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_tu" />
 
-        <TextView
-            android:id="@+id/sa_tv"
-            style="@style/WeekDayTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_sa" />
+            <TextView
+                android:id="@+id/we_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_we" />
+
+            <TextView
+                android:id="@+id/th_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_th" />
+
+            <TextView
+                android:id="@+id/fr_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_fr" />
+
+            <TextView
+                android:id="@+id/sa_tv"
+                style="@style/WeekDayTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_sa" />
+        </LinearLayout>
     </LinearLayout>
 
     <com.schautup.views.AnimImageButton

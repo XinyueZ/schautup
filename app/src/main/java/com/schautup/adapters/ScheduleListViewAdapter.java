@@ -3,9 +3,11 @@ package com.schautup.adapters;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.bus.ShowSetOptionEvent;
+import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -26,8 +28,7 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-		viewHolder.mOptionBtn.setOnClickListener(
-				new AnimImageButton.OnAnimImageButtonClickedListener() {
+		viewHolder.mOptionBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
 					public void onClick() {
 						EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
@@ -35,6 +36,8 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 				});
 
 		viewHolder.mOptionBtn.setVisibility(!isActionMode() ? View.VISIBLE : View.GONE);
+		viewHolder.mEditedTimeTv.setText(Utils.convertTimestamps2dateString(parent.getContext(), getItemList().get(position)
+				.getEditedTime()));
 		return convertView;
 	}
 
@@ -51,13 +54,17 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 
 	/**
 	 * ViewHolder patter for {@link com.schautup.R.layout#item_schedule_lv}.
+	 *
+	 * @author Xinyue Zhao
 	 */
 	private static class ViewHolder extends BaseScheduleAdapter.ViewHolder {
 		private ImageButton mOptionBtn;
+		private TextView mEditedTimeTv;
 
 		private ViewHolder(View convertView) {
 			super(convertView);
 			mOptionBtn = (ImageButton) convertView.findViewById(R.id.status_option_btn);
+			mEditedTimeTv = (TextView) convertView.findViewById(R.id.edited_at_tv);
 		}
 	}
 

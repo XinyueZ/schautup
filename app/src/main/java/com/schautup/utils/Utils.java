@@ -23,6 +23,11 @@ import com.schautup.data.ScheduleItem;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
+import static android.text.format.DateUtils.FORMAT_SHOW_DATE;
+import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
+import static android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+import static android.text.format.DateUtils.formatDateTime;
+
 /**
  * Util tool.
  *
@@ -79,6 +84,7 @@ public final class Utils {
 	 * 		{@link android.content.Context}.
 	 * @param item
 	 * 		{@link com.schautup.data.ScheduleItem}.
+	 *
 	 * @return A {@link android.support.annotation.ColorRes}.
 	 */
 	public static int getStatusLevelColor(Context cxt, ScheduleItem item) {
@@ -195,9 +201,13 @@ public final class Utils {
 	/**
 	 * Converts one of the internal day constants (SU, MO, etc.) to the two-letter string representing that constant.
 	 *
-	 * @param day one the internal constants SU, MO, etc.
+	 * @param day
+	 * 		one the internal constants SU, MO, etc.
+	 *
 	 * @return the two-letter string for the day ("SU", "MO", etc.)
-	 * @throws IllegalArgumentException Thrown if the day argument is not one of the defined day constants.
+	 *
+	 * @throws IllegalArgumentException
+	 * 		Thrown if the day argument is not one of the defined day constants.
 	 */
 	public static String day2String(int day) {
 		switch (day) {
@@ -237,6 +247,21 @@ public final class Utils {
 		Display display = displays[displayIndex];
 		display.getMetrics(displaymetrics);
 		return new ScreenSize(displaymetrics.widthPixels, displaymetrics.heightPixels);
+	}
+
+	/**
+	 * Convert a timestamps to a readable date in string.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param timestamps
+	 * 		A long value for a timestamps.
+	 *
+	 * @return A date string format.
+	 */
+	public static String convertTimestamps2dateString(Context cxt, long timestamps) {
+		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
+				FORMAT_SHOW_TIME) ;
 	}
 
 	/**

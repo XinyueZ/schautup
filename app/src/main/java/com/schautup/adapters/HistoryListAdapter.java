@@ -1,6 +1,5 @@
 package com.schautup.adapters;
 
-import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.schautup.R;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.ScheduleType;
+import com.schautup.utils.Utils;
 
 /**
  * {@link android.widget.Adapter} for list of all histories.
@@ -74,9 +74,9 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 		ScheduleType type = item.getType();
 		vh.mStatusIv.setImageResource(type.getIconDrawResId());
 		vh.mStatusTv.setText(cxt.getString(type.getNameResId()));
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(item.getLogTime());
-		vh.mLoggedTimeTv.setText(cxt.getString(R.string.lbl_log_at, c.getTime().toLocaleString()));
+		vh.mLoggedTimeTv.setText(cxt.getString(R.string.lbl_log_at,
+				Utils.convertTimestamps2dateString(parent.getContext(),
+						item.getLogTime())));
 
 		super.getView(position, convertView, parent);
 		return convertView;
