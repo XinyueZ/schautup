@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 import com.schautup.utils.Utils;
+import com.schautup.views.BadgeView;
 
 /**
  * Abstract impl {@link android.widget.BaseAdapter} for all {@link android.widget.ListView}, {@link
@@ -77,63 +79,72 @@ public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<Schedule
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder h;
+		ViewHolder vh;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(parent.getContext()).inflate(getLayoutId(), parent, false);
-			h = createViewHolder(convertView);
-			convertView.setTag(h);
+			vh = createViewHolder(convertView);
+			convertView.setTag(vh);
 		} else {
-			h = (ViewHolder) convertView.getTag();
+			vh = (ViewHolder) convertView.getTag();
 		}
 		final ScheduleItem item = getItemList().get(position);
-		h.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
-		h.mStatusIv.setImageResource(item.getType().getIconDrawResId());
-		h.mStatusTv.setText(Utils.convertValue(item));
+		vh.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
+		vh.mStatusIv.setImageResource(item.getType().getIconDrawResId());
+		vh.mStatusTv.setText(Utils.convertValue(item));
 		if (mWarningDrawable != null && mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
 			Utils.setBackgroundCompat(convertView, mWarningDrawable);
 			((AnimationDrawable) convertView.getBackground()).start();
 		} else {
 			convertView.setBackgroundResource(R.drawable.selector_item_bg);
 		}
+		if(!TextUtils.isEmpty(item.getReserveLeft()) && !TextUtils.isEmpty(item.getReserveRight())) {
+			if(TextUtils.equals("boolean", item.getReserveRight())) {
+				boolean bool = Boolean.valueOf(item.getReserveLeft());
+				Utils.showBadgeView(parent.getContext(),
+						vh.mInfoBgv, Utils.convertBooleanToOnOff(parent.getContext(), bool));
+			}
+		} else {
+			vh.mInfoBgv.setVisibility(View.GONE);
+		}
 
-		h.mSuTv.setSelected(false);h.mSuTv.setTypeface(null, Typeface.NORMAL);
-		h.mMoTv.setSelected(false);h.mMoTv.setTypeface(null, Typeface.NORMAL);
-		h.mTuTv.setSelected(false);h.mTuTv.setTypeface(null, Typeface.NORMAL);
-		h.mWeTv.setSelected(false);h.mWeTv.setTypeface(null, Typeface.NORMAL);
-		h.mThTv.setSelected(false);h.mThTv.setTypeface(null, Typeface.NORMAL);
-		h.mFrTv.setSelected(false);h.mFrTv.setTypeface(null, Typeface.NORMAL);
-		h.mSaTv.setSelected(false);h.mSaTv.setTypeface(null, Typeface.NORMAL);
+		vh.mSuTv.setSelected(false);vh.mSuTv.setTypeface(null, Typeface.NORMAL);
+		vh.mMoTv.setSelected(false);vh.mMoTv.setTypeface(null, Typeface.NORMAL);
+		vh.mTuTv.setSelected(false);vh.mTuTv.setTypeface(null, Typeface.NORMAL);
+		vh.mWeTv.setSelected(false);vh.mWeTv.setTypeface(null, Typeface.NORMAL);
+		vh.mThTv.setSelected(false);vh.mThTv.setTypeface(null, Typeface.NORMAL);
+		vh.mFrTv.setSelected(false);vh.mFrTv.setTypeface(null, Typeface.NORMAL);
+		vh.mSaTv.setSelected(false);vh.mSaTv.setTypeface(null, Typeface.NORMAL);
 		EventRecurrence er = item.getEventRecurrence();
 		int[] byday = er.byday;
 		for (int i : byday) {
 			switch (i) {
 			case EventRecurrence.SU:
-				h.mSuTv.setSelected(true);
-				h.mSuTv.setTypeface(null, Typeface.BOLD);
+				vh.mSuTv.setSelected(true);
+				vh.mSuTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.MO:
-				h.mMoTv.setSelected(true);
-				h.mMoTv.setTypeface(null, Typeface.BOLD);
+				vh.mMoTv.setSelected(true);
+				vh.mMoTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.TU:
-				h.mTuTv.setSelected(true);
-				h.mTuTv.setTypeface(null, Typeface.BOLD);
+				vh.mTuTv.setSelected(true);
+				vh.mTuTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.WE:
-				h.mWeTv.setSelected(true);
-				h.mWeTv.setTypeface(null, Typeface.BOLD);
+				vh.mWeTv.setSelected(true);
+				vh.mWeTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.TH:
-				h.mThTv.setSelected(true);
-				h.mThTv.setTypeface(null, Typeface.BOLD);
+				vh.mThTv.setSelected(true);
+				vh.mThTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.FR:
-				h.mFrTv.setSelected(true);
-				h.mFrTv.setTypeface(null, Typeface.BOLD);
+				vh.mFrTv.setSelected(true);
+				vh.mFrTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.SA:
-				h.mSaTv.setSelected(true);
-				h.mSaTv.setTypeface(null, Typeface.BOLD);
+				vh.mSaTv.setSelected(true);
+				vh.mSaTv.setTypeface(null, Typeface.BOLD);
 				break;
 			}
 		}
@@ -239,6 +250,8 @@ public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<Schedule
 		itemFound.setHour(newItem.getHour());
 		itemFound.setMinute(newItem.getMinute());
 		itemFound.setEditedTime(newItem.getEditedTime());
+		itemFound.setReserveLeft(newItem.getReserveLeft());
+		itemFound.setReserveRight(newItem.getReserveRight());
 		itemFound.setEventRecurrence(newItem.getEventRecurrence());
 		notifyDataSetChanged();
 	}
@@ -311,6 +324,7 @@ public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<Schedule
 	 * */
 	protected static class ViewHolder extends ViewHolderActionMode{
 		private View mStatusLevelV;
+		private BadgeView mInfoBgv;
 		private ImageView mStatusIv;
 		private TextView mStatusTv;
 
@@ -326,6 +340,7 @@ public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<Schedule
 			super(convertView);
 			mStatusLevelV = convertView.findViewById(R.id.status_level_v);
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
+			mInfoBgv = (BadgeView) convertView.findViewById(R.id.info_bgv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
 
 			mSuTv = (TextView) convertView.findViewById(R.id.su_tv);

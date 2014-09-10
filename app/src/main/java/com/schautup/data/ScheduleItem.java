@@ -240,7 +240,9 @@ public final class ScheduleItem {
 	}
 
 	/**
-	 * Get reserve data.
+	 * Get reserve data. This reserve value always provides data type of the value in reserve left.
+	 * <p/>
+	 * For example. the left reserve is {@code "true"} then the right reserve is {@code "false"}.
 	 *
 	 * @return Reserve data.
 	 */
@@ -249,7 +251,9 @@ public final class ScheduleItem {
 	}
 
 	/**
-	 * Set reserve data.
+	 * Set reserve data. This reserve value always provides data type of the value in reserve left.
+	 * <p/>
+	 * For example. the left reserve is {@code "true"} then the right reserve is {@code "false"}.
 	 *
 	 * @param reserveRight
 	 * 		Reserve data.

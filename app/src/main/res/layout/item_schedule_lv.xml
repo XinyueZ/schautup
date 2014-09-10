@@ -23,16 +23,18 @@
         android:layout_width="@dimen/size_status_level" />
 
 
-    <ImageView
-        android:id="@+id/status_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:contentDescription="@string/app_name"
-        android:layout_gravity="left|center_vertical"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_launcher" />
+    <!--<ImageView-->
+        <!--android:id="@+id/status_iv"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:contentDescription="@string/app_name"-->
+        <!--android:layout_gravity="left|center_vertical"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:src="@drawable/ic_launcher" />-->
 
+
+    <include layout="@layout/inc_status" />
 
     <TextView
         android:id="@+id/status_tv"

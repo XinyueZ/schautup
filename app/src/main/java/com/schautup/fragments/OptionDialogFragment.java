@@ -31,6 +31,7 @@ import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
 import com.schautup.views.AnimImageTextView;
+import com.schautup.views.BadgeView;
 
 import org.joda.time.DateTime;
 
@@ -111,9 +112,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Parent view for all setting types.
 	 */
 	private View mSettingTypesLl;
-
-	private boolean mWifiOnOff = true;//0, 1, -1
-	private boolean  mMobileOnOff = true;//0, 1, -1
+	/**
+	 * Information about wifi setting ON/OFF.
+	 */
+	private BadgeView mWifiInfoBgb;
+	/**
+	 * Information about mobile setting ON/OFF.
+	 */
+	private BadgeView mMobileInfoBgb;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -161,6 +167,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelectedType = item.getType();
 		mEventRecurrence = item.getEventRecurrence();
 
+		//Init all values that have been set before.
 		switch (item.getType()) {
 		case MUTE:
 			mSelMuteV.setSelected(true);
@@ -173,11 +180,15 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			break;
 		case WIFI:
 			mSelWifiV.setSelected(true);
-			mWifiOnOff = Boolean.valueOf(item.getReserveLeft());
+			mSelWifiV.setTag(item.getReserveLeft());
+			Utils.showBadgeView(getActivity(), mWifiInfoBgb,
+					Utils.convertBooleanToOnOff(getActivity(), Boolean.parseBoolean(item.getReserveLeft())));
 			break;
 		case MOBILE:
 			mSelMobileV.setSelected(true);
-			mMobileOnOff = Boolean.valueOf(item.getReserveLeft());
+			mSelMobileV.setTag(item.getReserveLeft());
+			Utils.showBadgeView(getActivity(), mMobileInfoBgb,
+					Utils.convertBooleanToOnOff(getActivity(), Boolean.parseBoolean(item.getReserveLeft())));
 			break;
 		}
 
@@ -261,10 +272,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelVibrateV.setOnClickListener(this);
 		mSelSoundV = view.findViewById(R.id.set_sound_ll);
 		mSelSoundV.setOnClickListener(this);
-		mSelWifiV= view.findViewById(R.id.set_wifi_ll);
+		mSelWifiV = view.findViewById(R.id.set_wifi_ll);
 		mSelWifiV.setOnClickListener(this);
-		mSelMobileV= view.findViewById(R.id.set_mobile_data_ll);
+		mSelMobileV = view.findViewById(R.id.set_mobile_data_ll);
 		mSelMobileV.setOnClickListener(this);
+		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wif_bgv);
+		mWifiInfoBgb.setVisibility(View.GONE);
+		mMobileInfoBgb = (BadgeView) view.findViewById(R.id.info_mobile_data_bgv);
+		mMobileInfoBgb.setVisibility(View.GONE);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
@@ -311,77 +326,113 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(true);
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(false);
+			mSelWifiV.setSelected(false);
+			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelMobileV.setSelected(false);
+			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelectedType = ScheduleType.MUTE;
 			break;
 		case R.id.set_vibrate_ll:
-			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(true);
+			mSelMuteV.setSelected(false);
 			mSelSoundV.setSelected(false);
+			mSelWifiV.setSelected(false);
+			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelMobileV.setSelected(false);
+			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelectedType = ScheduleType.VIBRATE;
 			break;
 		case R.id.set_sound_ll:
+			mSelSoundV.setSelected(true);
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
-			mSelSoundV.setSelected(true);
+			mSelWifiV.setSelected(false);
+			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelMobileV.setSelected(false);
+			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelectedType = ScheduleType.SOUND;
 			break;
 		case R.id.set_wifi_ll:
-			new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.option_wifi)
-					.setMessage(R.string.msg_wifi_on_off)
-					.setCancelable(false)
-					.setPositiveButton(R.string.lbl_on, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = ScheduleType.WIFI;
-							mWifiOnOff = true;
-							mSelWifiV.setSelected(true);
-						}
-					})
-					.setNegativeButton(R.string.lbl_off, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = ScheduleType.WIFI;
-							mWifiOnOff = false;
-							mSelWifiV.setSelected(true);
-						}
-					})
-					.setNeutralButton(R.string.btn_cancel, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = null;
-							mSelWifiV.setSelected(false);
-						}
-					}).create().show();
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.WIFI;
+					mSelWifiV.setTag(true);
+					Utils.showBadgeView(getActivity(), mWifiInfoBgb,
+							Utils.convertBooleanToOnOff(getActivity(), true));
+					mSelWifiV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNegativeButton(R.string.lbl_off, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.WIFI;
+					mSelWifiV.setTag(false);
+					Utils.showBadgeView(getActivity(), mWifiInfoBgb,
+							Utils.convertBooleanToOnOff(getActivity(), false));
+					mSelWifiV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNeutralButton(R.string.btn_cancel, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = null;
+					mSelWifiV.setTag(null);
+					mSelWifiV.setSelected(false);
+				}
+			}).create().show();
 			break;
 		case R.id.set_mobile_data_ll:
-			new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.option_wifi)
-					.setMessage(R.string.msg_wifi_on_off)
-					.setCancelable(false)
-					.setPositiveButton(R.string.lbl_on, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = ScheduleType.MOBILE;
-							mMobileOnOff = true;
-							mSelMobileV.setSelected(true);
-						}
-					})
-					.setNegativeButton(R.string.lbl_off, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = ScheduleType.MOBILE;
-							mMobileOnOff = false;
-							mSelMobileV.setSelected(true);
-						}
-					})
-					.setNeutralButton(R.string.btn_cancel, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							mSelectedType = null;
-							mSelMobileV.setSelected(false);
-						}
-					}).create().show();
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.MOBILE;
+					mSelMobileV.setTag(true);
+					Utils.showBadgeView(getActivity(), mMobileInfoBgb,
+							Utils.convertBooleanToOnOff(getActivity(), true));
+					mSelMobileV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNegativeButton(R.string.lbl_off, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.MOBILE;
+					mSelMobileV.setTag(false);
+					Utils.showBadgeView(getActivity(), mMobileInfoBgb,
+							Utils.convertBooleanToOnOff(getActivity(), false));
+					mSelMobileV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNeutralButton(R.string.btn_cancel, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = null;
+					mSelMobileV.setTag(null);
+					mSelMobileV.setSelected(false);
+				}
+			}).create().show();
 			break;
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
@@ -392,6 +443,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
+				mSelWifiV.setSelected(false);
+				mSelMobileV.setSelected(false);
 			} else if (mEventRecurrence == null || (mEventRecurrence != null &&
 					(mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
 				//Warning, we must select "repeat".
@@ -415,9 +468,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					//Add mode, we should check whether the new item has been in DB or not.
 					if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 							mMinute)) {
-						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated,
-								getString(mSelectedType.getNameResId()), Utils.convertValue(mHour),
-								Utils.convertValue(mMinute)),
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated, getString(
+								mSelectedType.getNameResId()), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
 								getResources().getColor(R.color.warning_red_1)));
 						break;
 					}
@@ -431,8 +483,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 								mMinute)) {
 							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated,
-									getString(mSelectedType.getNameResId()), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
-									getResources().getColor(R.color.warning_red_1)));
+									getString(mSelectedType.getNameResId()), Utils.convertValue(mHour),
+									Utils.convertValue(mMinute)), getResources().getColor(R.color.warning_red_1)));
 							break;
 						}
 					}
@@ -441,12 +493,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				ScheduleItem scheduleItem = new ScheduleItem(mId, mSelectedType, mHour, mMinute);
 				scheduleItem.setEventRecurrence(mEventRecurrence);
 				//Set some additional information for the selected schedule-type.
-				switch (mSelectedType ) {
+				switch (mSelectedType) {
 				case WIFI:
-					scheduleItem.setReserveLeft(mWifiOnOff + "");
+					scheduleItem.setReserveLeft(mSelWifiV.getTag() == null ? "false" : mSelWifiV.toString());
+					scheduleItem.setReserveRight("boolean");
 					break;
 				case MOBILE:
-					scheduleItem.setReserveLeft(mMobileOnOff + "");
+					scheduleItem.setReserveLeft(mSelMobileV.getTag() == null ? "false" : mSelMobileV.toString());
+					scheduleItem.setReserveRight("boolean");
 					break;
 				}
 				EventBus.getDefault().post(new UpdateDBEvent(scheduleItem, mEditMode));
@@ -458,4 +512,5 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			break;
 		}
 	}
+
 }

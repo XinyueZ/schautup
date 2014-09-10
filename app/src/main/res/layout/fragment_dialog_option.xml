@@ -177,11 +177,23 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_wifi_btn" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_wif_bgv"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_wifi_btn" />
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -201,11 +213,23 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_mobile_data_btn" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_mobile_data_bgv"
+                            android:layout_width="wrap_content"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_mobile_data_btn" />
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="match_parent"

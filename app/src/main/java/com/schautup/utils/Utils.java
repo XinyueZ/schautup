@@ -17,12 +17,15 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.hardware.display.DisplayManagerCompat;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
+import com.schautup.views.BadgeView;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -347,5 +350,38 @@ public final class Utils {
 			Width = _width;
 			Height = _height;
 		}
+	}
+
+	/**
+	 * Helper method that shows and animates text on a {@link com.schautup.views.BadgeView}.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param view
+	 * 		The target {@link com.schautup.views.BadgeView}.
+	 * @param text
+	 * 		The inforamtion to show.
+	 */
+	public static void showBadgeView(Context context, BadgeView view, String text) {
+		view.setVisibility(View.VISIBLE);
+		view.setBadgePosition(BadgeView.POSITION_BOTTOM_RIGHT);
+		view.setBadgeMargin(0);
+		view.setText(text);
+		view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+		view.show(AnimationUtils.loadAnimation(context, R.anim.scale_in));
+	}
+
+	/**
+	 * Helper method that converts true/false to on/off in text.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param bool
+	 * 		The boolean value.
+	 *
+	 * @return The on/off in text.
+	 */
+	public static String convertBooleanToOnOff(Context cxt, boolean bool) {
+		return cxt.getString(bool ? R.string.lbl_on_small : R.string.lbl_off_small);
 	}
 }

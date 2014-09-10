@@ -15,14 +15,16 @@
         android:layout_height="wrap_content">
 
 
-        <ImageView
-            android:id="@+id/status_iv"
-            android:layout_width="@dimen/size_list_grid_item_img"
-            android:layout_height="@dimen/size_list_grid_item_img"
-            android:contentDescription="@string/app_name"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_launcher" />
+        <!--<ImageView-->
+            <!--android:id="@+id/status_iv"-->
+            <!--android:layout_width="@dimen/size_list_grid_item_img"-->
+            <!--android:layout_height="@dimen/size_list_grid_item_img"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:src="@drawable/ic_launcher" />-->
+
+        <include layout="@layout/inc_status" />
 
         <TextView
             android:id="@+id/status_tv"
