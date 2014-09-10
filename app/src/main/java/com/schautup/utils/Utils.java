@@ -1,5 +1,7 @@
 package com.schautup.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -8,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -261,7 +265,75 @@ public final class Utils {
 	 */
 	public static String convertTimestamps2dateString(Context cxt, long timestamps) {
 		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
-				FORMAT_SHOW_TIME) ;
+				FORMAT_SHOW_TIME);
+	}
+
+	/**
+	 * Turn on/off the mobile data.
+	 * <p/>
+	 * <b>Unofficial implementation.</b>
+	 * <p/>
+	 * See. <a href="http://stackoverflow.com/questions/12535101/how-can-i-turn-off-3g-data-programmatically-on
+	 * -android">StackOverflow</a>
+	 *
+	 * @param context
+	 * 		{@link android.content.Context}.
+	 * @param enabled
+	 * 		{@code true} Turn on, {@code false} turn off.
+	 *
+	 * @return {@code true} if change is success.
+	 */
+	public static boolean setMobileDataEnabled(Context context, boolean enabled) {
+		boolean success = false;
+		try {
+			final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(
+					Context.CONNECTIVITY_SERVICE);
+			final Class conmanClass = Class.forName(conman.getClass().getName());
+			final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+			iConnectivityManagerField.setAccessible(true);
+			final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+			final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+			final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod(
+					"setMobileDataEnabled", Boolean.TYPE);
+			setMobileDataEnabledMethod.setAccessible(true);
+
+			setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
+			success = true;
+		} catch (Exception ex) {
+			LL.w(ex.toString());
+			success = false;
+		}
+		return success;
+	}
+
+	/**
+	 * Turn on/off the wifi. Call {@link android.net.wifi.WifiManager#setWifiEnabled(boolean)} directly.
+	 *
+	 * @param context
+	 * 		{@link android.content.Context}.
+	 * @param enabled
+	 * 		{@code true} Turn on, {@code false} turn off.
+	 *
+	 * @return {@code true} if change is success.
+	 */
+	public static boolean setWifiEnabled(Context context, boolean enabled) {
+		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		return wifiManager.setWifiEnabled(enabled);
+	}
+
+	/**
+	 * Set different ring mode. Call {@link android.media.AudioManager#setRingerMode(int)}.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param mode
+	 * 		Different mode:<li>{@link android.media.AudioManager#RINGER_MODE_SILENT} for {@link
+	 * 		com.schautup.data.ScheduleType#MUTE}</li> <li>{@link android.media.AudioManager#RINGER_MODE_VIBRATE} for {@link
+	 * 		com.schautup.data.ScheduleType#VIBRATE}</li><li>{@link android.media.AudioManager#RINGER_MODE_NORMAL} for
+	 * 		{@link com.schautup.data.ScheduleType#SOUND}</li>
+	 */
+	public static void setRingMode(Context cxt, int mode) {
+
 	}
 
 	/**

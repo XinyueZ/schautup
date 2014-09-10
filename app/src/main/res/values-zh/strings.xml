@@ -24,7 +24,12 @@
     <string name="lbl_sa">六</string>
     <string name="lbl_no_history">目前没有记录。</string>
     <string name="lbl_log_at">%1$s</string>
-
+    <string name="lbl_on">打开</string>
+    <string name="lbl_off">断开</string>
+    <string name="lbl_on_small">@string/lbl_on</string>
+    <string name="lbl_off_small">@string/lbl_off</string>
+    <string name="lbl_can">能</string>
+    <string name="lbl_can_not">不能</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -62,6 +67,8 @@
     <string name="msg_tip_recurrence">必须指定事件发生周期！</string>
     <string name="msg_tip_duplicated">注意! 您想要设置的 %1$s，%2$s:%3$s 已经有了，本次设置无法进行，请继续修改。</string>
     <string name="msg_boot_start">SchautUp已经启动。</string>
+    <string name="msg_wifi_on_off">是否打开或关闭无线网络连接？</string>
+    <string name="msg_mobile_on_off">是否打开或关闭移动网络连接？</string>
 
     <!--Settings-->
     <string name="settings_hungry_mode">精确</string>
@@ -89,4 +96,6 @@
     <string name="type_mute">静音</string>
     <string name="type_vibrate">震动</string>
     <string name="type_sound">铃声</string>
+    <string name="type_wifi">无线</string>
+    <string name="type_mobile_data">移动</string>
 </resources>

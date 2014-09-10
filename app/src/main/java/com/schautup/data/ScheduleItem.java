@@ -30,6 +30,14 @@ public final class ScheduleItem {
 	 * The {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
 	 */
 	private EventRecurrence mEventRecurrence;
+	/**
+	 * The reserve data for some settings.
+	 */
+	private String mReserveLeft;
+	/**
+	 * The reserve data for some settings.
+	 */
+	private String mReserveRight;
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
@@ -196,6 +204,7 @@ public final class ScheduleItem {
 
 	/**
 	 * Set {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 *
 	 * @param eventRecurrence
 	 */
 	public void setEventRecurrence(EventRecurrence eventRecurrence) {
@@ -209,5 +218,43 @@ public final class ScheduleItem {
 	 */
 	public EventRecurrence getEventRecurrence() {
 		return mEventRecurrence;
+	}
+
+	/**
+	 * Get reserve data.
+	 *
+	 * @return Reserve data.
+	 */
+	public String getReserveLeft() {
+		return mReserveLeft;
+	}
+
+	/**
+	 * Set reserve data.
+	 *
+	 * @param reserveLeft
+	 * 		Reserve data.
+	 */
+	public void setReserveLeft(String reserveLeft) {
+		mReserveLeft = reserveLeft;
+	}
+
+	/**
+	 * Get reserve data.
+	 *
+	 * @return Reserve data.
+	 */
+	public String getReserveRight() {
+		return mReserveRight;
+	}
+
+	/**
+	 * Set reserve data.
+	 *
+	 * @param reserveRight
+	 * 		Reserve data.
+	 */
+	public void setReserveRight(String reserveRight) {
+		mReserveRight = reserveRight;
 	}
 }

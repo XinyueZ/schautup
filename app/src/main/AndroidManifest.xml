@@ -9,6 +9,11 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--Homepage, App-config, etc.-->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!--Turn on/off 3G etc.-->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!--Turn on/off Wifi etc.-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <supports-screens android:xlargeScreens="true" />
 

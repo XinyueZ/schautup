@@ -103,6 +103,8 @@ public final class DB {
 			v.put(ScheduleTbl.HOUR, item.getHour());
 			v.put(ScheduleTbl.MINUTE, item.getMinute());
 			v.put(ScheduleTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(ScheduleTbl.RESERVE_LEFT, item.getReserveLeft());
+			v.put(ScheduleTbl.RESERVE_RIGHT, item.getReserveRight());
 			v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
 			rowId = mDB.insert(ScheduleTbl.TABLE_NAME, null, v);
 			item.setId(rowId);
@@ -134,6 +136,8 @@ public final class DB {
 			v.put(ScheduleTbl.HOUR, item.getHour());
 			v.put(ScheduleTbl.MINUTE, item.getMinute());
 			v.put(ScheduleTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(ScheduleTbl.RESERVE_LEFT, item.getReserveLeft());
+			v.put(ScheduleTbl.RESERVE_RIGHT, item.getReserveRight());
 			v.put(ScheduleTbl.EDIT_TIME, System.currentTimeMillis());
 			String[] args = new String[] { item.getId() + "" };
 			rowId = mDB.update(ScheduleTbl.TABLE_NAME, v, ScheduleTbl.ID + " = ?", args);
@@ -289,6 +293,8 @@ public final class DB {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
 				list.add(item);
 			}
 		} finally {
@@ -321,6 +327,8 @@ public final class DB {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
 				list.add(item);
 			}
 		} finally {
@@ -354,6 +362,8 @@ public final class DB {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
 				list.add(item);
 			}
 		} finally {
@@ -395,6 +405,8 @@ public final class DB {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
 				list.add(item);
 			}
 		} finally {

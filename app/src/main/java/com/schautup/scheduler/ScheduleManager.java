@@ -185,20 +185,20 @@ public class ScheduleManager extends Service {
 		/**
 		 * Constructor of {@link Result}.
 		 *
-		 * @param _simpleContent
+		 * @param simpleContent
 		 * 		Simple information about a finished scheduled item.
-		 * @param _headline
+		 * @param headline
 		 * 		Headline(title) of the {@link #mContent}.
-		 * @param _content
+		 * @param content
 		 * 		Rich information about a finished scheduled item.
-		 * @param _icon
+		 * @param icon
 		 * 		An icon to a finished scheduled item.
 		 */
-		public Result(String _simpleContent, String _headline, String _content, int _icon) {
-			mSimpleContent = _simpleContent;
-			mHeadline = _headline;
-			mContent = _content;
-			mIcon = _icon;
+		public Result(String simpleContent, String headline, String content, int icon) {
+			mSimpleContent = simpleContent;
+			mHeadline = headline;
+			mContent = content;
+			mIcon = icon;
 		}
 
 		/**
@@ -313,30 +313,58 @@ public class ScheduleManager extends Service {
 		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(time.getHourOfDay(),
 				time.getMinuteOfHour(), Utils.day2String(time.getDayOfWeek()));
 
-		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		DB db= DB.getInstance(getApplication());
 		HistoryItem historyItem;
 		for (ScheduleItem item : items) {
 			switch (item.getType()) {
 			case MUTE:
-				audioManager.setRingerMode(RINGER_MODE_SILENT);
+				Utils.setRingMode(this, RINGER_MODE_SILENT);
 				sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
 						R.string.notify_mute_headline), getString(R.string.notify_mute_content),
 						R.drawable.ic_mute_notify));
 				break;
 			case VIBRATE:
-				audioManager.setRingerMode(RINGER_MODE_VIBRATE);
+				Utils.setRingMode(this, RINGER_MODE_VIBRATE);
 				sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
 						R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
 						R.drawable.ic_vibrate_notify));
 				break;
 			case SOUND:
-				audioManager.setRingerMode(RINGER_MODE_NORMAL);
+				Utils.setRingMode(this, RINGER_MODE_NORMAL);
 				sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
 						R.string.notify_sound_headline), getString(R.string.notify_sound_content),
 						R.drawable.ic_sound_notify));
 				break;
+			case WIFI:
+				if (Boolean.valueOf(item.getReserveLeft())) {
+					Utils.setWifiEnabled(this, true);
+					sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_simple_content),
+							getString(R.string.lbl_on)), getString(R.string.notify_wifi_headline), String.format(
+							getString(R.string.notify_wifi_content), getString(R.string.lbl_on)),
+							R.drawable.ic_wifi_notify));
+				} else {
+					Utils.setWifiEnabled(this, false);
+					sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content), getString(
+							R.string.lbl_off)), getString(R.string.notify_wifi_headline), String.format(getString(
+							R.string.notify_wifi_content), getString(R.string.lbl_off)), R.drawable.ic_wifi_notify));
+				}
+				break;
+			case MOBILE:
+				if (Boolean.valueOf(item.getReserveLeft())) {
+					Utils.setMobileDataEnabled(this, true);
+					sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content),
+							getString(R.string.lbl_on)), getString(R.string.notify_mobile_headline), String.format(
+							getString(R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
+							R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
+				} else {
+					Utils.setMobileDataEnabled(this, false);
+					sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content),
+							getString(R.string.lbl_off)), getString(R.string.notify_mobile_headline), String.format(
+							getString(R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
+							R.string.lbl_can_not)), R.drawable.ic_mobile_data_notify));
+				}
+				break;
 			}
+			DB db = DB.getInstance(getApplication());
 			historyItem = new HistoryItem(item.getType());
 			db.logHistory(historyItem);
 		}

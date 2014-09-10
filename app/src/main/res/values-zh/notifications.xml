@@ -16,4 +16,12 @@
     <string name="notify_sound_simple_content">响铃 开启！</string>
     <string name="notify_sound_headline">SchautUp</string>
     <string name="notify_sound_content">我已经打开了响铃状态。</string>
+    <!--Wifi-->
+    <string name="notify_wifi_simple_content">%s了无线</string>
+    <string name="notify_wifi_headline">SchautUp</string>
+    <string name="notify_wifi_content">我已经%s了无线。</string>
+    <!--Mobile data-->
+    <string name="notify_mobile_simple_content">%s了移动网络</string>
+    <string name="notify_mobile_headline">SchautUp</string>
+    <string name="notify_mobile_content">我已经%1$s了移动网络，你%2$s通过手机访问因特网了。</string>
 </resources>

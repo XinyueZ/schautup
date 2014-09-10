@@ -9,7 +9,8 @@ import com.schautup.R;
  */
 public enum ScheduleType {
 	MUTE(0, R.drawable.ic_mute, R.string.type_mute), VIBRATE(1, R.drawable.ic_vibrate, R.string.type_vibrate), SOUND(2,
-			R.drawable.ic_sound, R.string.type_sound);
+			R.drawable.ic_sound, R.string.type_sound), WIFI(3, R.drawable.ic_wifi_btn, R.string.type_wifi),
+	MOBILE(4, R.drawable.ic_mobile_data_btn, R.string.type_mobile_data);
 
 	/**
 	 * Code of type.
@@ -73,6 +74,10 @@ public enum ScheduleType {
 			return VIBRATE;
 		case 2:
 			return SOUND;
+		case 3:
+			return WIFI;
+		case 4:
+			return MOBILE;
 		default:
 			return null;
 		}

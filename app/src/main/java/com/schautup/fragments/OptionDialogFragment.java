@@ -1,6 +1,9 @@
 package com.schautup.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -57,6 +60,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	private View mSelSoundV;
 	/**
+	 * {@link android.view.View} represent selection on wifi.
+	 */
+	private View mSelWifiV;
+	/**
+	 * {@link android.view.View} represent selection on mobile network.
+	 */
+	private View mSelMobileV;
+	/**
 	 * {@link android.widget.TextView} for selected hour.
 	 */
 	private TextView mHourTv;
@@ -96,6 +107,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Open setting dialog for recurrence.
 	 */
 	private View mRecurrenceV;
+	/**
+	 * Parent view for all setting types.
+	 */
+	private View mSettingTypesLl;
+
+	private boolean mWifiOnOff = true;//0, 1, -1
+	private boolean  mMobileOnOff = true;//0, 1, -1
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -153,6 +171,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case SOUND:
 			mSelSoundV.setSelected(true);
 			break;
+		case WIFI:
+			mSelWifiV.setSelected(true);
+			mWifiOnOff = Boolean.valueOf(item.getReserveLeft());
+			break;
+		case MOBILE:
+			mSelMobileV.setSelected(true);
+			mMobileOnOff = Boolean.valueOf(item.getReserveLeft());
+			break;
 		}
 
 		EventBus.getDefault().removeStickyEvent(ShowSetOptionEvent.class);
@@ -187,6 +213,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		mSettingTypesLl = view.findViewById(R.id.setting_types_ll);
 		DateTime now = DateTime.now();
 		mHour = now.getHourOfDay();
 		mMinute = now.getMinuteOfHour();
@@ -234,6 +261,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelVibrateV.setOnClickListener(this);
 		mSelSoundV = view.findViewById(R.id.set_sound_ll);
 		mSelSoundV.setOnClickListener(this);
+		mSelWifiV= view.findViewById(R.id.set_wifi_ll);
+		mSelWifiV.setOnClickListener(this);
+		mSelMobileV= view.findViewById(R.id.set_mobile_data_ll);
+		mSelMobileV.setOnClickListener(this);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
@@ -294,12 +325,70 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelSoundV.setSelected(true);
 			mSelectedType = ScheduleType.SOUND;
 			break;
+		case R.id.set_wifi_ll:
+			new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.option_wifi)
+					.setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false)
+					.setPositiveButton(R.string.lbl_on, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = ScheduleType.WIFI;
+							mWifiOnOff = true;
+							mSelWifiV.setSelected(true);
+						}
+					})
+					.setNegativeButton(R.string.lbl_off, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = ScheduleType.WIFI;
+							mWifiOnOff = false;
+							mSelWifiV.setSelected(true);
+						}
+					})
+					.setNeutralButton(R.string.btn_cancel, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = null;
+							mSelWifiV.setSelected(false);
+						}
+					}).create().show();
+			break;
+		case R.id.set_mobile_data_ll:
+			new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.option_wifi)
+					.setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false)
+					.setPositiveButton(R.string.lbl_on, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = ScheduleType.MOBILE;
+							mMobileOnOff = true;
+							mSelMobileV.setSelected(true);
+						}
+					})
+					.setNegativeButton(R.string.lbl_off, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = ScheduleType.MOBILE;
+							mMobileOnOff = false;
+							mSelMobileV.setSelected(true);
+						}
+					})
+					.setNeutralButton(R.string.btn_cancel, new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = null;
+							mSelMobileV.setSelected(false);
+						}
+					}).create().show();
+			break;
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
-				//Warning, if no selection on setting type on schedule.
+				//Warning, if has not selected a type to schedule.
 				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_selection),
 						getResources().getColor(R.color.warning_green_1)));
-				((View) mSelMuteV.getParent()).setSelected(true);
+				mSettingTypesLl.setSelected(true);
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
@@ -351,6 +440,15 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 				ScheduleItem scheduleItem = new ScheduleItem(mId, mSelectedType, mHour, mMinute);
 				scheduleItem.setEventRecurrence(mEventRecurrence);
+				//Set some additional information for the selected schedule-type.
+				switch (mSelectedType ) {
+				case WIFI:
+					scheduleItem.setReserveLeft(mWifiOnOff + "");
+					break;
+				case MOBILE:
+					scheduleItem.setReserveLeft(mMobileOnOff + "");
+					break;
+				}
 				EventBus.getDefault().post(new UpdateDBEvent(scheduleItem, mEditMode));
 				dismiss();
 			}

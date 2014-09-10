@@ -26,6 +26,12 @@
     <string name="lbl_sa">Sa</string>
     <string name="lbl_no_history">There\'s still no logged data.</string>
     <string name="lbl_log_at">%1$s</string>
+    <string name="lbl_on">ON</string>
+    <string name="lbl_off">OFF</string>
+    <string name="lbl_on_small">on</string>
+    <string name="lbl_off_small">Off</string>
+    <string name="lbl_can">can</string>
+    <string name="lbl_can_not">can\'t</string>
 
 
     <!--Menu-->
@@ -41,10 +47,12 @@
 
     <!--Option dialog-->
     <string name="option_dlg_title">Option</string>
+    <string name="option_recurrence_dlg_title">Recurrence</string>
     <string name="option_mute">@string/type_mute</string>
     <string name="option_vibrate">@string/type_vibrate</string>
     <string name="option_sound">@string/type_sound</string>
-    <string name="option_recurrence_dlg_title">Recurrence</string>
+    <string name="option_wifi">@string/type_wifi</string>
+    <string name="option_mobile">@string/type_mobile_data</string>
 
     <!-- Shown in the 'About' window of the app. -->
     <string name="about_body">&lt;b&gt;SchautUp &lt;/b&gt;&lt;br&gt;Version %s &lt;br&gt;</string>
@@ -74,6 +82,8 @@
     <string name="msg_tip_duplicated">Warning! Set %1$s at %2$s:%3$s has been defined, your change can\'t be
         proceed, please edit again.</string>
     <string name="msg_boot_start">SchautUp has been started.</string>
+    <string name="msg_wifi_on_off">Do you want to turn off or on wifi?</string>
+    <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>
@@ -115,4 +125,6 @@
     <string name="type_mute">Mute</string>
     <string name="type_vibrate">Vibrate</string>
     <string name="type_sound">Sound</string>
+    <string name="type_wifi">Wifi</string>
+    <string name="type_mobile_data">Mobile</string>
 </resources>

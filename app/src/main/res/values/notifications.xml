@@ -18,4 +18,13 @@
     <string name="notify_sound_simple_content">Sound is ON!</string>
     <string name="notify_sound_headline">SchautUp</string>
     <string name="notify_sound_content">I\'ve switched your device to Sound status.</string>
+    <!--Wifi-->
+    <string name="notify_wifi_simple_content">Wifi %s</string>
+    <string name="notify_wifi_headline">SchautUp</string>
+    <string name="notify_wifi_content">I\'ve turned %s your wifi.</string>
+    <!--Mobile data-->
+    <string name="notify_mobile_simple_content">Mobile data connection %s</string>
+    <string name="notify_mobile_headline">SchautUp</string>
+    <string name="notify_mobile_content">I\'ve turned %1$s your mobile data, you %2$s use internet under
+        way.</string>
 </resources>

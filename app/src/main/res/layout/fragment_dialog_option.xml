@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragments.OptionDialogFragment">
+    tools:context="com.schautup.fragments.OptionDialogFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -74,85 +74,148 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/setting_types_ll"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="3"
+            android:orientation="vertical"
             android:background="@drawable/selector_warning"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_mute_ll"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
 
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_mute" />
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_mute_ll"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:gravity="center_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_common_black"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/option_mute" />
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_mute" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_mute" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_vibrate_ll"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_vibrate" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_vibrate" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_sound_ll"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_sound" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_sound" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_vibrate_ll"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
 
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_vibrate" />
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_wifi_ll"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:gravity="center_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_common_black"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/option_vibrate" />
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_wifi_btn" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_wifi" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_mobile_data_ll"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_mobile_data_btn" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_mobile" />
+                </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_sound_ll"
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_sound" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:gravity="center_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_common_black"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/option_sound" />
-            </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
