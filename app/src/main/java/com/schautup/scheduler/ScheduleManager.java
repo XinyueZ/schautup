@@ -345,7 +345,7 @@ public class ScheduleManager extends Service {
 					Utils.setWifiEnabled(this, false);
 					sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content), getString(
 							R.string.lbl_off)), getString(R.string.notify_wifi_headline), String.format(getString(
-							R.string.notify_wifi_content), getString(R.string.lbl_off)), R.drawable.ic_wifi_notify));
+							R.string.notify_wifi_content), getString(R.string.lbl_off)), R.drawable.ic_no_wifi_notify));
 				}
 				break;
 			case MOBILE:
@@ -360,7 +360,8 @@ public class ScheduleManager extends Service {
 					sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content),
 							getString(R.string.lbl_off)), getString(R.string.notify_mobile_headline), String.format(
 							getString(R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
-							R.string.lbl_can_not)), R.drawable.ic_mobile_data_notify));
+							R.string.lbl_can_not)),
+							R.drawable.ic_no_mobile_data_notify));
 				}
 				break;
 			}

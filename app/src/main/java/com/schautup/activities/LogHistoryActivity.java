@@ -218,7 +218,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	}
 
 	@Override
-	public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
+	public boolean onActionItemClicked(  ActionMode actionMode, MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case R.id.action_delete: {
 			new ParallelTask<Void, Void, LongSparseArray<HistoryItem>>(true) {
@@ -249,7 +249,8 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
 								getResources().getColor(R.color.warning_red_1)));
 					}
-					actionMode.finish();
+					mActionMode.finish();
+					mActionMode = null;
 				}
 			}.executeParallel();
 			break;
