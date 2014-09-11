@@ -8,23 +8,21 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 
+import com.chopping.application.BasicPrefs;
 import com.schautup.R;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.utils.Prefs;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * System basic {@link android.app.Activity}.
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends com.chopping.activities.BaseActivity{
 	/**
 	 * Height of {@link android.support.v7.app.ActionBar}.
 	 */
@@ -38,6 +36,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	public void onEvent(Object e) {
 
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		setErrorHandlerAvailable(false);
 	}
 
 	@Override
@@ -69,18 +73,11 @@ public abstract class BaseActivity extends ActionBarActivity {
 
 	@Override
 	public void onResume() {
-		EventBus.getDefault().register(this);
 		super.onResume();
 		//The "End User License Agreement" must be confirmed before you use this application.
 		if (!Prefs.getInstance(getApplication()).isEULAOnceConfirmed()) {
 			showDialogFragment(AboutDialogFragment.EulaConfirmationDialog.newInstance(this), null);
 		}
-	}
-
-	@Override
-	public void onPause() {
-		EventBus.getDefault().unregister(this);
-		super.onPause();
 	}
 
 	/**
@@ -131,5 +128,10 @@ public abstract class BaseActivity extends ActionBarActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected BasicPrefs getPrefs() {
+		return Prefs.getInstance(getApplication());
 	}
 }

@@ -24,7 +24,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
-
+        <FrameLayout
+            android:id="@id/error_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <include layout="@layout/inc_sticky" />
     </FrameLayout>
 

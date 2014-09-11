@@ -34,6 +34,7 @@ package com.schautup;
 import android.app.Application;
 import android.content.Intent;
 
+import com.chopping.net.TaskHelper;
 import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
 
@@ -51,5 +52,6 @@ public final class App extends Application {
 		if (prefs.isEULAOnceConfirmed()) {
 			startService(new Intent(this, ScheduleManager.class));
 		}
+		TaskHelper.init(getApplicationContext());
 	}
 }

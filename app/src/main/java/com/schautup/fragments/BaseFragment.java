@@ -3,20 +3,21 @@ package com.schautup.fragments;
 import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 
-import com.schautup.activities.BaseActivity;
+import com.chopping.application.BasicPrefs;
 import com.schautup.R;
-
-import de.greenrobot.event.EventBus;
+import com.schautup.activities.BaseActivity;
+import com.schautup.utils.Prefs;
 
 /**
  * {@link com.schautup.fragments.BaseFragment} for all fragments except dialogs.
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends com.chopping.fragments.BaseFragment {
 	/**
 	 * Height of {@link android.support.v7.app.ActionBar}.
 	 */
@@ -52,16 +53,11 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	@Override
-	public void onResume() {
-		EventBus.getDefault().registerSticky(this);
-		super.onResume();
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setErrorHandlerAvailable(false);
 	}
 
-	@Override
-	public void onPause() {
-		EventBus.getDefault().unregister(this);
-		super.onPause();
-	}
 
 	/**
 	 * Get height of {@link android.support.v7.app.ActionBar}.
@@ -76,4 +72,10 @@ public abstract class BaseFragment extends Fragment {
 	public ActionBar getSupportActionBar() {
 		return mActionBar;
 	}
+
+	@Override
+	protected BasicPrefs getPrefs() {
+		return Prefs.getInstance(getActivity().getApplication());
+	}
+
 }

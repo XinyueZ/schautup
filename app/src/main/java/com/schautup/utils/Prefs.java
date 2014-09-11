@@ -2,19 +2,15 @@ package com.schautup.utils;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.chopping.application.BasicPrefs;
 
 /**
  * App's preferences.
  *
  * @author Xinyue Zhao
  */
-public final class Prefs {
-	/**
-	 * Hold on default preference from {@link android.preference.PreferenceManager}.
-	 */
-	private SharedPreferences mPrefs = null;
+public final class Prefs extends BasicPrefs {
 	/**
 	 * Impl singleton pattern.
 	 */
@@ -63,10 +59,16 @@ public final class Prefs {
 	public static final String KEY_RUN_BOOT = "key_run_boot";
 	//----------------------------------------------------------
 
-	private Prefs(Context cxt) {
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(cxt);
-	}
 
+	/**
+	 * Created a DeviceData storage.
+	 *
+	 * @param context
+	 * 		A context object.
+	 */
+	private Prefs(Context context) {
+		super(context);
+	}
 
 	/**
 	 * Get instance of  {@link com.schautup.utils.Prefs} singleton.
@@ -83,74 +85,6 @@ public final class Prefs {
 		return sInstance;
 	}
 
-	//----------------------------------------------------------
-	// Description: Getters / Setters of different types.
-	//----------------------------------------------------------
-	private String getString(String key, String defValue) {
-		return mPrefs.getString(key, defValue);
-	}
-
-
-	private boolean setString(String key, String value) {
-		SharedPreferences.Editor edit = mPrefs.edit();
-		edit.putString(key, value);
-		return edit.commit();
-	}
-
-
-	private boolean getBoolean(String key, boolean defValue) {
-		return mPrefs.getBoolean(key, defValue);
-	}
-
-
-	private boolean setBoolean(String key, boolean value) {
-		SharedPreferences.Editor edit = mPrefs.edit();
-		edit.putBoolean(key, value);
-		return edit.commit();
-	}
-
-
-	private int getInt(String key, int defValue) {
-		return mPrefs.getInt(key, defValue);
-	}
-
-
-	private boolean setInt(String key, int value) {
-		SharedPreferences.Editor edit = mPrefs.edit();
-		edit.putInt(key, value);
-		return edit.commit();
-	}
-
-
-	private long getLong(String key, long defValue) {
-		return mPrefs.getLong(key, defValue);
-	}
-
-
-	private boolean setLong(String key, long value) {
-		SharedPreferences.Editor edit = mPrefs.edit();
-		edit.putLong(key, value);
-		return edit.commit();
-	}
-
-
-	private float getFloat(String key, float defValue) {
-		return mPrefs.getFloat(key, defValue);
-	}
-
-
-	private boolean setFloat(String key, float value) {
-		SharedPreferences.Editor edit = mPrefs.edit();
-		edit.putFloat(key, value);
-		return edit.commit();
-	}
-
-
-	private boolean contains(String key) {
-		return mPrefs.contains(key);
-	}
-
-	//----------------------------------------------------------
 
 	/**
 	 * Is last view before user closes App a list-view?
