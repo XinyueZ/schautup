@@ -495,11 +495,11 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				//Set some additional information for the selected schedule-type.
 				switch (mSelectedType) {
 				case WIFI:
-					scheduleItem.setReserveLeft(mSelWifiV.getTag() == null ? "false" : mSelWifiV.toString());
+					scheduleItem.setReserveLeft(Utils.ignoreNullToString(mSelWifiV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
 				case MOBILE:
-					scheduleItem.setReserveLeft(mSelMobileV.getTag() == null ? "false" : mSelMobileV.toString());
+					scheduleItem.setReserveLeft(Utils.ignoreNullToString(mSelMobileV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
 				}

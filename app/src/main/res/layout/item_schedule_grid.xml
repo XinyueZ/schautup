@@ -15,24 +15,35 @@
         android:layout_height="wrap_content">
 
 
-        <!--<ImageView-->
-            <!--android:id="@+id/status_iv"-->
-            <!--android:layout_width="@dimen/size_list_grid_item_img"-->
-            <!--android:layout_height="@dimen/size_list_grid_item_img"-->
-            <!--android:contentDescription="@string/app_name"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@android:color/transparent"-->
-            <!--android:src="@drawable/ic_launcher" />-->
+        <FrameLayout
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
 
-        <include layout="@layout/inc_status" />
+            <ImageView
+                android:id="@+id/status_iv"
+                android:layout_width="@dimen/size_list_grid_item_img"
+                android:layout_height="@dimen/size_list_grid_item_img"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_launcher" />
+
+            <com.schautup.views.BadgeView
+                android:id="@+id/info_bgv"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/status_tv"
             android:text="@string/app_name"
             android:layout_width="match_parent"
-            android:textSize="20sp"
+            android:textSize="@dimen/size_schedule_item_fired_time_text"
             android:gravity="center"
-            android:layout_marginTop="10dp"
             android:textColor="@color/text_common_black"
             android:layout_height="wrap_content" />
 

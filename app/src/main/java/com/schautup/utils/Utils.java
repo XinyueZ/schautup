@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -30,6 +31,7 @@ import com.schautup.views.BadgeView;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
+import static android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 import static android.text.format.DateUtils.FORMAT_SHOW_DATE;
 import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
 import static android.text.format.DateUtils.FORMAT_SHOW_YEAR;
@@ -268,7 +270,7 @@ public final class Utils {
 	 */
 	public static String convertTimestamps2dateString(Context cxt, long timestamps) {
 		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
-				FORMAT_SHOW_TIME);
+				FORMAT_SHOW_TIME | FORMAT_ABBREV_MONTH);
 	}
 
 	/**
@@ -336,7 +338,8 @@ public final class Utils {
 	 * 		{@link com.schautup.data.ScheduleType#SOUND}</li>
 	 */
 	public static void setRingMode(Context cxt, int mode) {
-
+		AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
+		audioManager.setRingerMode(mode);
 	}
 
 	/**
@@ -355,17 +358,17 @@ public final class Utils {
 	/**
 	 * Helper method that shows and animates text on a {@link com.schautup.views.BadgeView}.
 	 *
-	 * @param cxt
+	 * @param context
 	 * 		{@link android.content.Context}.
 	 * @param view
 	 * 		The target {@link com.schautup.views.BadgeView}.
 	 * @param text
-	 * 		The inforamtion to show.
+	 * 		The info to show.
 	 */
 	public static void showBadgeView(Context context, BadgeView view, String text) {
 		view.setVisibility(View.VISIBLE);
 		view.setBadgePosition(BadgeView.POSITION_BOTTOM_RIGHT);
-		view.setBadgeMargin(0);
+		view.setBadgeMargin(5);
 		view.setText(text);
 		view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
 		view.show(AnimationUtils.loadAnimation(context, R.anim.scale_in));
@@ -383,5 +386,16 @@ public final class Utils {
 	 */
 	public static String convertBooleanToOnOff(Context cxt, boolean bool) {
 		return cxt.getString(bool ? R.string.lbl_on_small : R.string.lbl_off_small);
+	}
+
+	/**
+	 * Util method that fetch the string from {@link java.lang.Object}'s {@link Object#toString()}.
+	 * <p/>
+	 * Convenient way to ignore null when {@code boolObj} is null.
+	 * @param boolObj A object that wants to get string.
+	 * @return null if {@code booObj} is null, not null when it is not null and calls {@link Object#toString()}.
+	 */
+	public static String ignoreNullToString(Object boolObj) {
+		return boolObj == null ? null : boolObj.toString();
 	}
 }
