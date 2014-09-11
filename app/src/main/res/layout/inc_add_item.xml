@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <FrameLayout
-        android:id="@+id/add_fl"
-        android:background="@drawable/selector_bg2_btn"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/add_btn"
-            android:layout_width="wrap_content"
-            android:background="@drawable/ic_add_btn"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+    <com.schautup.views.AnimImageButton
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_action_add"
+        android:background="@drawable/bg_circle"
+        android:layout_gravity="bottom|right"
+        android:layout_height="wrap_content" />
 </merge>

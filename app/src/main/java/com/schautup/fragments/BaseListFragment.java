@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -55,9 +55,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	private int mLastFirstVisibleItem;
 
 	/**
-	 * {@link android.view.ViewGroup} that holds an "add" {@link android.widget.ImageButton}.
+	 * {@link android.view.View} for "add".
 	 */
-	private ViewGroup mAddNewVG;
+	private AnimImageButton mAddNewVG;
 	/**
 	 * A button to load data when there's no data.
 	 */
@@ -172,11 +172,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mLv.setOnScrollListener(this);
 
 		// Add new.
-		mAddNewVG = (ViewGroup) view.findViewById(R.id.add_fl);
-		mAddNewVG.getLayoutParams().height = getActionBarHeight();
-		mAddNewVG.setOnClickListener(new View.OnClickListener() {
+		mAddNewVG = (AnimImageButton) view.findViewById(R.id.add_btn);
+		mAddNewVG.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick() {
 				EventBus.getDefault().post(new AddNewScheduleItemEvent());
 			}
 		});
@@ -234,17 +233,17 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		float translationY = ViewHelper.getTranslationY(mAddNewVG);
-		if (scrollState == 0) {
+		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 			//ListView is idle, user can add item with a button.
 			if (translationY != 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
 				animator.translationY(0).setDuration(500);
 			}
-		} else {
+		} else if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
 			//ListView moving, add button can dismiss.
 			if (translationY == 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight()).setDuration(500);
+				animator.translationY(getActionBarHeight() * 2).setDuration(500);
 			}
 		}
 		if (view.getId() == mLv.getId()) {
