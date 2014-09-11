@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,14 +182,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case WIFI:
 			mSelWifiV.setSelected(true);
 			mSelWifiV.setTag(item.getReserveLeft());
-			Utils.showBadgeView(getActivity(), mWifiInfoBgb,
-					Utils.convertBooleanToOnOff(getActivity(), Boolean.parseBoolean(item.getReserveLeft())));
+			Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+					Boolean.parseBoolean(item.getReserveLeft())));
 			break;
 		case MOBILE:
 			mSelMobileV.setSelected(true);
 			mSelMobileV.setTag(item.getReserveLeft());
-			Utils.showBadgeView(getActivity(), mMobileInfoBgb,
-					Utils.convertBooleanToOnOff(getActivity(), Boolean.parseBoolean(item.getReserveLeft())));
+			Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+					Boolean.parseBoolean(item.getReserveLeft())));
 			break;
 		}
 
@@ -359,8 +360,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.WIFI;
 					mSelWifiV.setTag(true);
-					Utils.showBadgeView(getActivity(), mWifiInfoBgb,
-							Utils.convertBooleanToOnOff(getActivity(), true));
+					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
 					mSelWifiV.setSelected(true);
 
 					mSelVibrateV.setSelected(false);
@@ -374,8 +374,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.WIFI;
 					mSelWifiV.setTag(false);
-					Utils.showBadgeView(getActivity(), mWifiInfoBgb,
-							Utils.convertBooleanToOnOff(getActivity(), false));
+					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
 					mSelWifiV.setSelected(true);
 
 					mSelVibrateV.setSelected(false);
@@ -400,8 +399,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.MOBILE;
 					mSelMobileV.setTag(true);
-					Utils.showBadgeView(getActivity(), mMobileInfoBgb,
-							Utils.convertBooleanToOnOff(getActivity(), true));
+					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+							true));
 					mSelMobileV.setSelected(true);
 
 					mSelVibrateV.setSelected(false);
@@ -415,8 +414,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.MOBILE;
 					mSelMobileV.setTag(false);
-					Utils.showBadgeView(getActivity(), mMobileInfoBgb,
-							Utils.convertBooleanToOnOff(getActivity(), false));
+					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+							false));
 					mSelMobileV.setSelected(true);
 
 					mSelVibrateV.setSelected(false);
@@ -445,8 +444,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelSoundV.setSelected(false);
 				mSelWifiV.setSelected(false);
 				mSelMobileV.setSelected(false);
-			} else if (mEventRecurrence == null || (mEventRecurrence != null &&
-					(mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
+			} else if (mEventRecurrence == null ||
+					((mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
 				//Warning, we must select "repeat".
 				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_recurrence),
 						getResources().getColor(R.color.warning_green_1)));
@@ -459,8 +458,23 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 							mPreScheduleItem.getHour() == mHour &&
 							mPreScheduleItem.getMinute() == mMinute &&
 							mPreScheduleItem.getEventRecurrence().equals(mEventRecurrence)) {
-						dismiss();
-						break;
+						switch (mSelectedType) {
+						case WIFI:
+							if (TextUtils.equals(mPreScheduleItem.getReserveLeft(), Utils.toString(
+									mSelWifiV.getTag()))) {
+								dismiss();
+							}
+							break;
+						case MOBILE:
+							if (TextUtils.equals(mPreScheduleItem.getReserveLeft(), Utils.toString(
+									mSelMobileV.getTag()))) {
+								dismiss();
+							}
+							break;
+						default:
+							dismiss();
+							break;
+						}
 					}
 				}
 
@@ -495,11 +509,11 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				//Set some additional information for the selected schedule-type.
 				switch (mSelectedType) {
 				case WIFI:
-					scheduleItem.setReserveLeft(Utils.ignoreNullToString(mSelWifiV.getTag()));
+					scheduleItem.setReserveLeft(Utils.toString(mSelWifiV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
 				case MOBILE:
-					scheduleItem.setReserveLeft(Utils.ignoreNullToString(mSelMobileV.getTag()));
+					scheduleItem.setReserveLeft(Utils.toString(mSelMobileV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
 				}

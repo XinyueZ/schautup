@@ -17,7 +17,8 @@ import com.schautup.R;
 import com.schautup.adapters.BaseScheduleAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.bus.AskRemovedScheduleItemsEvent;
+import com.schautup.bus.AskDeleteScheduleItemsEvent;
+import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.RemovedItemEvent;
@@ -137,17 +138,29 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.AskRemovedScheduleItemsEvent}.
+	 * Handler for {@link com.schautup.bus.AskDeleteScheduleItemsEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.AskRemovedScheduleItemsEvent}.
+	 * 		Event {@link com.schautup.bus.AskDeleteScheduleItemsEvent}.
 	 */
-	public void onEvent(AskRemovedScheduleItemsEvent e) {
+	public void onEvent(AskDeleteScheduleItemsEvent e) {
 		if (mAdp != null) {
 			EventBus.getDefault().post(new GivenRemovedScheduleItemsEvent(mAdp.removeItems()));
 			if(mAdp!=null) {
 				mAdp.notifyDataSetChanged();
 			}
+		}
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.DeletedConfirmEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.DeletedConfirmEvent}.
+	 */
+	public void onEvent(DeletedConfirmEvent e) {
+		if(mAdp == null || mAdp.getItemList() == null || mAdp.getItemList().size() == 0) {
+			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
 	}
 

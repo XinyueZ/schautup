@@ -395,7 +395,7 @@ public final class Utils {
 	 * @param boolObj A object that wants to get string.
 	 * @return null if {@code booObj} is null, not null when it is not null and calls {@link Object#toString()}.
 	 */
-	public static String ignoreNullToString(Object boolObj) {
+	public static String toString(Object boolObj) {
 		return boolObj == null ? null : boolObj.toString();
 	}
 }

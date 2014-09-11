@@ -36,7 +36,8 @@ import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
-import com.schautup.bus.AskRemovedScheduleItemsEvent;
+import com.schautup.bus.AskDeleteScheduleItemsEvent;
+import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
@@ -317,11 +318,13 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					if (result != null) {
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
 								getResources().getColor(R.color.warning_green_1)));
+						EventBus.getDefault().post(new DeletedConfirmEvent());
 					} else {
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
 								getResources().getColor(R.color.warning_red_1)));
 					}
 					mActionMode.finish();
+					mActionMode = null;
 				}
 			}.executeParallel(items);
 		}
@@ -531,7 +534,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public boolean onActionItemClicked(final android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case R.id.action_delete: {
-			EventBus.getDefault().post(new AskRemovedScheduleItemsEvent());
+			EventBus.getDefault().post(new AskDeleteScheduleItemsEvent());
 			break;
 		}
 		default:

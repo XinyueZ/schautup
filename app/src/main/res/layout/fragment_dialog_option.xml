@@ -246,7 +246,16 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/close_cancel_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/text_common_black"
+                android:layout_height="match_parent"
+                android:text="@string/btn_cancel"
+                android:background="@drawable/selector_bg4_btn" />
 
             <Button
                 android:id="@+id/close_confirm_btn"
@@ -257,14 +266,6 @@
                 android:text="@string/btn_confirm"
                 android:background="@drawable/selector_bg2_btn" />
 
-            <Button
-                android:id="@+id/close_cancel_btn"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textColor="@color/text_common_black"
-                android:layout_height="match_parent"
-                android:text="@string/btn_cancel"
-                android:background="@drawable/selector_bg4_btn" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

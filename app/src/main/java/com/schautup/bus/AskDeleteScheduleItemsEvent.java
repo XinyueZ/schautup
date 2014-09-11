@@ -5,5 +5,5 @@ package com.schautup.bus;
  *
  * @author Xinyue Zhao
  */
-public final class AskRemovedScheduleItemsEvent {
+public final class AskDeleteScheduleItemsEvent {
 }
