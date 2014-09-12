@@ -5,9 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.chopping.utils.Utils;
 import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
-import com.schautup.utils.Utils;
 
 /**
  * Handling device boot by {@link android.content.BroadcastReceiver}.

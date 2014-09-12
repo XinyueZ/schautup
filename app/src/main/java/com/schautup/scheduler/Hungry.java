@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.chopping.application.LL;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
-import com.schautup.utils.LL;
 
 import org.joda.time.DateTime;
 
@@ -39,7 +39,7 @@ public final class Hungry extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		LL.i( "Hungry#Create.");
+		LL.i("Hungry#Create.");
 	}
 
 	@Override

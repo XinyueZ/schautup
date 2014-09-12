@@ -15,15 +15,11 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v4.hardware.display.DisplayManagerCompat;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
+import com.chopping.application.LL;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 import com.schautup.views.BadgeView;
@@ -139,18 +135,6 @@ public final class Utils {
 
 
 	/**
-	 * Show long time toast.
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param messageId
-	 * 		{@link android.support.annotation.StringRes}. Message to show.
-	 */
-	public static void showLongToast(Context context, @StringRes int messageId) {
-		Toast.makeText(context, context.getString(messageId), Toast.LENGTH_LONG).show();
-	}
-
-	/**
 	 * A compatible method for setting {@link android.graphics.drawable.Drawable} object on the {@link
 	 * android.view.View}.
 	 * <p/>
@@ -171,41 +155,6 @@ public final class Utils {
 		}
 	}
 
-	/**
-	 * Show short time toast.
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param messageId
-	 * 		{@link android.support.annotation.StringRes}. Message to show.
-	 */
-	public static void showShortToast(Context context, @StringRes int messageId) {
-		Toast.makeText(context, context.getString(messageId), Toast.LENGTH_SHORT).show();
-	}
-
-	/**
-	 * Show short time toast.
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param message
-	 * 		{@link java.lang.String}. Message to show.
-	 */
-	public static void showLongToast(Context context, String message) {
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-	}
-
-	/**
-	 * Show short time toast.
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param message
-	 * 		{@link java.lang.String}. Message to show.
-	 */
-	public static void showShortToast(Context context, String message) {
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-	}
 
 	/**
 	 * Converts one of the internal day constants (SU, MO, etc.) to the two-letter string representing that constant.
@@ -240,23 +189,7 @@ public final class Utils {
 	}
 
 
-	/**
-	 * Get {@link ScreenSize} with different {@code displayIndex} .
-	 *
-	 * @param cxt
-	 * 		{@link android.content.Context} .
-	 * @param displayIndex
-	 * 		The index of display.
-	 *
-	 * @return A {@link ScreenSize}.
-	 */
-	public static ScreenSize getScreenSize(Context cxt, int displayIndex) {
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		Display[] displays = DisplayManagerCompat.getInstance(cxt).getDisplays();
-		Display display = displays[displayIndex];
-		display.getMetrics(displaymetrics);
-		return new ScreenSize(displaymetrics.widthPixels, displaymetrics.heightPixels);
-	}
+
 
 	/**
 	 * Convert a timestamps to a readable date in string.
@@ -342,18 +275,7 @@ public final class Utils {
 		audioManager.setRingerMode(mode);
 	}
 
-	/**
-	 * Screen-size in pixels.
-	 */
-	public static class ScreenSize {
-		public int Width;
-		public int Height;
 
-		public ScreenSize(int _width, int _height) {
-			Width = _width;
-			Height = _height;
-		}
-	}
 
 	/**
 	 * Helper method that shows and animates text on a {@link com.schautup.views.BadgeView}.
@@ -392,7 +314,10 @@ public final class Utils {
 	 * Util method that fetch the string from {@link java.lang.Object}'s {@link Object#toString()}.
 	 * <p/>
 	 * Convenient way to ignore null when {@code boolObj} is null.
-	 * @param boolObj A object that wants to get string.
+	 *
+	 * @param boolObj
+	 * 		A object that wants to get string.
+	 *
 	 * @return null if {@code booObj} is null, not null when it is not null and calls {@link Object#toString()}.
 	 */
 	public static String toString(Object boolObj) {

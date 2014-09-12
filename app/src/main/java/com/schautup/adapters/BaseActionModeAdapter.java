@@ -10,8 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.chopping.application.LL;
 import com.schautup.R;
-import com.schautup.utils.LL;
 
 /**
  * An {@link android.widget.BaseAdapter} for {@link android.widget.ListView}s that can start {@link

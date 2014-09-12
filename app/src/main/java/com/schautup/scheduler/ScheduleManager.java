@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
+import com.chopping.application.LL;
 import com.schautup.R;
 import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
@@ -24,7 +25,6 @@ import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
-import com.schautup.utils.LL;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Utils;
 

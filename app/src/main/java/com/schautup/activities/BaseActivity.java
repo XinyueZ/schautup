@@ -22,7 +22,7 @@ import com.schautup.utils.Prefs;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseActivity extends com.chopping.activities.BaseActivity{
+public abstract class BaseActivity extends com.chopping.activities.BaseActivity {
 	/**
 	 * Height of {@link android.support.v7.app.ActionBar}.
 	 */
@@ -69,7 +69,9 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity{
 		} catch (Exception _e) {
 			_e.printStackTrace();
 		}
+
 	}
+
 
 	@Override
 	public void onResume() {
@@ -79,6 +81,8 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity{
 			showDialogFragment(AboutDialogFragment.EulaConfirmationDialog.newInstance(this), null);
 		}
 	}
+
+
 
 	/**
 	 * Show  {@link android.support.v4.app.DialogFragment}.
@@ -134,4 +138,5 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity{
 	protected BasicPrefs getPrefs() {
 		return Prefs.getInstance(getApplication());
 	}
+
 }
