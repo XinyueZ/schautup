@@ -10,12 +10,12 @@ android {
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionCode 1
-        versionName "pre_0.4.5"
+        versionName "pre_0.5"
     }
     buildTypes {
         debug {
             zipAlign true
-            versionNameSuffix buildNumber
+//            versionNameSuffix buildNumber
         }
         release {
             runProguard false
