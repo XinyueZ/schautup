@@ -314,59 +314,107 @@ public class ScheduleManager extends Service {
 				time.getMinuteOfHour(), Utils.day2String(time.getDayOfWeek()));
 
 		HistoryItem historyItem;
+		String comment = null;
 		for (ScheduleItem item : items) {
 			switch (item.getType()) {
 			case MUTE:
-				Utils.setRingMode(this, RINGER_MODE_SILENT);
-				sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
-						R.string.notify_mute_headline), getString(R.string.notify_mute_content),
-						R.drawable.ic_mute_notify));
+				if (Utils.setRingMode(this, RINGER_MODE_SILENT)) {
+					sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
+							R.string.notify_mute_headline), getString(R.string.notify_mute_content),
+							R.drawable.ic_mute_notify));
+				} else {
+					comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mute),
+							getString(R.string.lbl_on_small),
+							getString(R.string.option_mute));
+				}
 				break;
 			case VIBRATE:
-				Utils.setRingMode(this, RINGER_MODE_VIBRATE);
-				sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
-						R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
-						R.drawable.ic_vibrate_notify));
+				if (Utils.setRingMode(this, RINGER_MODE_VIBRATE)) {
+					sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
+							R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
+							R.drawable.ic_vibrate_notify));
+				} else {
+					comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_vibrate),
+							getString(R.string.lbl_on_small),  getString(R.string.option_vibrate));
+				}
 				break;
 			case SOUND:
-				Utils.setRingMode(this, RINGER_MODE_NORMAL);
-				sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
-						R.string.notify_sound_headline), getString(R.string.notify_sound_content),
-						R.drawable.ic_sound_notify));
+				if (Utils.setRingMode(this, RINGER_MODE_NORMAL)) {
+					sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
+							R.string.notify_sound_headline), getString(R.string.notify_sound_content),
+							R.drawable.ic_sound_notify));
+				} else {
+					comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_sound),
+							getString(R.string.lbl_on_small),
+							getString(R.string.option_sound));
+				}
 				break;
 			case WIFI:
+				boolean wifiSuccess;
 				if (Boolean.valueOf(item.getReserveLeft())) {
-					Utils.setWifiEnabled(this, true);
-					sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_simple_content),
-							getString(R.string.lbl_on)), getString(R.string.notify_wifi_headline), String.format(
-							getString(R.string.notify_wifi_content), getString(R.string.lbl_on)),
-							R.drawable.ic_wifi_notify));
+					wifiSuccess = Utils.setWifiEnabled(this, true);
+					if (wifiSuccess) {
+						sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_simple_content),
+								getString(R.string.lbl_on)), getString(R.string.notify_wifi_headline), String.format(
+								getString(R.string.notify_wifi_content), getString(R.string.lbl_on)),
+								R.drawable.ic_wifi_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_wifi),
+								getString(R.string.lbl_on_small),
+								getString(R.string.option_wifi));
+					}
 				} else {
-					Utils.setWifiEnabled(this, false);
-					sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content), getString(
-							R.string.lbl_off)), getString(R.string.notify_wifi_headline), String.format(getString(
-							R.string.notify_wifi_content), getString(R.string.lbl_off)), R.drawable.ic_no_wifi_notify));
+					wifiSuccess = Utils.setWifiEnabled(this, false);
+					if (wifiSuccess) {
+						sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content),
+								getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline), String.format(
+								getString(R.string.notify_wifi_content), getString(R.string.lbl_off)),
+								R.drawable.ic_no_wifi_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_wifi),
+								getString(R.string.lbl_off_small),
+								getString(R.string.option_wifi));
+					}
 				}
 				break;
 			case MOBILE:
+				Boolean mobileDataSuccess;
 				if (Boolean.valueOf(item.getReserveLeft())) {
-					Utils.setMobileDataEnabled(this, true);
-					sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content),
-							getString(R.string.lbl_on)), getString(R.string.notify_mobile_headline), String.format(
-							getString(R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
-							R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
+					mobileDataSuccess = Utils.setMobileDataEnabled(this, true);
+					if (mobileDataSuccess == null) {
+						comment = getString(R.string.lbl_can_not_set_mobile);
+					} else if (mobileDataSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
+								R.string.notify_mobile_headline), String.format(getString(
+								R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
+								R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_mobile),
+								getString(R.string.lbl_on_small),
+								getString(R.string.option_mobile));
+					}
 				} else {
-					Utils.setMobileDataEnabled(this, false);
-					sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content),
-							getString(R.string.lbl_off)), getString(R.string.notify_mobile_headline), String.format(
-							getString(R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
-							R.string.lbl_can_not)),
-							R.drawable.ic_no_mobile_data_notify));
+					mobileDataSuccess = Utils.setMobileDataEnabled(this, false);
+					if (mobileDataSuccess == null) {
+						comment = getString(R.string.lbl_can_not_set_mobile);
+					} else if (mobileDataSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
+								R.string.notify_mobile_headline), String.format(getString(
+										R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
+										R.string.lbl_can_not)), R.drawable.ic_no_mobile_data_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running,  getString(R.string.option_mobile),
+								getString(R.string.lbl_off_small),
+								getString(R.string.option_mobile));
+					}
 				}
 				break;
 			}
 			DB db = DB.getInstance(getApplication());
 			historyItem = new HistoryItem(item.getType());
+			historyItem.setComment(comment);
 			db.logHistory(historyItem);
 		}
 	}

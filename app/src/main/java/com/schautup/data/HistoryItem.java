@@ -19,6 +19,12 @@ public final class HistoryItem {
 	 */
 	private long mLogTime;
 
+
+	/**
+	 * Extra information.
+	 */
+	private String mComment;
+
 	/**
 	 * Constructor of {@link com.schautup.data.HistoryItem}.
 	 *
@@ -82,5 +88,21 @@ public final class HistoryItem {
 	 */
 	public long getId() {
 		return mId;
+	}
+
+	/**
+	 * Get extra information.
+	 *
+	 * @return Comment.
+	 */
+	public String getComment() {
+		return mComment;
+	}
+
+	/**
+	 * Set extra information.
+	 */
+	public void setComment(String _comment) {
+		mComment = _comment;
 	}
 }

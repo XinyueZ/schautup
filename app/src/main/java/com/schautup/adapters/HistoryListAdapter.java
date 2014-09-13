@@ -3,9 +3,13 @@ package com.schautup.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +65,7 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder vh;
+		final ViewHolder vh;
 		Context cxt = parent.getContext();
 		if (convertView == null) {
 			convertView = LayoutInflater.from(cxt).inflate(ITEM_LAYOUT, parent, false);
@@ -75,8 +79,25 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 		vh.mStatusIv.setImageResource(type.getIconDrawResId());
 		vh.mStatusTv.setText(cxt.getString(type.getNameResId()));
 		vh.mLoggedTimeTv.setText(cxt.getString(R.string.lbl_log_at,
-				Utils.convertTimestamps2dateString(parent.getContext(),
-						item.getLogTime())));
+				Utils.convertTimestamps2dateString(parent.getContext(), item.getLogTime())));
+		vh.mOpenCommentBtn.setVisibility(!TextUtils.isEmpty(item.getComment()) ? View.VISIBLE : View.GONE);
+		vh.mOpenCommentBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vh.mToggled = !vh.mToggled ;
+				vh.mDivCommentV.setVisibility(vh.mToggled ? View.VISIBLE : View.GONE);
+				vh.mCommentTv.setVisibility(vh.mToggled ? View.VISIBLE : View.GONE);
+			}
+		});
+		if(!TextUtils.isEmpty(item.getComment())) {
+			vh.mCommentTv.setText(
+					Html.fromHtml(item.getComment()));
+			vh.mDivCommentV.setVisibility(vh.mToggled ? View.VISIBLE : View.GONE);
+			vh.mCommentTv.setVisibility(vh.mToggled ? View.VISIBLE : View.GONE);
+		} else {
+			vh.mDivCommentV.setVisibility(View.GONE);
+			vh.mCommentTv.setVisibility( View.GONE);
+		}
 
 		super.getView(position, convertView, parent);
 		return convertView;
@@ -111,6 +132,22 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 		 * Show logged time.
 		 */
 		private TextView mLoggedTimeTv;
+		/**
+		 * Comment of history, not necessary  always be shown.
+		 */
+		private TextView mCommentTv;
+		/**
+		 * To show comment, then click.
+		 */
+		private Button mOpenCommentBtn;
+		/**
+		 * {@code true} if is opened.
+		 */
+		private boolean mToggled;
+		/**
+		 * A divide for comment to headline.
+		 */
+		private View mDivCommentV;
 
 		/**
 		 * Constructor of {@link com.schautup.adapters.HistoryListAdapter.ViewHolder}.
@@ -123,6 +160,9 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
 			mLoggedTimeTv = (TextView) convertView.findViewById(R.id.log_at_tv);
+			mCommentTv = (TextView) convertView.findViewById(R.id.comment_tv);
+			mOpenCommentBtn = (Button) convertView.findViewById(R.id.open_comment_btn);
+			mDivCommentV = convertView.findViewById(R.id.div_comment_v);
 		}
 	}
 

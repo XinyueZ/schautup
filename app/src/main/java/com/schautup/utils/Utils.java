@@ -189,8 +189,6 @@ public final class Utils {
 	}
 
 
-
-
 	/**
 	 * Convert a timestamps to a readable date in string.
 	 *
@@ -211,37 +209,68 @@ public final class Utils {
 	 * <p/>
 	 * <b>Unofficial implementation.</b>
 	 * <p/>
-	 * See. <a href="http://stackoverflow.com/questions/12535101/how-can-i-turn-off-3g-data-programmatically-on
-	 * -android">StackOverflow</a>
+	 * See. <a href="http://stackoverflow.com/questions/12535101/how-can-i-turn-off-3g-data-programmatically-on-android">StackOverflow</a>
 	 *
 	 * @param context
 	 * 		{@link android.content.Context}.
 	 * @param enabled
 	 * 		{@code true} Turn on, {@code false} turn off.
 	 *
-	 * @return {@code true} if change is success.
+	 * @return {code null} if unconfirmed, some errors happened, {@code true} if change is success, {@code false} if
+	 * already on or off.
 	 */
-	public static boolean setMobileDataEnabled(Context context, boolean enabled) {
-		boolean success = false;
-		try {
-			final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(
-					Context.CONNECTIVITY_SERVICE);
-			final Class conmanClass = Class.forName(conman.getClass().getName());
-			final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
-			iConnectivityManagerField.setAccessible(true);
-			final Object iConnectivityManager = iConnectivityManagerField.get(conman);
-			final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
-			final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod(
-					"setMobileDataEnabled", Boolean.TYPE);
-			setMobileDataEnabledMethod.setAccessible(true);
-
-			setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
-			success = true;
-		} catch (Exception ex) {
-			LL.w(ex.toString());
+	public static Boolean setMobileDataEnabled(Context context, boolean enabled) {
+		Boolean success;
+		Boolean isMobileDataEnabled = isMobileDataEnabled(context);
+		if (isMobileDataEnabled == null) {
+			success = null;
+		} else if ((isMobileDataEnabled && enabled) || (!isMobileDataEnabled && !enabled)) {
 			success = false;
+		} else {
+			try {
+				final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(
+						Context.CONNECTIVITY_SERVICE);
+				final Class conmanClass = Class.forName(conman.getClass().getName());
+				final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+				iConnectivityManagerField.setAccessible(true);
+				final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+				final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+				final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod(
+						"setMobileDataEnabled", Boolean.TYPE);
+				setMobileDataEnabledMethod.setAccessible(true);
+
+				setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
+				success = true;
+			} catch (Exception ex) {
+				LL.w(ex.toString());
+				success = null;
+			}
 		}
 		return success;
+	}
+
+	/**
+	 * Check whether mobile data is enable or not.
+	 * <p/>
+	 * <b>Unofficial implementation.</b>
+	 * <p/>
+	 * See. <a href="http://stackoverflow.com/questions/8224097/how-to-check-if-mobile-network-is-enabled-disabled">StackOverflow</a>
+	 *
+	 * @return {code null} if unconfirmed, some errors happened, {@code true} if already enabled, {@code false} disable.
+	 */
+	private static Boolean isMobileDataEnabled(Context cxt) {
+		Object connectivityService = cxt.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) connectivityService;
+
+		try {
+			Class<?> c = Class.forName(cm.getClass().getName());
+			Method m = c.getDeclaredMethod("getMobileDataEnabled");
+			m.setAccessible(true);
+			return (Boolean) m.invoke(cm);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -252,11 +281,15 @@ public final class Utils {
 	 * @param enabled
 	 * 		{@code true} Turn on, {@code false} turn off.
 	 *
-	 * @return {@code true} if change is success.
+	 * @return {@code true} if change is success. {@code false} if wifi is already enable or disable.
 	 */
 	public static boolean setWifiEnabled(Context context, boolean enabled) {
 		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		return wifiManager.setWifiEnabled(enabled);
+		if ((enabled && wifiManager.isWifiEnabled()) || (!enabled && !wifiManager.isWifiEnabled())) {
+			return false;
+		}
+		wifiManager.setWifiEnabled(enabled);
+		return true;
 	}
 
 	/**
@@ -269,12 +302,17 @@ public final class Utils {
 	 * 		com.schautup.data.ScheduleType#MUTE}</li> <li>{@link android.media.AudioManager#RINGER_MODE_VIBRATE} for {@link
 	 * 		com.schautup.data.ScheduleType#VIBRATE}</li><li>{@link android.media.AudioManager#RINGER_MODE_NORMAL} for
 	 * 		{@link com.schautup.data.ScheduleType#SOUND}</li>
+	 *
+	 * @return {@code false} if the mode that will be switched is already on.
 	 */
-	public static void setRingMode(Context cxt, int mode) {
+	public static boolean setRingMode(Context cxt, int mode) {
 		AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
+		if (audioManager.getRingerMode() == mode) {
+			return false;
+		}
 		audioManager.setRingerMode(mode);
+		return true;
 	}
-
 
 
 	/**

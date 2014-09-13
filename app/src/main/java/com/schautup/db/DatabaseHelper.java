@@ -10,9 +10,28 @@ import android.database.sqlite.SQLiteOpenHelper;
  * @author Xinyue Zhao
  */
 final class DatabaseHelper extends SQLiteOpenHelper {
+	/**
+	 * DB name.
+	 */
 	private static final String DATABASE_NAME = "schautUpDB";
-	private static final int DATABASE_VERSION = 1;
+	/**
+	 * New version of DB
+	 * <p/>
+	 * Added new column of "comment" on {@link com.schautup.db.LogHistoryTbl}.
+	 */
+	private static final int DATABASE_VERSION = 2;
 
+	/**
+	 * Init version of DB.
+	 */
+	//	private static final int DATABASE_VERSION = 1;
+
+	/**
+	 * Constructor of {@link com.schautup.db.DatabaseHelper}.
+	 *
+	 * @param context
+	 * 		{@link android.content.Context}.
+	 */
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -25,8 +44,12 @@ final class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS " + ScheduleTbl.TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + LogHistoryTbl.TABLE_NAME);
-		onCreate(db);
+		if (oldVersion == 1 && newVersion == 2) {
+			db.execSQL(LogHistoryTbl.SQL_ALTER_ADD_COMMENT);
+		} else {
+			db.execSQL("DROP TABLE IF EXISTS " + ScheduleTbl.TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + LogHistoryTbl.TABLE_NAME);
+			onCreate(db);
+		}
 	}
 }

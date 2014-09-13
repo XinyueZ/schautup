@@ -25,11 +25,14 @@
     <string name="lbl_no_history">目前没有记录。</string>
     <string name="lbl_log_at">%1$s</string>
     <string name="lbl_on">打开</string>
-    <string name="lbl_off">断开</string>
+    <string name="lbl_off">关闭</string>
     <string name="lbl_on_small">@string/lbl_on</string>
     <string name="lbl_off_small">@string/lbl_off</string>
     <string name="lbl_can">能</string>
     <string name="lbl_can_not">不能</string>
+    <string name="lbl_more">更多</string>
+    <string name="lbl_function_is_running"><Data><![CDATA[&#8226;已经正处于%1$s状态，忽略%2$s%3$s。]]></Data></string>
+    <string name="lbl_can_not_set_mobile"><Data><![CDATA[&#8226;无法通过App改变本机移动网络状态。]]></Data></string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -97,5 +100,5 @@
     <string name="type_vibrate">震动</string>
     <string name="type_sound">铃声</string>
     <string name="type_wifi">无线</string>
-    <string name="type_mobile_data">移动</string>
+    <string name="type_mobile_data">移动\n网络</string>
 </resources>

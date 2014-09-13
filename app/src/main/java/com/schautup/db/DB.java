@@ -166,6 +166,7 @@ public final class DB {
 			//Do "insert" command.
 			ContentValues v = new ContentValues();
 			v.put(LogHistoryTbl.TYPE, item.getType().toCode());
+			v.put(LogHistoryTbl.COMMENT, item.getComment());
 			v.put(LogHistoryTbl.EDIT_TIME, System.currentTimeMillis());
 			rowId = mDB.insert(LogHistoryTbl.TABLE_NAME, null, v);
 			success = rowId != -1;
@@ -227,6 +228,7 @@ public final class DB {
 			while (c.moveToNext()) {
 				item = new HistoryItem(c.getLong(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
 						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getLong(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
+				item.setComment(c.getString(c.getColumnIndex(LogHistoryTbl.COMMENT)));
 				list.add(item);
 			}
 		} finally {

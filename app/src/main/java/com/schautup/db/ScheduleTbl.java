@@ -18,6 +18,9 @@ interface ScheduleTbl {
 
 	//We use rowId as key for each row.
 	//See. http://www.sqlite.org/autoinc.html
+	/**
+	 * Init new table since {@link DatabaseHelper#DATABASE_VERSION} = {@code 1}.
+	 */
 	static final String SQL_CREATE =
 			"CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY, " + TYPE + " INTEGER, " +
 					HOUR + " INTEGER, " + MINUTE + " INTEGER, " + RECURRENCE + " TEXT, "  + RESERVE_LEFT + " TEXT, " +

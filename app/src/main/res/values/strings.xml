@@ -32,6 +32,9 @@
     <string name="lbl_off_small">Off</string>
     <string name="lbl_can">can</string>
     <string name="lbl_can_not">can\'t</string>
+    <string name="lbl_more">More</string>
+    <string name="lbl_function_is_running"><Data><![CDATA[&#8226;Because %1$s is already on, avoid switching %2$s %3$s.]]></Data></string>
+    <string name="lbl_can_not_set_mobile"><Data><![CDATA[&#8226;I couldn\'t set status on mobile network by this application.]]></Data></string>
 
 
     <!--Menu-->
