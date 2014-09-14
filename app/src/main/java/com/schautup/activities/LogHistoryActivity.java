@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
 import android.view.Menu;
@@ -42,7 +43,7 @@ import de.greenrobot.event.EventBus;
  * @author Xinyue Zhao
  */
 public final class LogHistoryActivity extends BaseActivity implements OnScrollListener, OnItemLongClickListener,
-		Callback, AnimationListener {
+		Callback, AnimationListener, OnRefreshListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -88,7 +89,15 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	 * {@link android.widget.TextView} where message to be shown.
 	 */
 	private TextView mStickyMsgTv;
+	/**
+	 * {@code true} if still loading data.
+	 */
+	private boolean mLoading;
 
+	/**
+	 * Header of {@link android.widget.ListView}.
+	 */
+	private View mHeaderV;
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -130,12 +139,12 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
 		//Add header.
-		View headerV = getLayoutInflater().inflate(LAYOUT_HEADER, mLv, false);
-		mLv.addHeaderView(headerV, null, false);
-		headerV.getLayoutParams().height = getActionBarHeight();
+		mHeaderV = getLayoutInflater().inflate(LAYOUT_HEADER, mLv, false);
+		mHeaderV.getLayoutParams().height = getActionBarHeight();
 		//Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
+		mRefreshLayout.setOnRefreshListener(this);
 		//Long press to the ActionMode.
 		mLv.setOnItemLongClickListener(this);
 		//Move the progress-indicator firstly under the ActionBar.
@@ -145,7 +154,30 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	@Override
 	public void onResume() {
 		super.onResume();
+		loadHistory();
+
+		Prefs prefs = Prefs.getInstance(getApplication());
+		if (!prefs.isTipLongPressRmvLogHistoryShown() &&
+				mAdapter != null &&
+				mAdapter.getCount() > 0) {
+			//For first log-items, we show a message on sticky.
+			showStickyMsg(getString(R.string.msg_long_press_rmv_log_history), getResources().getColor(
+					R.color.warning_green_1));
+			prefs.setTipLongPressRmvLogHistoryShown(true);
+		}
+	}
+
+	/**
+	 * Load all log-history from DB.
+	 */
+	private void loadHistory() {
 		new ParallelTask<Void, List<HistoryItem>, List<HistoryItem>>(true) {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				mLoading = true;
+			}
+
 			@Override
 			protected List<HistoryItem> doInBackground(Void... params) {
 				return DB.getInstance(getApplication()).getAllHistories();
@@ -169,18 +201,9 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 					mLv.setVisibility(View.GONE);
 					mNoDataV.setVisibility(View.VISIBLE);
 				}
+				mLoading = false;
 			}
 		}.executeParallel();
-
-		Prefs prefs = Prefs.getInstance(getApplication());
-		if (!prefs.isTipLongPressRmvLogHistoryShown() &&
-				mAdapter != null &&
-				mAdapter.getCount() > 0) {
-			//For first log-items, we show a message on sticky.
-			showStickyMsg(getString(R.string.msg_long_press_rmv_log_history), getResources().getColor(
-					R.color.warning_green_1));
-			prefs.setTipLongPressRmvLogHistoryShown(true);
-		}
 	}
 
 	@Override
@@ -218,7 +241,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	}
 
 	@Override
-	public boolean onActionItemClicked(  ActionMode actionMode, MenuItem menuItem) {
+	public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case R.id.action_delete: {
 			new ParallelTask<Void, Void, LongSparseArray<HistoryItem>>(true) {
@@ -276,14 +299,16 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 			final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRefreshLayout.getLayoutParams();
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-				if (getSupportActionBar().isShowing()) {
+				if (getSupportActionBar().isShowing() && !mLoading) {
 					getSupportActionBar().hide();
 					ViewCompat.setY(mRefreshLayout, 0);
+					mLv.addHeaderView(mHeaderV, null, false);
 				}
 			} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
 				if (!getSupportActionBar().isShowing()) {
 					getSupportActionBar().show();
 					ViewCompat.setY(mRefreshLayout, getActionBarHeight());
+					mLv.removeHeaderView(mHeaderV);
 				}
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
@@ -331,4 +356,10 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	public void onAnimationRepeat(Animation animation) {
 
 	}
+
+	@Override
+	public void onRefresh() {
+		loadHistory();
+	}
+
 }
