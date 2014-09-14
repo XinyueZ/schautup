@@ -8,7 +8,6 @@
     android:lines="3"
     android:background="@color/white"
     android:inputType="textMultiLine"
-    android:visibility="gone"
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
     android:paddingTop="5dp"

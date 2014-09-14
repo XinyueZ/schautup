@@ -79,6 +79,7 @@ public class HistoryListAdapter extends BaseActionModeExpandableListAdapter<Hist
 				ExpandableListView lv = (ExpandableListView) parent;
 				if (!lv.isGroupExpanded(groupPosition)) {
 					lv.expandGroup(groupPosition);
+					lv.setSelectedGroup(groupPosition);
 				} else {
 					lv.collapseGroup(groupPosition);
 				}

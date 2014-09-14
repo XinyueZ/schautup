@@ -24,6 +24,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
 
 import com.schautup.R;
@@ -44,7 +45,7 @@ import de.greenrobot.event.EventBus;
  * @author Xinyue Zhao
  */
 public final class LogHistoryActivity extends BaseActivity implements OnScrollListener, OnItemLongClickListener,
-		Callback, AnimationListener, OnRefreshListener {
+		Callback, AnimationListener, OnRefreshListener, OnGroupClickListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -157,6 +158,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		mRefreshLayout.setOnRefreshListener(this);
 		//Long press to the ActionMode.
 		mLv.setOnItemLongClickListener(this);
+		mLv.setOnGroupClickListener(this);
 		//Move the progress-indicator firstly under the ActionBar.
 		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 	}
@@ -234,8 +236,8 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		if (mAdapter != null) {
 			mAdapter.actionModeBegin();
 
-			for(int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
-				if(mLv.isGroupExpanded(i)) {
+			for (int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
+				if (mLv.isGroupExpanded(i)) {
 					mLv.collapseGroup(i);
 				}
 			}
@@ -316,7 +318,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 			final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRefreshLayout.getLayoutParams();
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-				if (getSupportActionBar().isShowing() && !mLoading) {
+				if (getSupportActionBar().isShowing() && !mLoading && mActionMode == null) {
 					getSupportActionBar().hide();
 					ViewCompat.setY(mRefreshLayout, 0);
 					mLv.addHeaderView(mHeaderV, null, false);
@@ -379,4 +381,9 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		loadHistory();
 	}
 
+	@Override
+	public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+		//Disable system handling to open group.
+		return true;
+	}
 }
