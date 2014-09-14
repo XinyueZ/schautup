@@ -80,7 +80,8 @@ public class HistoryListAdapter extends BaseActionModeAdapter<HistoryItem> {
 		vh.mStatusTv.setText(cxt.getString(type.getNameResId()));
 		vh.mLoggedTimeTv.setText(cxt.getString(R.string.lbl_log_at,
 				Utils.convertTimestamps2dateString(parent.getContext(), item.getLogTime())));
-		vh.mOpenCommentBtn.setVisibility(!TextUtils.isEmpty(item.getComment()) ? View.VISIBLE : View.GONE);
+		vh.mOpenCommentBtn.setVisibility(!TextUtils.isEmpty(item.getComment()) && !isActionMode() ? View.VISIBLE :
+				View.GONE);
 		vh.mOpenCommentBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
