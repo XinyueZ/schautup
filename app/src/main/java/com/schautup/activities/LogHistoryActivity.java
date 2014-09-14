@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.adapters.HistoryListAdapter;
+import com.schautup.bus.AddedHistoryEvent;
 import com.schautup.bus.ProgressbarEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.data.HistoryItem;
@@ -112,6 +113,15 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		mRefreshLayout.setRefreshing(e.isShow());
 	}
 
+	/**
+	 * Handler for {@link com.schautup.bus.AddedHistoryEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.AddedHistoryEvent}.
+	 */
+	public void onEvent(AddedHistoryEvent e) {
+		loadHistory();
+	}
 	//------------------------------------------------
 
 

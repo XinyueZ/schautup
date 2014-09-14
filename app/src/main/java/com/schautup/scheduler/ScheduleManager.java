@@ -19,6 +19,7 @@ import com.chopping.application.LL;
 import com.schautup.R;
 import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
+import com.schautup.bus.AddedHistoryEvent;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
@@ -416,6 +417,7 @@ public class ScheduleManager extends Service {
 			historyItem = new HistoryItem(item.getType());
 			historyItem.setComment(comment);
 			db.logHistory(historyItem);
+			EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
 		}
 	}
 }
