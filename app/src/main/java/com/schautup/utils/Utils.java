@@ -199,7 +199,7 @@ public final class Utils {
 	 *
 	 * @return A date string format.
 	 */
-	public static String convertTimestamps2dateString(Context cxt, long timestamps) {
+	public static String convertTimestamps2DateString(Context cxt, long timestamps) {
 		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
 				FORMAT_SHOW_TIME | FORMAT_ABBREV_MONTH);
 	}

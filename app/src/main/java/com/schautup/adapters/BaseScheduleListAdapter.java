@@ -26,7 +26,7 @@ import com.schautup.views.BadgeView;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<ScheduleItem> {
+public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<ScheduleItem> {
 	/**
 	 * Data source.
 	 */
@@ -160,12 +160,12 @@ public abstract class BaseScheduleAdapter extends BaseActionModeAdapter<Schedule
 	protected abstract int getLayoutId();
 
 	/**
-	 * Create a  {@link com.schautup.adapters.BaseScheduleAdapter.ViewHolder} object variant.
+	 * Create a  {@link BaseScheduleListAdapter.ViewHolder} object variant.
 	 *
 	 * @param convertView
 	 * 		The root {@link android.view.View} of item.
 	 *
-	 * @return A {@link com.schautup.adapters.BaseScheduleAdapter.ViewHolder} object.
+	 * @return A {@link BaseScheduleListAdapter.ViewHolder} object.
 	 */
 	protected abstract ViewHolder createViewHolder(View convertView);
 

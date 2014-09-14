@@ -17,7 +17,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
+public final class ScheduleListViewListAdapter extends BaseScheduleListAdapter {
 	/**
 	 * Main layout for this component.
 	 */
@@ -36,8 +36,8 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 				});
 
 		viewHolder.mOptionBtn.setVisibility(!isActionMode() ? View.VISIBLE : View.GONE);
-		viewHolder.mEditedTimeTv.setText(Utils.convertTimestamps2dateString(parent.getContext(), getItemList().get(position)
-				.getEditedTime()));
+		viewHolder.mEditedTimeTv.setText(Utils.convertTimestamps2DateString(parent.getContext(), getItemList().get(
+				position).getEditedTime()));
 		return convertView;
 	}
 
@@ -48,7 +48,7 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 	}
 
 	@Override
-	protected BaseScheduleAdapter.ViewHolder createViewHolder(View convertView) {
+	protected BaseScheduleListAdapter.ViewHolder createViewHolder(View convertView) {
 		return new ViewHolder(convertView);
 	}
 
@@ -57,7 +57,7 @@ public final class ScheduleListViewAdapter extends BaseScheduleAdapter {
 	 *
 	 * @author Xinyue Zhao
 	 */
-	private static class ViewHolder extends BaseScheduleAdapter.ViewHolder {
+	private static final class ViewHolder extends BaseScheduleListAdapter.ViewHolder {
 		private ImageButton mOptionBtn;
 		private TextView mEditedTimeTv;
 

@@ -14,7 +14,7 @@ import android.widget.AdapterView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
-import com.schautup.adapters.BaseScheduleAdapter;
+import com.schautup.adapters.BaseScheduleListAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
@@ -46,9 +46,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 */
 	private AbsListView mLv;
 	/**
-	 * {@link com.schautup.adapters.BaseScheduleAdapter} for {@link #mLv}.
+	 * {@link com.schautup.adapters.BaseScheduleListAdapter} for {@link #mLv}.
 	 */
-	private BaseScheduleAdapter mAdp;
+	private BaseScheduleListAdapter mAdp;
 	/**
 	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mLv}.
 	 */
@@ -304,11 +304,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	}
 
 	/**
-	 * Create a {@link com.schautup.adapters.BaseScheduleAdapter} object.
+	 * Create a {@link com.schautup.adapters.BaseScheduleListAdapter} object.
 	 *
-	 * @return The {@link com.schautup.adapters.BaseScheduleAdapter} object.
+	 * @return The {@link com.schautup.adapters.BaseScheduleListAdapter} object.
 	 */
-	protected void setAdapter(BaseScheduleAdapter adp) {
+	protected void setAdapter(BaseScheduleListAdapter adp) {
 		mAdp = adp;
 	}
 
@@ -317,7 +317,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 *
 	 * @return The adapter.
 	 */
-	protected BaseScheduleAdapter getAdapter() {
+	protected BaseScheduleListAdapter getAdapter() {
 		return mAdp;
 	}
 

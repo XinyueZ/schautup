@@ -6,7 +6,7 @@ import android.support.v4.util.LongSparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -19,7 +19,7 @@ import com.schautup.R;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseActionModeAdapter<T> extends BaseAdapter implements
+public abstract class BaseActionModeExpandableListAdapter<T> extends BaseExpandableListAdapter implements
 		OnClickListener {
 	/**
 	 * Items that will be removed.
@@ -30,30 +30,15 @@ public abstract class BaseActionModeAdapter<T> extends BaseAdapter implements
 	 */
 	private boolean mActionMode;
 
-	/**
-	 * Let view show a {@link android.widget.CheckBox} for the {@link android.support.v7.view.ActionMode}.
-	 * <p/>
-	 * <b>Call this before return if override this method.</b>
-	 *
-	 * @param position
-	 * 		The position of the item within the adapter's data set of the item whose view we want.
-	 * @param convertView
-	 * 		The old view to reuse, if possible. Note: You should check that this view is non-null and of an appropriate
-	 * 		type before using. If it is not possible to convert this view to display the correct data, this method can
-	 * 		create a new view. Heterogeneous lists can specify their number of view types, so that this View is always of
-	 * 		the right type (see {@link #getViewTypeCount()} and {@link #getItemViewType(int)}).
-	 * @param parent
-	 * 		The parent that this view will eventually be attached to
-	 *
-	 * @return A View corresponding to the data at the specified position.
-	 */
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public  View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
 		ViewHolderActionMode vh = (ViewHolderActionMode) convertView.getTag();
-		T item = (T) getItem(position);
+		T item = (T) getGroup(groupPosition);
 		if (vh.mDeleteCb != null) {
 			vh.mDeleteCb.setVisibility(mActionMode ? View.VISIBLE : View.GONE);
-			if(!mActionMode) {
+			if (!mActionMode) {
 				vh.mDeleteCb.setChecked(false);
 			} else {
 				vh.mDeleteCb.setChecked(mToRmvItems.indexOfKey(getItemKey(item)) > 0);
@@ -122,9 +107,8 @@ public abstract class BaseActionModeAdapter<T> extends BaseAdapter implements
 	}
 
 
-
 	/**
-	 * Data-Source for this {@link com.schautup.adapters.BaseActionModeAdapter}.
+	 * Data-Source for this {@link com.schautup.adapters.BaseActionModeExpandableListAdapter}.
 	 *
 	 * @return A {@link java.util.List} of {@code T}.
 	 */
@@ -161,7 +145,7 @@ public abstract class BaseActionModeAdapter<T> extends BaseAdapter implements
 		private CheckBox mDeleteCb;
 
 		/**
-		 * Constructor of {@link com.schautup.adapters.BaseActionModeAdapter.ViewHolderActionMode}.
+		 * Constructor of {@link com.schautup.adapters.BaseActionModeExpandableListAdapter.ViewHolderActionMode}.
 		 *
 		 * @param convertView
 		 * 		The parent view for all.

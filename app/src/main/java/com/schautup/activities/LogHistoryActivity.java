@@ -23,7 +23,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.schautup.R;
@@ -59,9 +59,9 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 	private SwipeRefreshLayout mRefreshLayout;
 
 	/**
-	 * {@link android.widget.ListView} for all histories.
+	 * {@link android.widget.ExpandableListView} for all histories.
 	 */
-	private ListView mLv;
+	private ExpandableListView mLv;
 	/**
 	 * Indicator when there's no data.
 	 */
@@ -143,7 +143,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		setContentView(LAYOUT);
 		getSupportActionBar().setIcon(R.drawable.ic_action_log);
 		mNoDataV = findViewById(R.id.no_history_tv);
-		mLv = (ListView) findViewById(R.id.history_lv);
+		mLv = (ExpandableListView) findViewById(R.id.history_explv);
 		mLv.setOnScrollListener(this);
 		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
@@ -169,7 +169,7 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		Prefs prefs = Prefs.getInstance(getApplication());
 		if (!prefs.isTipLongPressRmvLogHistoryShown() &&
 				mAdapter != null &&
-				mAdapter.getCount() > 0) {
+				mAdapter.getGroupCount() > 0) {
 			//For first log-items, we show a message on sticky.
 			showStickyMsg(getString(R.string.msg_long_press_rmv_log_history), getResources().getColor(
 					R.color.warning_green_1));
@@ -233,7 +233,14 @@ public final class LogHistoryActivity extends BaseActivity implements OnScrollLi
 		startSupportActionMode(this);
 		if (mAdapter != null) {
 			mAdapter.actionModeBegin();
+
+			for(int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
+				if(mLv.isGroupExpanded(i)) {
+					mLv.collapseGroup(i);
+				}
+			}
 		}
+
 		return true;
 	}
 

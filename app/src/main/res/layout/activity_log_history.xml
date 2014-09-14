@@ -10,7 +10,6 @@
     tools:context="com.schautup.activities.LogHistoryActivity">
 
 
-
     <TextView
         android:id="@+id/no_history_tv"
         android:text="@string/lbl_no_history"
@@ -27,13 +26,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/history_lv"
+        <ExpandableListView
+            android:id="@+id/history_explv"
             android:visibility="gone"
             android:cacheColorHint="@android:color/transparent"
             android:layout_width="match_parent"
             android:divider="@drawable/lv_divider"
-            android:dividerHeight="1dp"   android:choiceMode="singleChoice"
+            android:groupIndicator="@null"
+            android:dividerHeight="1dp"
+            android:choiceMode="singleChoice"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 

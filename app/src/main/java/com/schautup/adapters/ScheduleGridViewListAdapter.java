@@ -13,7 +13,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class ScheduleGridViewAdapter extends BaseScheduleAdapter {
+public final class ScheduleGridViewListAdapter extends BaseScheduleListAdapter {
 	/**
 	 * Main layout for this component.
 	 */

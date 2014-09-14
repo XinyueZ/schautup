@@ -16,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.schautup.R;
-import com.schautup.adapters.ScheduleListViewAdapter;
+import com.schautup.adapters.ScheduleListViewListAdapter;
 import com.schautup.bus.ShowActionModeEvent;
 
 import de.greenrobot.event.EventBus;
@@ -70,7 +70,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 		listView.setLayoutAnimation(controller);
 
 		setListViewWidget(listView);
-		setAdapter(new ScheduleListViewAdapter());
+		setAdapter(new ScheduleListViewListAdapter());
 		//Add header.
 		View headerV = getActivity().getLayoutInflater().inflate(LAYOUT_HEADER, listView, false);
 		listView.addHeaderView(headerV, null, false);
