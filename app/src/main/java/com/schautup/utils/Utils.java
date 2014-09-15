@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import com.chopping.application.LL;
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
+import com.schautup.OperationFailException;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 import com.schautup.views.BadgeView;
@@ -157,17 +159,17 @@ public final class Utils {
 
 
 	/**
-	 * Converts one of the internal day constants (SU, MO, etc.) to the two-letter string representing that constant.
+	 * Compare with {@link org.joda.time.DateTimeConstants}. Converts day in week to two-letter string .
 	 *
 	 * @param day
-	 * 		one the internal constants SU, MO, etc.
+	 * 		Day in week.
 	 *
 	 * @return the two-letter string for the day ("SU", "MO", etc.)
 	 *
 	 * @throws IllegalArgumentException
 	 * 		Thrown if the day argument is not one of the defined day constants.
 	 */
-	public static String day2String(int day) {
+	public static String dateTimeDay2String(int day) {
 		switch (day) {
 		case DateTimeConstants.SUNDAY:
 			return "SU";
@@ -183,6 +185,43 @@ public final class Utils {
 			return "FR";
 		case DateTimeConstants.SATURDAY:
 			return "SA";
+		default:
+			throw new IllegalArgumentException("bad day argument: " + day);
+		}
+	}
+
+
+
+	/**
+	 * Compare with {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}. Converts day in week to
+	 * local text .
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param day
+	 * 		Day in week.
+	 *
+	 * @return The day in week in local text.
+	 *
+	 * @throws IllegalArgumentException
+	 * 		Thrown if the day argument is not one of the defined day constants.
+	 */
+	public static String recurrenceDay2String(Context cxt, int day) {
+		switch (day) {
+		case EventRecurrence.SU:
+			return cxt.getString(R.string.lbl_su);
+		case EventRecurrence.MO:
+			return cxt.getString(R.string.lbl_mo);
+		case EventRecurrence.TU:
+			return cxt.getString(R.string.lbl_tu);
+		case EventRecurrence.WE:
+			return cxt.getString(R.string.lbl_we);
+		case EventRecurrence.TH:
+			return cxt.getString(R.string.lbl_th);
+		case EventRecurrence.FR:
+			return cxt.getString(R.string.lbl_fr);
+		case EventRecurrence.SA:
+			return cxt.getString(R.string.lbl_sa);
 		default:
 			throw new IllegalArgumentException("bad day argument: " + day);
 		}
@@ -218,12 +257,15 @@ public final class Utils {
 	 *
 	 * @return {code null} if unconfirmed, some errors happened, {@code true} if change is success, {@code false} if
 	 * already on or off.
+	 *
+	 * @throws com.schautup.OperationFailException
+	 * 		Error fires when the operation is not success.
 	 */
-	public static Boolean setMobileDataEnabled(Context context, boolean enabled) {
-		Boolean success;
+	public static boolean setMobileDataEnabled(Context context, boolean enabled) throws OperationFailException {
+		boolean success;
 		Boolean isMobileDataEnabled = isMobileDataEnabled(context);
 		if (isMobileDataEnabled == null) {
-			success = null;
+			throw new OperationFailException();
 		} else if ((isMobileDataEnabled && enabled) || (!isMobileDataEnabled && !enabled)) {
 			success = false;
 		} else {
@@ -243,7 +285,7 @@ public final class Utils {
 				success = true;
 			} catch (Exception ex) {
 				LL.w(ex.toString());
-				success = null;
+				throw new OperationFailException();
 			}
 		}
 		return success;
@@ -282,14 +324,20 @@ public final class Utils {
 	 * 		{@code true} Turn on, {@code false} turn off.
 	 *
 	 * @return {@code true} if change is success. {@code false} if wifi is already enable or disable.
+	 *
+	 * @throws com.schautup.OperationFailException
+	 * 		Error fires when the operation is not success.
 	 */
-	public static boolean setWifiEnabled(Context context, boolean enabled) {
+	public static boolean setWifiEnabled(Context context, boolean enabled) throws OperationFailException {
 		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		if ((enabled && wifiManager.isWifiEnabled()) || (!enabled && !wifiManager.isWifiEnabled())) {
 			return false;
 		}
-		wifiManager.setWifiEnabled(enabled);
-		return true;
+		if (wifiManager.setWifiEnabled(enabled)) {
+			return true;
+		} else {
+			throw new OperationFailException();
+		}
 	}
 
 	/**

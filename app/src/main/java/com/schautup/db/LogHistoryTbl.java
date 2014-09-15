@@ -19,6 +19,7 @@ final class LogHistoryTbl {
 	 */
 	static final String SQL_CREATE =
 			"CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY, " + TYPE + " INTEGER, " +
+					COMMENT + " TEXT, " +
 					EDIT_TIME + " INTEGER" +
 					");";
 
