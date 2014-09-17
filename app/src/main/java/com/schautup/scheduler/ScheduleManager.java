@@ -16,7 +16,8 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
 import com.chopping.application.LL;
-import com.schautup.OperationFailException;
+import com.chopping.exceptions.OperationFailException;
+import com.chopping.utils.DeviceUtils;
 import com.schautup.R;
 import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
@@ -321,7 +322,7 @@ public class ScheduleManager extends Service {
 			comment = null;
 			switch (item.getType()) {
 			case MUTE:
-				if (Utils.setRingMode(this, RINGER_MODE_SILENT)) {
+				if (DeviceUtils.setRingMode(this, RINGER_MODE_SILENT)) {
 					sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
 							R.string.notify_mute_headline), getString(R.string.notify_mute_content),
 							R.drawable.ic_mute_notify));
@@ -331,7 +332,7 @@ public class ScheduleManager extends Service {
 				}
 				break;
 			case VIBRATE:
-				if (Utils.setRingMode(this, RINGER_MODE_VIBRATE)) {
+				if (DeviceUtils.setRingMode(this, RINGER_MODE_VIBRATE)) {
 					sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
 							R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
 							R.drawable.ic_vibrate_notify));
@@ -341,7 +342,7 @@ public class ScheduleManager extends Service {
 				}
 				break;
 			case SOUND:
-				if (Utils.setRingMode(this, RINGER_MODE_NORMAL)) {
+				if (DeviceUtils.setRingMode(this, RINGER_MODE_NORMAL)) {
 					sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
 							R.string.notify_sound_headline), getString(R.string.notify_sound_content),
 							R.drawable.ic_sound_notify));
@@ -354,7 +355,7 @@ public class ScheduleManager extends Service {
 				try {
 					boolean wifiSuccess;
 					if (Boolean.valueOf(item.getReserveLeft())) {
-						wifiSuccess = Utils.setWifiEnabled(this, true);
+						wifiSuccess = DeviceUtils.setWifiEnabled(this, true);
 						if (wifiSuccess) {
 							sendNotification(this, new Result(String.format(getString(
 									R.string.notify_wifi_simple_content), getString(R.string.lbl_on)), getString(
@@ -366,7 +367,7 @@ public class ScheduleManager extends Service {
 									getString(R.string.lbl_on_small));
 						}
 					} else {
-						wifiSuccess = Utils.setWifiEnabled(this, false);
+						wifiSuccess = DeviceUtils.setWifiEnabled(this, false);
 						if (wifiSuccess) {
 							sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content),
 									getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline),
@@ -386,7 +387,7 @@ public class ScheduleManager extends Service {
 				try {
 					Boolean mobileDataSuccess;
 					if (Boolean.valueOf(item.getReserveLeft())) {
-						mobileDataSuccess = Utils.setMobileDataEnabled(this, true);
+						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, true);
 						if (mobileDataSuccess) {
 							sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
 									R.string.notify_mobile_headline), String.format(getString(R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
@@ -396,7 +397,7 @@ public class ScheduleManager extends Service {
 									getString(R.string.lbl_on_small));
 						}
 					} else {
-						mobileDataSuccess = Utils.setMobileDataEnabled(this, false);
+						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, false);
 						if (mobileDataSuccess) {
 							sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
 									R.string.notify_mobile_headline), String.format(getString(R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(

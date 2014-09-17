@@ -1,7 +1,5 @@
 package com.schautup.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -10,18 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.chopping.application.LL;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
-import com.schautup.OperationFailException;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
 import com.schautup.views.BadgeView;
@@ -191,7 +184,6 @@ public final class Utils {
 	}
 
 
-
 	/**
 	 * Compare with {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}. Converts day in week to
 	 * local text .
@@ -241,125 +233,6 @@ public final class Utils {
 	public static String convertTimestamps2DateString(Context cxt, long timestamps) {
 		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
 				FORMAT_SHOW_TIME | FORMAT_ABBREV_MONTH);
-	}
-
-	/**
-	 * Turn on/off the mobile data.
-	 * <p/>
-	 * <b>Unofficial implementation.</b>
-	 * <p/>
-	 * See. <a href="http://stackoverflow.com/questions/12535101/how-can-i-turn-off-3g-data-programmatically-on-android">StackOverflow</a>
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param enabled
-	 * 		{@code true} Turn on, {@code false} turn off.
-	 *
-	 * @return {code null} if unconfirmed, some errors happened, {@code true} if change is success, {@code false} if
-	 * already on or off.
-	 *
-	 * @throws com.schautup.OperationFailException
-	 * 		Error fires when the operation is not success.
-	 */
-	public static boolean setMobileDataEnabled(Context context, boolean enabled) throws OperationFailException {
-		boolean success;
-		Boolean isMobileDataEnabled = isMobileDataEnabled(context);
-		if (isMobileDataEnabled == null) {
-			throw new OperationFailException();
-		} else if ((isMobileDataEnabled && enabled) || (!isMobileDataEnabled && !enabled)) {
-			success = false;
-		} else {
-			try {
-				final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(
-						Context.CONNECTIVITY_SERVICE);
-				final Class conmanClass = Class.forName(conman.getClass().getName());
-				final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
-				iConnectivityManagerField.setAccessible(true);
-				final Object iConnectivityManager = iConnectivityManagerField.get(conman);
-				final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
-				final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod(
-						"setMobileDataEnabled", Boolean.TYPE);
-				setMobileDataEnabledMethod.setAccessible(true);
-
-				setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
-				success = true;
-			} catch (Exception ex) {
-				LL.w(ex.toString());
-				throw new OperationFailException();
-			}
-		}
-		return success;
-	}
-
-	/**
-	 * Check whether mobile data is enable or not.
-	 * <p/>
-	 * <b>Unofficial implementation.</b>
-	 * <p/>
-	 * See. <a href="http://stackoverflow.com/questions/8224097/how-to-check-if-mobile-network-is-enabled-disabled">StackOverflow</a>
-	 *
-	 * @return {code null} if unconfirmed, some errors happened, {@code true} if already enabled, {@code false} disable.
-	 */
-	private static Boolean isMobileDataEnabled(Context cxt) {
-		Object connectivityService = cxt.getSystemService(Context.CONNECTIVITY_SERVICE);
-		ConnectivityManager cm = (ConnectivityManager) connectivityService;
-
-		try {
-			Class<?> c = Class.forName(cm.getClass().getName());
-			Method m = c.getDeclaredMethod("getMobileDataEnabled");
-			m.setAccessible(true);
-			return (Boolean) m.invoke(cm);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Turn on/off the wifi. Call {@link android.net.wifi.WifiManager#setWifiEnabled(boolean)} directly.
-	 *
-	 * @param context
-	 * 		{@link android.content.Context}.
-	 * @param enabled
-	 * 		{@code true} Turn on, {@code false} turn off.
-	 *
-	 * @return {@code true} if change is success. {@code false} if wifi is already enable or disable.
-	 *
-	 * @throws com.schautup.OperationFailException
-	 * 		Error fires when the operation is not success.
-	 */
-	public static boolean setWifiEnabled(Context context, boolean enabled) throws OperationFailException {
-		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		if ((enabled && wifiManager.isWifiEnabled()) || (!enabled && !wifiManager.isWifiEnabled())) {
-			return false;
-		}
-		if (wifiManager.setWifiEnabled(enabled)) {
-			return true;
-		} else {
-			throw new OperationFailException();
-		}
-	}
-
-	/**
-	 * Set different ring mode. Call {@link android.media.AudioManager#setRingerMode(int)}.
-	 *
-	 * @param cxt
-	 * 		{@link android.content.Context}.
-	 * @param mode
-	 * 		Different mode:<li>{@link android.media.AudioManager#RINGER_MODE_SILENT} for {@link
-	 * 		com.schautup.data.ScheduleType#MUTE}</li> <li>{@link android.media.AudioManager#RINGER_MODE_VIBRATE} for {@link
-	 * 		com.schautup.data.ScheduleType#VIBRATE}</li><li>{@link android.media.AudioManager#RINGER_MODE_NORMAL} for
-	 * 		{@link com.schautup.data.ScheduleType#SOUND}</li>
-	 *
-	 * @return {@code false} if the mode that will be switched is already on.
-	 */
-	public static boolean setRingMode(Context cxt, int mode) {
-		AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
-		if (audioManager.getRingerMode() == mode) {
-			return false;
-		}
-		audioManager.setRingerMode(mode);
-		return true;
 	}
 
 
