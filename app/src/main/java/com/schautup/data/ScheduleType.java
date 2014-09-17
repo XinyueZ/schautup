@@ -10,7 +10,8 @@ import com.schautup.R;
 public enum ScheduleType {
 	MUTE(0, R.drawable.ic_mute, R.string.type_mute), VIBRATE(1, R.drawable.ic_vibrate, R.string.type_vibrate), SOUND(2,
 			R.drawable.ic_sound, R.string.type_sound), WIFI(3, R.drawable.ic_wifi_btn, R.string.type_wifi),
-	MOBILE(4, R.drawable.ic_mobile_data_btn, R.string.type_mobile_data);
+	MOBILE(4, R.drawable.ic_mobile_data_btn, R.string.type_mobile_data),BRIGHTNESS(5, R.drawable.ic_brightness_btn,
+			R.string.type_brightness);
 
 	/**
 	 * Code of type.

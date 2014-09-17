@@ -37,7 +37,12 @@
         name="lbl_function_is_running"><Data><![CDATA[&#8226;<font color="#80FF80">Because %1$s is already %2$s, avoid changing.</font>]]></Data></string>
     <string name="lbl_can_not_set"><Data><![CDATA[&#8226;<font color="#0096ff">I couldn\'t change %1$s status.</font>]]></Data></string>
     <string name="lbl_operation_fail"><Data><![CDATA[&#8226;<font color="#FF0000">Warning! Exception happened while switching.</font>]]></Data></string>
-
+    <string name="lbl_max">Maximum</string>
+    <string name="lbl_medium">Medium</string>
+    <string name="lbl_min">Minimum</string>
+    <string name="lbl_max_short">Max</string>
+    <string name="lbl_medium_short">Med</string>
+    <string name="lbl_min_short">Min</string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>
@@ -58,6 +63,7 @@
     <string name="option_sound">@string/type_sound</string>
     <string name="option_wifi">@string/type_wifi</string>
     <string name="option_mobile">@string/type_mobile_data</string>
+    <string name="option_brightness">@string/type_brightness</string>
 
     <!-- Shown in the 'About' window of the app. -->
     <string name="about_body">&lt;b&gt;SchautUp &lt;/b&gt;&lt;br&gt;Version %s &lt;br&gt;</string>
@@ -89,6 +95,7 @@
     <string name="msg_boot_start">SchautUp has been started.</string>
     <string name="msg_wifi_on_off">Do you want to turn off or on wifi?</string>
     <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?</string>
+    <string name="msg_brightness">How to set your display brightness?</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>
@@ -132,4 +139,5 @@
     <string name="type_sound">Sound</string>
     <string name="type_wifi">Wifi</string>
     <string name="type_mobile_data">Mobile</string>
+    <string name="type_brightness">Brightness</string>
 </resources>

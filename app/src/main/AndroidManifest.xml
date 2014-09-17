@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.schautup"
-    android:installLocation="preferExternal" >
+    android:installLocation="preferExternal">
 
     <!-- For a lot functions that need vibration. -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- The application runs as soon as possible when device starts. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--Homepage, App-config, etc.-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!--Turn on/off 3G etc.-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--Turn on/off Wifi etc.-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--Download for new update version-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--This application needs setting system settings.-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <supports-screens android:xlargeScreens="true" />
 
@@ -75,12 +77,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/NoTitleTextOverlayTheme" >
+            android:theme="@style/NoTitleTextOverlayTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -110,7 +112,7 @@
             android:label="@string/settings_quick_title"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/ActivityDialog"/>
+            android:theme="@style/ActivityDialog" />
 
         <service
             android:name=".scheduler.Hungry"
@@ -119,7 +121,7 @@
 
         <receiver
             android:name=".BootReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -129,7 +131,9 @@
             android:name=".scheduler.ScheduleManager"
             android:enabled="true"
             android:exported="false" />
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="0bf5835ac1569fe382ff64839c0be3d3ed9396b9"/>
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="0bf5835ac1569fe382ff64839c0be3d3ed9396b9" />
     </application>
 
 </manifest>

@@ -34,7 +34,12 @@
     <string name="lbl_function_is_running"><Data><![CDATA[&#8226;<font color="#80FF80">%1$s已经正处于%2$s状态，忽略本次操作。</font>]]></Data></string>
     <string name="lbl_can_not_set"><Data><![CDATA[&#8226;<font color="#0096ff">无法通过改变本机%1$s状态。</font>]]></Data></string>
     <string name="lbl_operation_fail"><Data><![CDATA[&#8226;<font color="#FF0000">警告！操作时出现了异常。</font>]]></Data></string>
-
+    <string name="lbl_max">最亮</string>
+    <string name="lbl_medium">中等</string>
+    <string name="lbl_min">最暗</string>
+    <string name="lbl_max_short">亮</string>
+    <string name="lbl_medium_short">中</string>
+    <string name="lbl_min_short">暗</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -74,6 +79,7 @@
     <string name="msg_boot_start">SchautUp已经启动。</string>
     <string name="msg_wifi_on_off">是否打开或关闭无线网络连接？</string>
     <string name="msg_mobile_on_off">是否打开或关闭移动网络连接？</string>
+    <string name="msg_brightness">如何设置屏幕亮度？</string>
 
     <!--Settings-->
     <string name="settings_hungry_mode">精确</string>
@@ -103,4 +109,5 @@
     <string name="type_sound">铃声</string>
     <string name="type_wifi">无线</string>
     <string name="type_mobile_data">移动\n网络</string>
+    <string name="type_brightness">亮度</string>
 </resources>
