@@ -31,9 +31,9 @@
     <string name="lbl_can">能</string>
     <string name="lbl_can_not">不能</string>
     <string name="lbl_more">更多</string>
-    <string name="lbl_function_is_running"><Data><![CDATA[&#8226;%1$s已经正处于%2$s状态，忽略本次操作。]]></Data></string>
-    <string name="lbl_can_not_set"><Data><![CDATA[&#8226;无法通过改变本机%1$s状态。]]></Data></string>
-    <string name="lbl_operation_fail"><Data><![CDATA[&#8226;警告！操作时出现了异常。]]></Data></string>
+    <string name="lbl_function_is_running"><Data><![CDATA[&#8226;<font color="#80FF80">%1$s已经正处于%2$s状态，忽略本次操作。</font>]]></Data></string>
+    <string name="lbl_can_not_set"><Data><![CDATA[&#8226;<font color="#0096ff">无法通过改变本机%1$s状态。</font>]]></Data></string>
+    <string name="lbl_operation_fail"><Data><![CDATA[&#8226;<font color="#FF0000">警告！操作时出现了异常。</font>]]></Data></string>
 
 
     <!--Menu-->

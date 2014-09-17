@@ -33,9 +33,10 @@
     <string name="lbl_can">can</string>
     <string name="lbl_can_not">can\'t</string>
     <string name="lbl_more">More</string>
-    <string name="lbl_function_is_running"><Data><![CDATA[&#8226;Because %1$s is already %2$s, avoid changing.]]></Data></string>
-    <string name="lbl_can_not_set"><Data><![CDATA[&#8226;I couldn\'t change %1$s status.]]></Data></string>
-    <string name="lbl_operation_fail"><Data><![CDATA[&#8226;Warning! Exception happened while switching.]]></Data></string>
+    <string
+        name="lbl_function_is_running"><Data><![CDATA[&#8226;<font color="#80FF80">Because %1$s is already %2$s, avoid changing.</font>]]></Data></string>
+    <string name="lbl_can_not_set"><Data><![CDATA[&#8226;<font color="#0096ff">I couldn\'t change %1$s status.</font>]]></Data></string>
+    <string name="lbl_operation_fail"><Data><![CDATA[&#8226;<font color="#FF0000">Warning! Exception happened while switching.</font>]]></Data></string>
 
 
     <!--Menu-->

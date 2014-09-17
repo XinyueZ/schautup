@@ -318,6 +318,7 @@ public class ScheduleManager extends Service {
 		HistoryItem historyItem;
 		String comment = null;
 		for (ScheduleItem item : items) {
+			comment = null;
 			switch (item.getType()) {
 			case MUTE:
 				if (Utils.setRingMode(this, RINGER_MODE_SILENT)) {
