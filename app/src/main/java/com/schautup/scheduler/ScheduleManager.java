@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import com.chopping.application.LL;
 import com.chopping.exceptions.OperationFailException;
 import com.chopping.utils.DeviceUtils;
+import com.chopping.utils.DeviceUtils.Brightness;
 import com.schautup.R;
 import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
@@ -26,6 +27,7 @@ import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.data.HistoryItem;
+import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
@@ -375,7 +377,7 @@ public class ScheduleManager extends Service {
 									R.drawable.ic_no_wifi_notify));
 						} else {
 							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
-									getString(R.string.lbl_off_small));
+									getString(R.string.lbl_off_small)) + "<p/>" + getString(R.string.lbl_left_from_wifi);
 						}
 					}
 				} catch (OperationFailException e) {
@@ -389,8 +391,10 @@ public class ScheduleManager extends Service {
 					if (Boolean.valueOf(item.getReserveLeft())) {
 						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, true);
 						if (mobileDataSuccess) {
-							sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
-									R.string.notify_mobile_headline), String.format(getString(R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
+							sendNotification(this, new Result(String.format(getString(
+									R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
+									R.string.notify_mobile_headline), String.format(getString(
+									R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
 									R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
 						} else {
 							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
@@ -399,17 +403,40 @@ public class ScheduleManager extends Service {
 					} else {
 						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, false);
 						if (mobileDataSuccess) {
-							sendNotification(this, new Result(String.format(getString(R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
-									R.string.notify_mobile_headline), String.format(getString(R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
+							sendNotification(this, new Result(String.format(getString(
+									R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
+									R.string.notify_mobile_headline), String.format(getString(
+									R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
 									R.string.lbl_can_not)), R.drawable.ic_no_mobile_data_notify));
 						} else {
 							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
 									getString(R.string.lbl_off_small));
 						}
 					}
-				}catch (OperationFailException e) {
+				} catch (OperationFailException e) {
 					comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
 							R.string.option_mobile))).append(getString(R.string.lbl_operation_fail)).toString();
+				}
+				break;
+			case BRIGHTNESS:
+				Level level = Level.fromInt(Integer.valueOf(item.getReserveLeft()));
+				switch (level) {
+				case MAX:
+					DeviceUtils.setBrightness(this, Brightness.MAX);
+					break;
+				case MEDIUM:
+					DeviceUtils.setBrightness(this, Brightness.MEDIUM);
+					break;
+				case MIN:
+					DeviceUtils.setBrightness(this, Brightness.MIN);
+					break;
+				}
+				if(level != null) {
+					sendNotification(this, new Result(String.format(getString(
+							R.string.notify_brightness_simple_content), getString(level.getLevelResId())), getString(
+							R.string.notify_brightness_headline), String.format(getString(
+							R.string.notify_brightness_content), getString(level.getLevelResId())),
+							R.drawable.ic_brightness_notify));
 				}
 				break;
 			}

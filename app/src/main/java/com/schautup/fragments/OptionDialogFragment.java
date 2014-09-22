@@ -25,6 +25,7 @@ import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
+import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
 import com.schautup.db.DB;
@@ -69,6 +70,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * {@link android.view.View} represent selection on mobile network.
 	 */
 	private View mSelMobileV;
+	/**
+	 * {@link android.view.View} represent setting on brightness.
+	 */
+	private View mSelBrightnessV;
 	/**
 	 * {@link android.widget.TextView} for selected hour.
 	 */
@@ -121,6 +126,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Information about mobile setting ON/OFF.
 	 */
 	private BadgeView mMobileInfoBgb;
+	/**
+	 * Information about setting brightness.
+	 */
+	private BadgeView mBrightnessInfoBgb;
 	/**
 	 * Information about selected recurrence.
 	 */
@@ -198,6 +207,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMobileV.setTag(item.getReserveLeft());
 			Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
 					Boolean.parseBoolean(item.getReserveLeft())));
+			break;
+		case BRIGHTNESS:
+			Level l = Level.fromInt(Integer.valueOf(item.getReserveLeft()));
+			mSelBrightnessV.setSelected(true);
+			mSelBrightnessV.setTag(l);
+			Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(l.getLevelShortResId()));
 			break;
 		}
 
@@ -288,10 +303,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelWifiV.setOnClickListener(this);
 		mSelMobileV = view.findViewById(R.id.set_mobile_data_ll);
 		mSelMobileV.setOnClickListener(this);
+		mSelBrightnessV = view.findViewById(R.id.set_brightness_ll);
+		mSelBrightnessV.setOnClickListener(this);
 		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wif_bgv);
 		mWifiInfoBgb.setVisibility(View.GONE);
 		mMobileInfoBgb = (BadgeView) view.findViewById(R.id.info_mobile_data_bgv);
 		mMobileInfoBgb.setVisibility(View.GONE);
+		mBrightnessInfoBgb = (BadgeView) view.findViewById(R.id.info_brightness_bgv);
+		mBrightnessInfoBgb.setVisibility(View.GONE);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
@@ -342,6 +361,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
+			mSelBrightnessV.setSelected(false);
+			mBrightnessInfoBgb.setVisibility(View.GONE);
+
 			mSelectedType = ScheduleType.MUTE;
 			break;
 		case R.id.set_vibrate_ll:
@@ -352,6 +374,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
+			mSelBrightnessV.setSelected(false);
+			mBrightnessInfoBgb.setVisibility(View.GONE);
+
 			mSelectedType = ScheduleType.VIBRATE;
 			break;
 		case R.id.set_sound_ll:
@@ -362,6 +387,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
+			mSelBrightnessV.setSelected(false);
+			mBrightnessInfoBgb.setVisibility(View.GONE);
+
 			mSelectedType = ScheduleType.SOUND;
 			break;
 		case R.id.set_wifi_ll:
@@ -370,6 +398,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.WIFI;
+
 					mSelWifiV.setTag(true);
 					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
 					mSelWifiV.setSelected(true);
@@ -379,11 +408,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
 			}).setNegativeButton(R.string.lbl_off, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.WIFI;
+
 					mSelWifiV.setTag(false);
 					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
 					mSelWifiV.setSelected(true);
@@ -393,11 +425,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
 			}).setNeutralButton(R.string.btn_cancel, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = null;
+
 					mSelWifiV.setTag(null);
 					mSelWifiV.setSelected(false);
 				}
@@ -409,6 +444,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.MOBILE;
+
 					mSelMobileV.setTag(true);
 					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
 							true));
@@ -419,11 +455,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
 			}).setNegativeButton(R.string.lbl_off, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = ScheduleType.MOBILE;
+
 					mSelMobileV.setTag(false);
 					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
 							false));
@@ -434,13 +473,72 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
 			}).setNeutralButton(R.string.btn_cancel, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mSelectedType = null;
+
 					mSelMobileV.setTag(null);
 					mSelMobileV.setSelected(false);
+				}
+			}).create().show();
+			break;
+		case R.id.set_brightness_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_brightness).setMessage(
+					R.string.msg_brightness).setCancelable(true).setPositiveButton(Level.MAX.getLevelResId(),
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mSelectedType = ScheduleType.BRIGHTNESS;
+
+							mSelBrightnessV.setTag(Level.MAX);
+							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MAX.getLevelShortResId()));
+							mSelBrightnessV.setSelected(true);
+
+							mSelVibrateV.setSelected(false);
+							mSelMuteV.setSelected(false);
+							mSelSoundV.setSelected(false);
+							mSelWifiV.setSelected(false);
+							mWifiInfoBgb.setVisibility(View.GONE);
+							mSelMobileV.setSelected(false);
+							mMobileInfoBgb.setVisibility(View.GONE);
+						}
+					}).setNegativeButton(Level.MIN.getLevelResId(), new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.BRIGHTNESS;
+
+					mSelBrightnessV.setTag(Level.MIN);
+					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MIN.getLevelShortResId()));
+					mSelBrightnessV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNeutralButton(Level.MEDIUM.getLevelResId(), new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.BRIGHTNESS;
+
+					mSelBrightnessV.setTag(Level.MEDIUM);
+					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MEDIUM.getLevelShortResId()));
+					mSelBrightnessV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
 				}
 			}).create().show();
 			break;
@@ -455,6 +553,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelSoundV.setSelected(false);
 				mSelWifiV.setSelected(false);
 				mSelMobileV.setSelected(false);
+				mSelBrightnessV.setSelected(false);
 			} else if (mEventRecurrence == null ||
 					((mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
 				//Warning, we must select "repeat".
@@ -479,6 +578,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						case MOBILE:
 							if (TextUtils.equals(mPreScheduleItem.getReserveLeft(), Utils.toString(
 									mSelMobileV.getTag()))) {
+								dismiss();
+							}
+							break;
+						case BRIGHTNESS:
+							Level l = Level.fromInt(Integer.valueOf(mPreScheduleItem.getReserveLeft()));
+							if (l == mSelBrightnessV.getTag()) {
 								dismiss();
 							}
 							break;
@@ -527,6 +632,11 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					scheduleItem.setReserveLeft(Utils.toString(mSelMobileV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
+				case BRIGHTNESS:
+					Level level = (Level) mSelBrightnessV.getTag();
+					scheduleItem.setReserveLeft(level.toCode() + "");
+					scheduleItem.setReserveRight("int");
+					break;
 				}
 				EventBus.getDefault().post(new UpdateDBEvent(scheduleItem, mEditMode));
 				dismiss();
@@ -547,14 +657,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				Utils.showBadgeView(getActivity(), mRecurrenceBgv, "..");
 			} else {
 				int sel = mEventRecurrence.byday[0];
-				Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(),sel));
+				Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(), sel));
 			}
 		} else {
 			String todayInWeek = Utils.dateTimeDay2String(DateTime.now().getDayOfWeek());
 			mEventRecurrence = new EventRecurrence();
 			mEventRecurrence.parse("FREQ=WEEKLY;WKST=SU;BYDAY=" + todayInWeek);
 			int sel = mEventRecurrence.byday[0];
-			Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(),sel));
+			Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(), sel));
 		}
 	}
 }

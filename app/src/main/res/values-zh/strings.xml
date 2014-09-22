@@ -34,12 +34,13 @@
     <string name="lbl_function_is_running"><Data><![CDATA[&#8226;<font color="#80FF80">%1$s已经正处于%2$s状态，忽略本次操作。</font>]]></Data></string>
     <string name="lbl_can_not_set"><Data><![CDATA[&#8226;<font color="#0096ff">无法通过改变本机%1$s状态。</font>]]></Data></string>
     <string name="lbl_operation_fail"><Data><![CDATA[&#8226;<font color="#FF0000">警告！操作时出现了异常。</font>]]></Data></string>
+    <string name="lbl_left_from_wifi"><Data><![CDATA[&#8226;<font color="#00007d">你可能已经离开了一个无限网络环境。</font>]]></Data></string>
     <string name="lbl_max">最亮</string>
     <string name="lbl_medium">中等</string>
     <string name="lbl_min">最暗</string>
-    <string name="lbl_max_short">亮</string>
-    <string name="lbl_medium_short">中</string>
-    <string name="lbl_min_short">暗</string>
+    <string name="lbl_max_short">最大</string>
+    <string name="lbl_medium_short">中等</string>
+    <string name="lbl_min_short">最小</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>

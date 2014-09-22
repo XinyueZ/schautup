@@ -27,4 +27,8 @@
     <string name="notify_mobile_headline">SchautUp</string>
     <string name="notify_mobile_content">I\'ve turned %1$s your mobile data, you %2$s use internet under
         way.</string>
+    <!--Brightness-->
+    <string name="notify_brightness_simple_content">Display brightness changed to %s</string>
+    <string name="notify_brightness_headline">SchautUp</string>
+    <string name="notify_brightness_content">I\'ve changed brightness to %1$s.</string>
 </resources>

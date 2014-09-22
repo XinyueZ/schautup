@@ -24,4 +24,8 @@
     <string name="notify_mobile_simple_content">%s了移动网络</string>
     <string name="notify_mobile_headline">SchautUp</string>
     <string name="notify_mobile_content">我已经%1$s了移动网络，你%2$s通过手机访问因特网了。</string>
+    <!--Brightness-->
+    <string name="notify_brightness_simple_content">屏幕亮度变为%s</string>
+    <string name="notify_brightness_headline">SchautUp</string>
+    <string name="notify_brightness_content">我已经了屏幕亮度到%1$s。</string>
 </resources>

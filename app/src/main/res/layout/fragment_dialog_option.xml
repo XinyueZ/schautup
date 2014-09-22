@@ -194,17 +194,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_wifi_btn" />
                         <com.schautup.views.BadgeView
                             android:id="@+id/info_wif_bgv"
                             android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <ImageView
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="@dimen/size_hour_minute"
-                            android:layout_height="@dimen/size_hour_minute"
-                            android:background="@drawable/ic_wifi_btn" />
                     </FrameLayout>
 
                     <TextView
@@ -230,18 +230,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_mobile_data_btn" />
                         <com.schautup.views.BadgeView
                             android:id="@+id/info_mobile_data_bgv"
                             android:layout_width="wrap_content"
                             android:visibility="gone"
                             android:layout_height="wrap_content" />
 
-                        <ImageView
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="@dimen/size_hour_minute"
-                            android:layout_height="@dimen/size_hour_minute"
-                            android:background="@drawable/ic_mobile_data_btn" />
                     </FrameLayout>
+
 
                     <TextView
                         android:layout_width="match_parent"
@@ -250,6 +251,42 @@
                         android:textColor="@color/text_common_black"
                         android:layout_gravity="center_horizontal"
                         android:text="@string/option_mobile" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_brightness_ll"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_brightness_btn" />
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_brightness_bgv"
+                            android:layout_width="wrap_content"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_common_black"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/option_brightness" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

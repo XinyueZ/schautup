@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
+import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
 import com.schautup.utils.Utils;
 import com.schautup.views.BadgeView;
@@ -102,6 +103,11 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 				boolean bool = Boolean.valueOf(item.getReserveLeft());
 				Utils.showBadgeView(parent.getContext(),
 						vh.mInfoBgv, Utils.convertBooleanToOnOff(parent.getContext(), bool));
+			} else if(TextUtils.equals("int", item.getReserveRight())) {
+				int code = Integer.valueOf(item.getReserveLeft());
+				Level l = Level.fromInt(code);
+				Utils.showBadgeView(parent.getContext(),
+						vh.mInfoBgv, parent.getContext().getString(l.getLevelShortResId()) );
 			}
 		} else {
 			vh.mInfoBgv.setVisibility(View.GONE);

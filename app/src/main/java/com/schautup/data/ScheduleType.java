@@ -79,6 +79,8 @@ public enum ScheduleType {
 			return WIFI;
 		case 4:
 			return MOBILE;
+		case 5:
+			return BRIGHTNESS;
 		default:
 			return null;
 		}
@@ -88,7 +90,7 @@ public enum ScheduleType {
 	 * Get code of type.
 	 *
 	 * @return code.
-	 */
+	*/
 	public int toCode() {
 		return mCode;
 	}
