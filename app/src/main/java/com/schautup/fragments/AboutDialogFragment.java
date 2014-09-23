@@ -67,6 +67,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		PackageManager pm = getActivity().getPackageManager();
 		String packageName = getActivity().getPackageName();
 		String versionName;
+		String appName = getString(R.string.app_name);
 		try {
 			PackageInfo info = pm.getPackageInfo(packageName, 0);
 			versionName = info.versionName;
@@ -76,7 +77,7 @@ public final class AboutDialogFragment extends DialogFragment {
 
 		// About.
 		SpannableStringBuilder aboutBody = new SpannableStringBuilder();
-		aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
+		aboutBody.append(Html.fromHtml(getString(R.string.about_body, appName, versionName)));
 
 		// Licenses.
 		SpannableString licensesLink = new SpannableString(getString(R.string.about_licenses));

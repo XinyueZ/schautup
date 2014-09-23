@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Foreground-->
-    <string name="notify_foreground_simple_content">Hi! Here is SchautUp。</string>
-    <string name="notify_foreground_headline">SchautUp</string>
+    <string name="notify_foreground_simple_content">Hi! Here is %1$s.</string>
+    <string name="notify_foreground_headline">Caution!</string>
     <string name="notify_foreground_content">Schedule your device with different status(sound,
         vibrate, mute).</string>
     <!--mute-->
     <string name="notify_mute_simple_content">Mute is ON!</string>
-    <string name="notify_mute_headline">SchautUp</string>
+    <string name="notify_mute_headline">Caution!</string>
     <string name="notify_mute_content">I\'ve switched your device to Mute status, we keep in silence.</string>
     <!--vibrate-->
     <string name="notify_vibrate_simple_content">Vibrate is ON!</string>
-    <string name="notify_vibrate_headline">SchautUp</string>
+    <string name="notify_vibrate_headline">Caution!</string>
     <string name="notify_vibrate_content">I\'ve switched your device to Vibrate status, we keep in silence and
         vibrate your device.</string>
     <!--sound-->
     <string name="notify_sound_simple_content">Sound is ON!</string>
-    <string name="notify_sound_headline">SchautUp</string>
+    <string name="notify_sound_headline">Caution!</string>
     <string name="notify_sound_content">I\'ve switched your device to Sound status.</string>
     <!--Wifi-->
     <string name="notify_wifi_simple_content">Wifi %s</string>
-    <string name="notify_wifi_headline">SchautUp</string>
+    <string name="notify_wifi_headline">Caution!</string>
     <string name="notify_wifi_content">I\'ve turned %s your wifi.</string>
     <!--Mobile data-->
     <string name="notify_mobile_simple_content">Mobile data connection %s</string>
-    <string name="notify_mobile_headline">SchautUp</string>
+    <string name="notify_mobile_headline">Caution!</string>
     <string name="notify_mobile_content">I\'ve turned %1$s your mobile data, you %2$s use internet under
         way.</string>
     <!--Brightness-->
     <string name="notify_brightness_simple_content">Display brightness changed to %s</string>
-    <string name="notify_brightness_headline">SchautUp</string>
+    <string name="notify_brightness_headline">Caution!</string>
     <string name="notify_brightness_content">I\'ve changed brightness to %1$s.</string>
 </resources>

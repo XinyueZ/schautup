@@ -120,7 +120,7 @@ public class ScheduleManager extends Service {
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setWhen(System.currentTimeMillis())
-				.setTicker(getText(R.string.notify_foreground_simple_content)).setAutoCancel(true).setSmallIcon(
+				.setTicker(getString(R.string.notify_foreground_simple_content, getString(R.string.app_name))).setAutoCancel(true).setSmallIcon(
 						R.drawable.ic_action_logo).setLargeIcon(BitmapFactory.decodeResource(getResources(),
 						R.drawable.ic_action_logo)).setContentTitle(getString(R.string.notify_foreground_headline))
 				.setContentText(getString(R.string.notify_foreground_content)).setContentIntent(pendingIntent);
