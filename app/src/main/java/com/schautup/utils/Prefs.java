@@ -57,6 +57,10 @@ public final class Prefs extends BasicPrefs {
 	 * Storage. Weather the application works since boot.
 	 */
 	public static final String KEY_RUN_BOOT = "key_run_boot";
+	/**
+	 * Url to the web-site of the app.
+	 */
+	private static final String APP_WEB_HOME = "app_web_home";
 	//----------------------------------------------------------
 
 
@@ -226,5 +230,14 @@ public final class Prefs extends BasicPrefs {
 	 */
 	public void setRunBoot(Boolean runBoot) {
 
+	}
+
+	/**
+	 * Get url to the web-site of the app.
+	 *
+	 * @return Url to home.
+	 */
+	public String getAppWebHome() {
+		return getString(APP_WEB_HOME, null);
 	}
 }

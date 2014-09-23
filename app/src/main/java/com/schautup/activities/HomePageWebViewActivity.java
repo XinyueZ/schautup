@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.schautup.R;
+import com.schautup.utils.Prefs;
 
 /**
  * A WebView to the homepage of SchautUp.
@@ -81,7 +82,7 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 				return true;
 			}
 		});
-		mWebView.loadUrl("http://wanlingzhao.eu.pn/app/schautup/schautup_index.html");
+		mWebView.loadUrl(Prefs.getInstance(getApplication()).getAppWebHome());
 	}
 
 	@Override
