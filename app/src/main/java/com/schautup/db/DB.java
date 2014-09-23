@@ -378,7 +378,7 @@ public final class DB {
 	}
 
 	/**
-	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by hour , minute and day in week.
 	 *
 	 * @param hour
 	 * 		Hour.
@@ -387,7 +387,7 @@ public final class DB {
 	 * @param byDay
 	 * 		Recurrence day in week.
 	 *
-	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour and minute.
+	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour , minute and day in week.
 	 */
 	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, String byDay) {
 		if (mDB == null || !mDB.isOpen()) {
@@ -396,6 +396,90 @@ public final class DB {
 		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
 						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%'",
 				new String[] { hour + "", minute + "" }, null, null, null, null);
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			EventRecurrence er;
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+	/**
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by id, hour , minute and day in week.
+	 *
+	 * @param id
+	 * 		Location id of the item in DB.
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 * @param byDay
+	 * 		Recurrence day in week.
+	 *
+	 * @return {@link com.schautup.data.ScheduleItem}s from DB by id, hour , minute and day in week.
+	 */
+	public synchronized List<ScheduleItem> getSchedules(long id, int hour, int minute, String byDay) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
+						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%' AND " + ScheduleTbl.ID + " = ?",
+				new String[] { hour + "", minute + "", id + "" }, null, null, null, null);
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			EventRecurrence er;
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+
+	/**
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by asking id.
+	 *
+	 * @param id
+	 * 		Location id of the item in DB.
+	 *
+	 * @return {@link com.schautup.data.ScheduleItem}s from DB by asking id.
+	 */
+	public synchronized List<ScheduleItem> getSchedules(long id) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.ID + " = ?", new String[] { id + "" }, null,
+				null, null, null);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {

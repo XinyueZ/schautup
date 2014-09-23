@@ -451,6 +451,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);
 			break;
+		case R.id.action_settings:
+			SettingsActivity.showInstance(MainActivity.this);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -24,6 +24,7 @@ import com.schautup.activities.MainActivity;
 import com.schautup.activities.QuickSettingsActivity;
 import com.schautup.bus.AddedHistoryEvent;
 import com.schautup.bus.DoSchedulesAtTimeEvent;
+import com.schautup.bus.DoSchedulesForIdEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.data.HistoryItem;
@@ -31,6 +32,7 @@ import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
 
 import org.joda.time.DateTime;
@@ -67,6 +69,23 @@ public class ScheduleManager extends Service {
 				return null;
 			}
 		}.executeParallel(e.getTime());
+	}
+
+
+	/**
+	 * Handler for {@link com.schautup.bus.DoSchedulesForIdEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.DoSchedulesForIdEvent}.
+	 */
+	public void onEvent(DoSchedulesForIdEvent e) {
+		new ParallelTask<DoSchedulesForIdEvent, Void, Void>(false) {
+			@Override
+			protected Void doInBackground(DoSchedulesForIdEvent... params) {
+				doSchedules(params[0].getId());
+				return null;
+			}
+		}.executeParallel(e);
 	}
 
 	/**
@@ -149,8 +168,19 @@ public class ScheduleManager extends Service {
 		LL.i("ScheduleManager#work");
 		//TODO start all schedules.
 		//Resume to work on schedules according to status of CompoundButton.
-		//Currently we support only Hungry.
-		startService(new Intent(this, Hungry.class));
+		//Currently we support only Hungry and Thirsty.
+		String mod = Prefs.getInstance(getApplication()).getScheduleMode();
+		switch (Integer.valueOf(mod.toString())) {
+		case 0:
+			startService(new Intent(this, Hungry.class));
+			break;
+		case 1:
+			startService(new Intent(this, Thirsty.class));
+			break;
+		case 2:
+			startService(new Intent(this, Thirsty.class));
+			break;
+		}
 	}
 
 	/**
@@ -160,8 +190,19 @@ public class ScheduleManager extends Service {
 		LL.i("ScheduleManager#pause");
 		//TODO stop all schedules.
 		//Pause the schedules according to status of CompoundButton.
-		//Currently we support only Hungry.
-		stopService(new Intent(this, Hungry.class));
+		//Currently we support only Hungry and Thirsty.
+		String mod = Prefs.getInstance(getApplication()).getScheduleMode();
+		switch (Integer.valueOf(mod.toString())) {
+		case 0:
+			stopService(new Intent(this, Hungry.class));
+			break;
+		case 1:
+			stopService(new Intent(this, Thirsty.class));
+			break;
+		case 2:
+			stopService(new Intent(this, Thirsty.class));
+			break;
+		}
 	}
 
 	/**
@@ -318,133 +359,159 @@ public class ScheduleManager extends Service {
 		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(time.getHourOfDay(),
 				time.getMinuteOfHour(), Utils.dateTimeDay2String(time.getDayOfWeek()));
 
-		HistoryItem historyItem;
-		String comment = null;
 		for (ScheduleItem item : items) {
-			comment = null;
-			switch (item.getType()) {
-			case MUTE:
-				if (DeviceUtils.setRingMode(this, RINGER_MODE_SILENT)) {
-					sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
-							R.string.notify_mute_headline), getString(R.string.notify_mute_content),
-							R.drawable.ic_mute_notify));
-				} else {
-					comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mute), getString(
-							R.string.lbl_on_small));
-				}
-				break;
-			case VIBRATE:
-				if (DeviceUtils.setRingMode(this, RINGER_MODE_VIBRATE)) {
-					sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
-							R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
-							R.drawable.ic_vibrate_notify));
-				} else {
-					comment = getString(R.string.lbl_function_is_running, getString(R.string.option_vibrate), getString(
-							R.string.lbl_on_small));
-				}
-				break;
-			case SOUND:
-				if (DeviceUtils.setRingMode(this, RINGER_MODE_NORMAL)) {
-					sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
-							R.string.notify_sound_headline), getString(R.string.notify_sound_content),
-							R.drawable.ic_sound_notify));
-				} else {
-					comment = getString(R.string.lbl_function_is_running, getString(R.string.option_sound), getString(
-							R.string.lbl_on_small));
-				}
-				break;
-			case WIFI:
-				try {
-					boolean wifiSuccess;
-					if (Boolean.valueOf(item.getReserveLeft())) {
-						wifiSuccess = DeviceUtils.setWifiEnabled(this, true);
-						if (wifiSuccess) {
-							sendNotification(this, new Result(String.format(getString(
-									R.string.notify_wifi_simple_content), getString(R.string.lbl_on)), getString(
-									R.string.notify_wifi_headline), String.format(getString(
-									R.string.notify_wifi_content), getString(R.string.lbl_on)),
-									R.drawable.ic_wifi_notify));
-						} else {
-							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
-									getString(R.string.lbl_on_small));
-						}
-					} else {
-						wifiSuccess = DeviceUtils.setWifiEnabled(this, false);
-						if (wifiSuccess) {
-							sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content),
-									getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline),
-									String.format(getString(R.string.notify_wifi_content), getString(R.string.lbl_off)),
-									R.drawable.ic_no_wifi_notify));
-						} else {
-							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
-									getString(R.string.lbl_off_small)) + "<p/>" + getString(R.string.lbl_left_from_wifi);
-						}
-					}
-				} catch (OperationFailException e) {
-					comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
-							R.string.option_wifi))).append(getString(R.string.lbl_operation_fail)).toString();
-				}
-				break;
-			case MOBILE:
-				try {
-					Boolean mobileDataSuccess;
-					if (Boolean.valueOf(item.getReserveLeft())) {
-						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, true);
-						if (mobileDataSuccess) {
-							sendNotification(this, new Result(String.format(getString(
-									R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
-									R.string.notify_mobile_headline), String.format(getString(
-									R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
-									R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
-						} else {
-							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
-									getString(R.string.lbl_on_small));
-						}
-					} else {
-						mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, false);
-						if (mobileDataSuccess) {
-							sendNotification(this, new Result(String.format(getString(
-									R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
-									R.string.notify_mobile_headline), String.format(getString(
-									R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
-									R.string.lbl_can_not)), R.drawable.ic_no_mobile_data_notify));
-						} else {
-							comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
-									getString(R.string.lbl_off_small));
-						}
-					}
-				} catch (OperationFailException e) {
-					comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
-							R.string.option_mobile))).append(getString(R.string.lbl_operation_fail)).toString();
-				}
-				break;
-			case BRIGHTNESS:
-				Level level = Level.fromInt(Integer.valueOf(item.getReserveLeft()));
-				switch (level) {
-				case MAX:
-					DeviceUtils.setBrightness(this, Brightness.MAX);
-					break;
-				case MEDIUM:
-					DeviceUtils.setBrightness(this, Brightness.MEDIUM);
-					break;
-				case MIN:
-					DeviceUtils.setBrightness(this, Brightness.MIN);
-					break;
-				}
-				if(level != null) {
-					sendNotification(this, new Result(String.format(getString(
-							R.string.notify_brightness_simple_content), getString(level.getLevelResId())), getString(
-							R.string.notify_brightness_headline), String.format(getString(
-							R.string.notify_brightness_content), getString(level.getLevelResId())),
-							R.drawable.ic_brightness_notify));
-				}
-				break;
-			}
-			DB db = DB.getInstance(getApplication());
-			historyItem = new HistoryItem(item.getType());
-			historyItem.setComment(comment);
-			db.logHistory(historyItem);
-			EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
+			doScheduleTask(item);
 		}
 	}
+
+
+	/**
+	 * Do schedules for the item with {@code id}.
+	 *
+	 * @param id
+	 * 		The id of a {@link com.schautup.data.ScheduleItem} in the pending-list and also in the location in DB.
+	 */
+	private void doSchedules(long id) {
+		DateTime now = DateTime.now();
+		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(id, now.getHourOfDay(),
+				now.getMinuteOfHour(), Utils.dateTimeDay2String(now.getDayOfWeek()));
+
+		for (ScheduleItem item : items) {
+			 doScheduleTask(item);
+		}
+	}
+
+
+	/**
+	 * Run the scheduled task.
+	 * @param item The data-module of a schedule.
+	 */
+	private void doScheduleTask(ScheduleItem item) {
+		HistoryItem historyItem;
+		String comment =   null;
+		switch (item.getType()) {
+		case MUTE:
+			if (DeviceUtils.setRingMode(this, RINGER_MODE_SILENT)) {
+				sendNotification(this, new Result(getString(R.string.notify_mute_simple_content), getString(
+						R.string.notify_mute_headline), getString(R.string.notify_mute_content),
+						R.drawable.ic_mute_notify));
+			} else {
+				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mute), getString(
+						R.string.lbl_on_small));
+			}
+			break;
+		case VIBRATE:
+			if (DeviceUtils.setRingMode(this, RINGER_MODE_VIBRATE)) {
+				sendNotification(this, new Result(getString(R.string.notify_vibrate_simple_content), getString(
+						R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
+						R.drawable.ic_vibrate_notify));
+			} else {
+				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_vibrate), getString(
+						R.string.lbl_on_small));
+			}
+			break;
+		case SOUND:
+			if (DeviceUtils.setRingMode(this, RINGER_MODE_NORMAL)) {
+				sendNotification(this, new Result(getString(R.string.notify_sound_simple_content), getString(
+						R.string.notify_sound_headline), getString(R.string.notify_sound_content),
+						R.drawable.ic_sound_notify));
+			} else {
+				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_sound), getString(
+						R.string.lbl_on_small));
+			}
+			break;
+		case WIFI:
+			try {
+				boolean wifiSuccess;
+				if (Boolean.valueOf(item.getReserveLeft())) {
+					wifiSuccess = DeviceUtils.setWifiEnabled(this, true);
+					if (wifiSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_wifi_simple_content), getString(R.string.lbl_on)), getString(
+								R.string.notify_wifi_headline), String.format(getString(
+								R.string.notify_wifi_content), getString(R.string.lbl_on)),
+								R.drawable.ic_wifi_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
+								getString(R.string.lbl_on_small));
+					}
+				} else {
+					wifiSuccess = DeviceUtils.setWifiEnabled(this, false);
+					if (wifiSuccess) {
+						sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content),
+								getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline),
+								String.format(getString(R.string.notify_wifi_content), getString(R.string.lbl_off)),
+								R.drawable.ic_no_wifi_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
+								getString(R.string.lbl_off_small)) + "<p/>" + getString(R.string.lbl_left_from_wifi);
+					}
+				}
+			} catch (OperationFailException e) {
+				comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
+						R.string.option_wifi))).append(getString(R.string.lbl_operation_fail)).toString();
+			}
+			break;
+		case MOBILE:
+			try {
+				Boolean mobileDataSuccess;
+				if (Boolean.valueOf(item.getReserveLeft())) {
+					mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, true);
+					if (mobileDataSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_on)), getString(
+								R.string.notify_mobile_headline), String.format(getString(
+								R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
+								R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
+								getString(R.string.lbl_on_small));
+					}
+				} else {
+					mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, false);
+					if (mobileDataSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_off)), getString(
+								R.string.notify_mobile_headline), String.format(getString(
+								R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
+								R.string.lbl_can_not)), R.drawable.ic_no_mobile_data_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
+								getString(R.string.lbl_off_small));
+					}
+				}
+			} catch (OperationFailException e) {
+				comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
+						R.string.option_mobile))).append(getString(R.string.lbl_operation_fail)).toString();
+			}
+			break;
+		case BRIGHTNESS:
+			Level level = Level.fromInt(Integer.valueOf(item.getReserveLeft()));
+			switch (level) {
+			case MAX:
+				DeviceUtils.setBrightness(this, Brightness.MAX);
+				break;
+			case MEDIUM:
+				DeviceUtils.setBrightness(this, Brightness.MEDIUM);
+				break;
+			case MIN:
+				DeviceUtils.setBrightness(this, Brightness.MIN);
+				break;
+			}
+			if(level != null) {
+				sendNotification(this, new Result(String.format(getString(
+						R.string.notify_brightness_simple_content), getString(level.getLevelResId())), getString(
+						R.string.notify_brightness_headline), String.format(getString(
+						R.string.notify_brightness_content), getString(level.getLevelResId())),
+						R.drawable.ic_brightness_notify));
+			}
+			break;
+		}
+		DB db = DB.getInstance(getApplication());
+		historyItem = new HistoryItem(item.getType());
+		historyItem.setComment(comment);
+		db.logHistory(historyItem);
+		EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
+	}
+
 }

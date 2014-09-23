@@ -7,7 +7,7 @@
     <dimen name="width_drawer">270dp</dimen>
     <dimen name="margin_padding_status_level">3dp</dimen>
     <dimen name="padding_eula">16dp</dimen>
-    <dimen name="padding_week_days">3dp</dimen>
+    <dimen name="padding_week_days">1dp</dimen>
     <dimen name="size_status_level">6dp</dimen>
     <dimen name="size_hour_minute">60dp</dimen>
     <dimen name="size_text_hour_minute">30sp</dimen>

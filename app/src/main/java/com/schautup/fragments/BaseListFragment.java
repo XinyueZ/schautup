@@ -3,6 +3,7 @@ package com.schautup.fragments;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
@@ -21,7 +23,6 @@ import com.schautup.bus.AskDeleteScheduleItemsEvent;
 import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
-import com.schautup.bus.RemovedItemEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
@@ -62,6 +63,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * A button to load data when there's no data.
 	 */
 	private AnimImageButton mNoDataBtn;
+	/**
+	 * There is different between android pre 3.0 and 3.x, 4.x on this wording.
+	 */
+	private static final String ALPHA =
+			(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) ? "alpha" : "Alpha";
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -109,17 +115,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		refreshUI(item, getResources().getDrawable(R.drawable.anim_list_warning_green));
 	}
 
-	/**
-	 * Handler for {@link com.schautup.bus.RemovedItemEvent}.
-	 *
-	 * @param e
-	 * 		Event {@link com.schautup.bus.RemovedItemEvent}.
-	 */
-	public void onEvent(RemovedItemEvent e) {
-		mAdp.removeItem(e.getItem());
-		mNoDataBtn.setVisibility(e.getRowsRemain() == 0 ? View.VISIBLE : View.GONE);
-		EventBus.getDefault().post(new ShowActionBarEvent(true));
-	}
 
 	/**
 	 * Handler for {@link com.schautup.bus.HideActionModeEvent}.
@@ -232,19 +227,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		float translationY = ViewHelper.getTranslationY(mAddNewVG);
+		float initAplha = ViewHelper.getAlpha(mAddNewVG);
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-			//ListView is idle, user can add item with a button.
-			if (translationY != 0) {
-				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(0).setDuration(500);
-			}
+			ObjectAnimator.ofFloat(mAddNewVG, ALPHA, 0, initAplha).setDuration(500).start();
 		} else if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-			//ListView moving, add button can dismiss.
-			if (translationY == 0) {
-				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight() * 2).setDuration(500);
-			}
+			ObjectAnimator.ofFloat(mAddNewVG, ALPHA, 1, initAplha).setDuration(500).start();
 		}
 		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();

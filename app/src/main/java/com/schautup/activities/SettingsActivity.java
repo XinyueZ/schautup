@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.schautup.BootReceiver;
 import com.schautup.R;
+import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
 
 /**
@@ -20,8 +21,10 @@ import com.schautup.utils.Prefs;
  */
 public final class SettingsActivity extends ActionBarPreferenceActivity implements
 		Preference.OnPreferenceChangeListener {
-
-
+	/**
+	 * Tricky to avoid first call.
+	 */
+	private boolean mInitModeList;
 	/**
 	 * Show an instance of SettingsActivity.
 	 *
@@ -74,6 +77,12 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 			}
 			preference.setTitle(title);
 			preference.setSummary(summary);
+			if(mInitModeList) {
+				stopService(new Intent(getApplication(), ScheduleManager.class));
+				startService(new Intent(getApplication(), ScheduleManager.class));
+			} else {
+				 mInitModeList = true;
+			}
 		} else if (preference.getKey().equals(Prefs.KEY_RUN_BOOT)) {
 			//On or Off that begins doing schedules at the boot of device.
 			ComponentName receiver = new ComponentName(getApplication(), BootReceiver.class);

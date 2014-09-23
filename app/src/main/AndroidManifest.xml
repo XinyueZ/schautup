@@ -114,10 +114,6 @@
             android:noHistory="true"
             android:theme="@style/ActivityDialog" />
 
-        <service
-            android:name=".scheduler.Hungry"
-            android:enabled="true"
-            android:exported="false" />
 
         <receiver
             android:name=".BootReceiver"
@@ -126,6 +122,22 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".scheduler.ThirstyReceiver"
+            android:enabled="true" />
+
+
+        <service
+            android:name=".scheduler.Hungry"
+            android:enabled="true"
+            android:exported="false" />
+
+
+        <service
+            android:name=".scheduler.Thirsty"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name=".scheduler.ScheduleManager"
