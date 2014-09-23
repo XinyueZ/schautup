@@ -2,7 +2,6 @@ package com.schautup.adapters;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.schautup.R;
@@ -28,14 +27,12 @@ public final class ScheduleListViewListAdapter extends BaseScheduleListAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-		viewHolder.mOptionBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
+		convertView.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 					@Override
 					public void onClick() {
 						EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
 					}
 				});
-
-		viewHolder.mOptionBtn.setVisibility(!isActionMode() ? View.VISIBLE : View.GONE);
 		viewHolder.mEditedTimeTv.setText(Utils.convertTimestamps2DateString(parent.getContext(), getItemList().get(
 				position).getEditedTime()));
 		return convertView;
@@ -58,12 +55,10 @@ public final class ScheduleListViewListAdapter extends BaseScheduleListAdapter {
 	 * @author Xinyue Zhao
 	 */
 	private static final class ViewHolder extends BaseScheduleListAdapter.ViewHolder {
-		private ImageButton mOptionBtn;
 		private TextView mEditedTimeTv;
 
 		private ViewHolder(View convertView) {
 			super(convertView);
-			mOptionBtn = (ImageButton) convertView.findViewById(R.id.status_option_btn);
 			mEditedTimeTv = (TextView) convertView.findViewById(R.id.edited_at_tv);
 		}
 	}

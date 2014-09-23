@@ -243,7 +243,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				if (!success) {
 					return null;
 				} else {
-					return db.getAllSchedules();
+					if (Prefs.getInstance( getApplication()).isSortedByLastEdit()) {
+						return db.getAllSchedulesOrderByEditTime();
+					} else {
+						return db.getAllSchedulesOrderByScheduleTime();
+					}
 				}
 			}
 
@@ -403,6 +407,12 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		String subject = getString(R.string.lbl_share_app_title);
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
+
+		MenuItem itemSc = menu.findItem(R.id.action_sort_by_schedule);
+		MenuItem itemEd =  menu.findItem(R.id.action_sort_by_edit_time);
+		boolean byEd = Prefs.getInstance(getApplication()).isSortedByLastEdit();
+		itemEd.setChecked(byEd);
+		itemSc.setChecked(!byEd);
 		return true;
 	}
 
@@ -428,10 +438,12 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			new ParallelTask<Void, Void, AllScheduleLoadedEvent>(true) {
 				@Override
 				protected AllScheduleLoadedEvent doInBackground(Void[] params) {
+					boolean bySchedule = item.getItemId() == R.id.action_sort_by_schedule;
 					DB db = DB.getInstance(getApplication());
 					List<ScheduleItem> list =
-							item.getItemId() == R.id.action_sort_by_schedule ? db.getAllSchedulesOrderByScheduleTime() :
+							bySchedule ? db.getAllSchedulesOrderByScheduleTime() :
 									db.getAllSchedulesOrderByEditTime();
+					Prefs.getInstance(getApplication()).setSortedByLastEdit(!bySchedule);
 					if (list.size() > 0) {
 						return new AllScheduleLoadedEvent(list);
 					} else {
@@ -447,6 +459,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					}
 				}
 			}.executeParallel();
+
+			item.setChecked(true);
 			break;
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);

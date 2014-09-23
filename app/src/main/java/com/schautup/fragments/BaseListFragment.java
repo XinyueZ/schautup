@@ -12,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
@@ -28,6 +27,7 @@ import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Prefs;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -141,7 +141,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onEvent(AskDeleteScheduleItemsEvent e) {
 		if (mAdp != null) {
 			EventBus.getDefault().post(new GivenRemovedScheduleItemsEvent(mAdp.removeItems()));
-			if(mAdp!=null) {
+			if (mAdp != null) {
 				mAdp.notifyDataSetChanged();
 			}
 		}
@@ -154,7 +154,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link com.schautup.bus.DeletedConfirmEvent}.
 	 */
 	public void onEvent(DeletedConfirmEvent e) {
-		if(mAdp == null || mAdp.getItemList() == null || mAdp.getItemList().size() == 0) {
+		if (mAdp == null || mAdp.getItemList() == null || mAdp.getItemList().size() == 0) {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
 	}
@@ -190,7 +190,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		mLv.setOnItemLongClickListener(null);
-		if(mAdp !=null) {
+		if (mAdp != null) {
 			mAdp.actionModeBegin();
 		}
 		//The ActionMode is starting, add-button should not work.
@@ -206,7 +206,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
-				return DB.getInstance(getActivity().getApplication()).getAllSchedules();
+				if (Prefs.getInstance(getActivity().getApplication()).isSortedByLastEdit()) {
+					return DB.getInstance(getActivity().getApplication()).getAllSchedulesOrderByEditTime();
+				} else {
+					return DB.getInstance(getActivity().getApplication()).getAllSchedulesOrderByScheduleTime();
+				}
 			}
 
 			@Override
@@ -227,11 +231,19 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		float initAplha = ViewHelper.getAlpha(mAddNewVG);
+		float translationY = ViewHelper.getTranslationY(mAddNewVG);
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-			ObjectAnimator.ofFloat(mAddNewVG, ALPHA, 0, initAplha).setDuration(500).start();
+			//ListView is idle, user can add item with a button.
+			if (translationY != 0) {
+				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
+				animator.translationY(0).setDuration(500);
+			}
 		} else if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-			ObjectAnimator.ofFloat(mAddNewVG, ALPHA, 1, initAplha).setDuration(500).start();
+			//ListView moving, add button can dismiss.
+			if (translationY == 0) {
+				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
+				animator.translationY(getActionBarHeight() * 2).setDuration(500);
+			}
 		}
 		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
@@ -272,12 +284,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				mLv.setSelection(location);
 			}
 		});
-		//Dismiss bottom "add" button.
-		float translationY = ViewHelper.getTranslationY(mAddNewVG);
-		if (translationY == 0) {
-			ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-			animator.translationY(getActionBarHeight()).setDuration(500);
-		}
 	}
 
 

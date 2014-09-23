@@ -126,6 +126,9 @@
         <receiver
             android:name=".scheduler.ThirstyReceiver"
             android:enabled="true" />
+        <receiver
+            android:name=".scheduler.NeutralReceiver"
+            android:enabled="true" />
 
 
         <service
@@ -140,9 +143,15 @@
             android:exported="false" />
 
         <service
+            android:name=".scheduler.Neutral"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
             android:name=".scheduler.ScheduleManager"
             android:enabled="true"
             android:exported="false" />
+
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="0bf5835ac1569fe382ff64839c0be3d3ed9396b9" />

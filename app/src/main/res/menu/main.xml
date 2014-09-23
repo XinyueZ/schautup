@@ -18,14 +18,19 @@
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_action_settings"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_sort_by_schedule"
-        android:title="@string/menu_sort_by_schedule"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sort_by_edit_time"
-        android:title="@string/menu_sort_by_edited_time"
-        app:showAsAction="never" />
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_sort_by_schedule"
+            android:title="@string/menu_sort_by_schedule"
+
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_sort_by_edit_time"
+            android:title="@string/menu_sort_by_edited_time"
+
+            app:showAsAction="never" />
+    </group>
 
     <item
         android:id="@+id/action_share_app"

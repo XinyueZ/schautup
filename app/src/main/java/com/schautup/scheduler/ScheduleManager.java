@@ -166,9 +166,6 @@ public class ScheduleManager extends Service {
 	 */
 	private void work() {
 		LL.i("ScheduleManager#work");
-		//TODO start all schedules.
-		//Resume to work on schedules according to status of CompoundButton.
-		//Currently we support only Hungry and Thirsty.
 		String mod = Prefs.getInstance(getApplication()).getScheduleMode();
 		switch (Integer.valueOf(mod.toString())) {
 		case 0:
@@ -178,7 +175,7 @@ public class ScheduleManager extends Service {
 			startService(new Intent(this, Thirsty.class));
 			break;
 		case 2:
-			startService(new Intent(this, Thirsty.class));
+			startService(new Intent(this, Neutral.class));
 			break;
 		}
 	}
@@ -188,9 +185,6 @@ public class ScheduleManager extends Service {
 	 */
 	private void pause() {
 		LL.i("ScheduleManager#pause");
-		//TODO stop all schedules.
-		//Pause the schedules according to status of CompoundButton.
-		//Currently we support only Hungry and Thirsty.
 		String mod = Prefs.getInstance(getApplication()).getScheduleMode();
 		switch (Integer.valueOf(mod.toString())) {
 		case 0:
@@ -200,7 +194,7 @@ public class ScheduleManager extends Service {
 			stopService(new Intent(this, Thirsty.class));
 			break;
 		case 2:
-			stopService(new Intent(this, Thirsty.class));
+			stopService(new Intent(this, Neutral.class));
 			break;
 		}
 	}

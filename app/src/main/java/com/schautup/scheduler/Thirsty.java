@@ -19,6 +19,7 @@ import com.schautup.bus.ScheduleNextEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
+import com.schautup.utils.Prefs;
 
 import de.greenrobot.event.EventBus;
 
@@ -27,7 +28,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class Thirsty extends Service {
+public   class Thirsty extends Service {
 	/**
 	 * Current time zone.
 	 */
@@ -65,10 +66,10 @@ public final class Thirsty extends Service {
 	public void onEvent(GivenRemovedScheduleItemsEvent e) {
 		LongSparseArray<ScheduleItem> items = e.getItems();
 		if (items != null) {
-			long key;
-			for (int i = 0; items != null && i < items.size(); i++) {
-				key = items.keyAt(i);
-				remove(key);
+			long id;
+			for (int i = 0; i < items.size(); i++) {
+				id = items.keyAt(i);
+				remove(id);
 			}
 		}
 	}
@@ -91,14 +92,19 @@ public final class Thirsty extends Service {
 	public void onCreate() {
 		EventBus.getDefault().register(this);
 		super.onCreate();
-		List<ScheduleItem> items = DB.getInstance(getApplication()).getAllSchedules();
+		List<ScheduleItem> items;
+		if (Prefs.getInstance( getApplication()).isSortedByLastEdit()) {
+			items =  DB.getInstance( getApplication()).getAllSchedulesOrderByEditTime();
+		} else {
+			items =  DB.getInstance( getApplication()).getAllSchedulesOrderByScheduleTime();
+		}
 		addAll(items);
-		LL.i("Thirsty#Create.");
+		LL.i(getClass().getSimpleName() + "#Create.");
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		LL.i("Thirsty#StartCommand.");
+		LL.i(getClass().getSimpleName() + "#StartCommand.");
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -107,7 +113,7 @@ public final class Thirsty extends Service {
 		EventBus.getDefault().unregister(this);
 		removeAll();
 		super.onDestroy();
-		LL.i("Thirsty#Destroy.");
+		LL.i(getClass().getSimpleName() + "#Destroy.");
 	}
 
 
@@ -169,15 +175,11 @@ public final class Thirsty extends Service {
 		// A difference between setTime and currentTime plus total time since boot equal to the time
 		// point we wanna.
 		long timeToAlarm = firstTime + (setTime - currentTime);
-		Intent intent = new Intent(this, ThirstyReceiver.class);
+		Intent intent = new Intent(this, doGetReceiver());
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent,
 				PendingIntent.FLAG_ONE_SHOT);
-		if (android.os.Build.VERSION.SDK_INT >= 19) {
-			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
-		} else {
-			mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
-		}
+		doSetAlarmManager(mgr, timeToAlarm, pendingIntent);
 		mScheduledIntents.put(item.getId(), pendingIntent);
 	}
 
@@ -185,14 +187,10 @@ public final class Thirsty extends Service {
 	 * Removed all scheduled tasks and cancel them.
 	 */
 	private void removeAll() {
-		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		long key;
-		PendingIntent pi;
+		long id;
 		for (int i = 0; i < mScheduledIntents.size(); i++) {
-			key = mScheduledIntents.keyAt(i);
-			pi = mScheduledIntents.get(key);
-			mgr.cancel(pi);
-			mScheduledIntents.remove(key);
+			id = mScheduledIntents.keyAt(i);
+			remove(id);
 		}
 	}
 
@@ -206,6 +204,7 @@ public final class Thirsty extends Service {
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = mScheduledIntents.get(id);
 		if (pi != null) {
+			mScheduledIntents.remove(id);
 			mgr.cancel(pi);
 		}
 	}
@@ -224,6 +223,34 @@ public final class Thirsty extends Service {
 		ScheduleItem item = items.get(0);
 		if (item != null) {
 			add(items.get(0));
+		}
+	}
+
+	/**
+	 * Specify the {@link android.content.BroadcastReceiver} that will be called by {@link android.app.AlarmManager}.
+	 *
+	 * @return The type of {@link android.content.BroadcastReceiver} to get callback from {@link
+	 * android.app.AlarmManager}.
+	 */
+	protected Class<?> doGetReceiver() {
+		return ThirstyReceiver.class;
+	}
+
+	/**
+	 * Specify the implementation of starting {@link android.app.AlarmManager}.
+	 *
+	 * @param mgr
+	 * 		A {@link android.app.AlarmManager}.
+	 * @param timeToAlarm
+	 * 		First time to do the task.
+	 * @param pendingIntent
+	 * 		The pending that will be fired when task will be done by {@link android.app.AlarmManager} future.
+	 */
+	protected void doSetAlarmManager(AlarmManager mgr, long timeToAlarm, PendingIntent pendingIntent) {
+		if (android.os.Build.VERSION.SDK_INT >= 19) {
+			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
+		} else {
+			mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
 		}
 	}
 }

@@ -54,13 +54,17 @@ public final class Prefs extends BasicPrefs {
 	 */
 	private static final String KEY_PAUSE_RESUME = "key_pause_resume";
 	/**
-	 * Storage. Weather the application works since boot.
+	 * Storage. Whether the application works since boot.
 	 */
 	public static final String KEY_RUN_BOOT = "key_run_boot";
 	/**
 	 * Url to the web-site of the app.
 	 */
 	private static final String APP_WEB_HOME = "app_web_home";
+	/**
+	 * Storage. Whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
+	 */
+	private static final String KEY_SORTED_BY_EDIT = "key_sorted_by_edit";
 	//----------------------------------------------------------
 
 
@@ -190,7 +194,7 @@ public final class Prefs extends BasicPrefs {
 	 * @return The current schedule mode.
 	 */
 	public String getScheduleMode() {
-		return getString(KEY_SCHEDULE_MODE, "1");
+		return getString(KEY_SCHEDULE_MODE, android.os.Build.VERSION.SDK_INT >= 19 ? "1" : "2");
 	}
 
 	/**
@@ -239,5 +243,19 @@ public final class Prefs extends BasicPrefs {
 	 */
 	public String getAppWebHome() {
 		return getString(APP_WEB_HOME, null);
+	}
+
+	/**
+	 * Get whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
+	 */
+	public boolean isSortedByLastEdit() {
+		return getBoolean(KEY_SORTED_BY_EDIT, true);
+	}
+
+	/**
+	 * Set whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
+	 */
+	public void setSortedByLastEdit(boolean sortedByEdit) {
+		setBoolean(KEY_SORTED_BY_EDIT, sortedByEdit);
 	}
 }

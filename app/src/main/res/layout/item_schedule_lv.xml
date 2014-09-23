@@ -146,14 +146,5 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
-
-        <com.schautup.views.AnimImageButton
-            android:id="@+id/status_option_btn"
-            android:layout_width="0dp" android:layout_weight="0.2"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_name" android:layout_marginRight="13dp"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_option" />
     </LinearLayout>
 </LinearLayout>

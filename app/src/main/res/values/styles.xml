@@ -3,8 +3,8 @@
     <style name="WeekDayTextStyle">
         <item name="android:textSize">@dimen/size_text_week_days</item>
         <item name="android:textColor">@color/selector_day_of_week</item>
-        <item name="android:layout_marginLeft">@dimen/padding_week_days</item>
-        <item name="android:layout_marginRight">@dimen/padding_week_days</item>
+        <item name="android:layout_marginLeft">@dimen/padding_week_days_grid</item>
+        <item name="android:layout_marginRight">@dimen/padding_week_days_grid</item>
         <item name="android:gravity">center</item>
     </style>
 

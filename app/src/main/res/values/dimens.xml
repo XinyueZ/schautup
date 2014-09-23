@@ -7,7 +7,8 @@
     <dimen name="width_drawer">270dp</dimen>
     <dimen name="margin_padding_status_level">3dp</dimen>
     <dimen name="padding_eula">16dp</dimen>
-    <dimen name="padding_week_days">2dp</dimen>
+    <dimen name="padding_week_days">5dp</dimen>
+    <dimen name="padding_week_days_grid">3dp</dimen>
     <dimen name="size_status_level">6dp</dimen>
     <dimen name="size_hour_minute">60dp</dimen>
     <dimen name="size_text_hour_minute">30sp</dimen>
@@ -15,5 +16,5 @@
     <dimen name="size_list_grid_item_img">75dp</dimen>
     <dimen name="size_text_about">14sp</dimen>
     <dimen name="size_text_week_days">13sp</dimen>
-    <dimen name="size_schedule_item_fired_time_text">15sp</dimen>
+    <dimen name="size_schedule_item_fired_time_text">13sp</dimen>
 </resources>
