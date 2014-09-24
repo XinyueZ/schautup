@@ -13,7 +13,7 @@
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
-    <string name="lbl_share_app_title">A good App you should have: SchautUp</string>
+    <string name="lbl_share_app_title">A good App you should have: %s</string>
     <string name="lbl_share_app_content">Hello!\n\n\u00A0\u00A0\u00A0\u00A0Manage some features like mute, vibrate,
         sound of your devices with schedule, a timer, improve your daily life.\n\nDownload: market://details?id=com.schautup </string>
     <string name="lbl_about">About</string>
@@ -92,7 +92,7 @@
     <string name="msg_tip_recurrence">Recurrence must be defined!</string>
     <string name="msg_tip_duplicated">Warning! Set %1$s at %2$s:%3$s has been defined, your change can\'t be
         proceed, please edit again.</string>
-    <string name="msg_boot_start">SchautUp has been started.</string>
+    <string name="msg_boot_start">%s has been started.</string>
     <string name="msg_wifi_on_off">Do you want to turn off or on wifi?</string>
     <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?</string>
     <string name="msg_brightness">How to set your display brightness?</string>
@@ -118,6 +118,7 @@
     <string name="settings_pause">pause</string>
     <string name="settings_resume">work</string>
     <string name="settings_quick_title">Quick settings</string>
+    <string name="settings_pause_resume">Pause/Go on?</string>
     <string name="settings_category_run_boot">Work at boot</string>
     <string name="settings_run_boot">Do we do all schedules at boot of device?</string>
     <string name="settings_run_boot_on">Yes</string>

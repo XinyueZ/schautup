@@ -2,7 +2,6 @@ package com.schautup.scheduler;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -95,7 +94,7 @@ public class Thirsty extends Service {
 	public void onCreate() {
 		EventBus.getDefault().register(this);
 		super.onCreate();
-		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+		new ParallelTask<Void, Void, List<ScheduleItem>>(false) {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
 				return Utils.getAllSchedules(getApplication());
@@ -169,7 +168,7 @@ public class Thirsty extends Service {
 		Calendar calendar = Calendar.getInstance();
 		// Important! Otherwise there's deviation.
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
+//		calendar.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		calendar.set(Calendar.HOUR_OF_DAY, hour);
 		calendar.set(Calendar.MINUTE, minute);
 		calendar.set(Calendar.SECOND, 0);
@@ -224,15 +223,26 @@ public class Thirsty extends Service {
 	 * @param id
 	 * 		The id pending in the list of pending.
 	 */
-	private void update(long id) {
+	private void update(final long id) {
 		//I think it should do a select from DB, because we can't sure
 		//that whether the schedule should be continued or not.
-		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(id);
-		ScheduleItem item = items.get(0);
-		if (item != null) {//Removed old pending what has been finished.
-			remove(item.getId());
-		}
-		add(items.get(0));
+
+		new ParallelTask<Void, Void, List<ScheduleItem>>(false) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return DB.getInstance(getApplication()).getSchedules(id);
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> items) {
+				super.onPostExecute(items);
+				ScheduleItem item = items.get(0);
+				if (item != null) {//Removed old pending what has been finished and re-add.
+					remove(item.getId());
+					add(item);
+				}
+			}
+		}.executeParallel();
 	}
 
 	/**

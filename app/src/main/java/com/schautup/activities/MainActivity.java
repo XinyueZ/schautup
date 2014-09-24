@@ -400,7 +400,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		android.support.v7.widget.ShareActionProvider provider =
 				(android.support.v7.widget.ShareActionProvider) MenuItemCompat.getActionProvider(menuShare);
 		//Setting a share intent.
-		String subject = getString(R.string.lbl_share_app_title);
+		String subject = getString(R.string.lbl_share_app_title, getString(R.string.app_name));
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
