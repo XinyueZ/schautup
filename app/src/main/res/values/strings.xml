@@ -93,9 +93,9 @@
     <string name="msg_tip_duplicated">Warning! Set %1$s at %2$s:%3$s has been defined, your change can\'t be
         proceed, please edit again.</string>
     <string name="msg_boot_start">%s has been started.</string>
-    <string name="msg_wifi_on_off">Do you want to turn off or on wifi?</string>
+    <string name="msg_wifi_on_off">Do you want to turn off or on wifi?\n\nWarning! If you\'ve left wifi environment, your setting would be ignored.</string>
     <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?</string>
-    <string name="msg_brightness">How to set your display brightness?</string>
+    <string name="msg_brightness">How to set your display brightness?\n\nWarning! Some applications that can control screen brightness could interrupt your setting and your setting would be ignored.</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>
