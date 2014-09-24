@@ -47,9 +47,10 @@ dependencies {
     }
     compile 'joda-time:joda-time:2.3'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile project(':ChoppingBootstrap')
-    compile project(':volley_cz')
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'com.google.android.gms:play-services:5.0.89'
+    compile project(':volley_cz')
+    compile project(':ChoppingBootstrap')
 }
 
 // Rename final apks

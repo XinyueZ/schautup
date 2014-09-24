@@ -41,6 +41,7 @@
     <string name="lbl_max_short">最大</string>
     <string name="lbl_medium_short">中等</string>
     <string name="lbl_min_short">最小</string>
+    <string name="lbl_play_service">本应用需要谷歌服务，必须先安装然后使用。</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>

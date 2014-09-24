@@ -18,5 +18,11 @@
 
 
     <include layout="@layout/inc_empty" />
+
+    <fragment
+        android:name="com.schautup.fragments.AdFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
     <include layout="@layout/inc_add_item" />
 </FrameLayout>

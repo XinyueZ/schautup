@@ -43,6 +43,7 @@
     <string name="lbl_max_short">Max</string>
     <string name="lbl_medium_short">Med</string>
     <string name="lbl_min_short">Min</string>
+    <string name="lbl_play_service">This application needs Google Play Service, you must install it first.</string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>
@@ -137,4 +138,12 @@
     <string name="type_wifi">Wifi</string>
     <string name="type_mobile_data">Mobile</string>
     <string name="type_brightness">Brightness</string>
+
+    <!--debug:-->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!--release:-->
+    <!--<string name="banner_ad_unit_id">ca-app-pub-9133982521997162/8164635739</string>-->
+
+    <string name="play_service_url">market://details?id=com.google.android.gms</string>
+
 </resources>
