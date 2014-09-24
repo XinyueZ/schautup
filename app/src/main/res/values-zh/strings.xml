@@ -113,4 +113,7 @@
     <string name="type_wifi">无线</string>
     <string name="type_mobile_data">移动\n网络</string>
     <string name="type_brightness">亮度</string>
+    <string name="type_call_abort">拒绝\n来电</string>
+    <string name="type_bluetooth">蓝牙</string>
+    <string name="type_app_start">启动\n应用</string>
 </resources>

@@ -305,7 +305,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelMobileV.setOnClickListener(this);
 		mSelBrightnessV = view.findViewById(R.id.set_brightness_ll);
 		mSelBrightnessV.setOnClickListener(this);
-		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wif_bgv);
+		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wifi_bgv);
 		mWifiInfoBgb.setVisibility(View.GONE);
 		mMobileInfoBgb = (BadgeView) view.findViewById(R.id.info_mobile_data_bgv);
 		mMobileInfoBgb.setVisibility(View.GONE);

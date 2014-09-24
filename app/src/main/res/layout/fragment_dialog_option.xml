@@ -85,211 +85,340 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/setting_types_ll"
+        <ScrollView
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/selector_warning"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/setting_types_ll"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:orientation="vertical"
+                android:background="@drawable/selector_warning"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_mute_ll"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
 
-                    <ImageView
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_mute" />
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_mute_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_mute" />
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_mute" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_mute" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_vibrate_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_vibrate" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_vibrate" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_sound_ll"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_sound" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_sound" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_vibrate_ll"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
 
-                    <ImageView
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_vibrate" />
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_wifi_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_vibrate" />
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_wifi_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_wifi_bgv"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_wifi" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_mobile_data_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_mobile_data_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_mobile_data_bgv"
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:layout_height="wrap_content" />
+
+                        </FrameLayout>
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_mobile" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_bluetooth_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_bluetooth_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_bluetooth_bgv"
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:layout_height="wrap_content" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_bluetooth" />
+                    </LinearLayout>
                 </LinearLayout>
+
 
                 <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_sound_ll"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
 
-                    <ImageView
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_sound" />
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_call_abort_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_sound" />
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_dail_abort_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_call_abort_bgv"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_call_abort" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_start_app_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_app_list_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_start_app_bgv"
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:layout_height="wrap_content" />
+
+                        </FrameLayout>
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_app_start" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:background="@drawable/selector_bg3_btn"
+                        android:id="@+id/set_brightness_ll"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="@dimen/size_hour_minute"
+                                android:layout_height="@dimen/size_hour_minute"
+                                android:background="@drawable/ic_brightness_btn" />
+
+                            <com.schautup.views.BadgeView
+                                android:id="@+id/info_brightness_bgv"
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:layout_height="wrap_content" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_common_black"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/option_brightness" />
+                    </LinearLayout>
                 </LinearLayout>
+
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
-
-                <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_wifi_ll"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-
-                    <FrameLayout
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="@dimen/size_hour_minute"
-                            android:layout_height="@dimen/size_hour_minute"
-                            android:background="@drawable/ic_wifi_btn" />
-                        <com.schautup.views.BadgeView
-                            android:id="@+id/info_wif_bgv"
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_wifi" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_mobile_data_ll"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-
-                    <FrameLayout
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="@dimen/size_hour_minute"
-                            android:layout_height="@dimen/size_hour_minute"
-                            android:background="@drawable/ic_mobile_data_btn" />
-                        <com.schautup.views.BadgeView
-                            android:id="@+id/info_mobile_data_bgv"
-                            android:layout_width="wrap_content"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content" />
-
-                    </FrameLayout>
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_mobile" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:background="@drawable/selector_bg3_btn"
-                    android:id="@+id/set_brightness_ll"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-
-                    <FrameLayout
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="@dimen/size_hour_minute"
-                            android:layout_height="@dimen/size_hour_minute"
-                            android:background="@drawable/ic_brightness_btn" />
-
-                        <com.schautup.views.BadgeView
-                            android:id="@+id/info_brightness_bgv"
-                            android:layout_width="wrap_content"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_common_black"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/option_brightness" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -302,7 +431,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textColor="@color/text_common_black"
-                android:layout_height="match_parent"
+                android:layout_height="45dp"
                 android:text="@string/btn_cancel"
                 android:background="@drawable/selector_bg4_btn" />
 
@@ -311,7 +440,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textColor="@color/text_common_black"
-                android:layout_height="match_parent"
+                android:layout_height="45dp"
                 android:text="@string/btn_confirm"
                 android:background="@drawable/selector_bg2_btn" />
 
