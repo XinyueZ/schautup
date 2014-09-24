@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build.VERSION_CODES;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.util.LongSparseArray;
@@ -83,9 +84,10 @@ public class Thirsty extends Service {
 	 */
 	public void onEvent(UpdatedItemEvent e) {
 		ScheduleItem item = e.getItem();
-		if (mScheduledIntents.get(item.getId()) == null) {//Not an  edit-mode, it is fresh new.
-			add(item);
+		if (mScheduledIntents.get(item.getId()) != null) {//Removed the old one after update.
+			remove(item.getId());
 		}
+		add(item);
 	}
 
 	//------------------------------------------------
@@ -253,7 +255,7 @@ public class Thirsty extends Service {
 	 * 		The pending that will be fired when task will be done by {@link android.app.AlarmManager} future.
 	 */
 	protected void doSetAlarmManager(AlarmManager mgr, long timeToAlarm, PendingIntent pendingIntent) {
-		if (android.os.Build.VERSION.SDK_INT >= 19) {
+		if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
 		} else {
 			mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);

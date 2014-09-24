@@ -110,16 +110,11 @@
         <item>2</item>
     </string-array>
     <string name="settings_hungry_mode">Hungry</string>
-    <string name="settings_hungry_mode_desc">The application tries to schedule all tasks as exact as possible against
-        every minute. The scheduled Task will be fired at every minute beginning which means that it is independent from
-        when you added the schedule in order to bring the best user feelings. This mode might maximize battery use.</string>
+    <string name="settings_hungry_mode_desc">Recommend mode if your device is charging or full changed.</string>
     <string name="settings_thirsty_mode">Thirsty</string>
-    <string name="settings_thirsty_mode_desc">The application tries to schedule all tasks as nearly as possible. The
-        schedule effect and power use of device rely on OS\'s AlarmManager.</string>
+    <string name="settings_thirsty_mode_desc">Recommend mode if your OS version is higher than Android 4.4.</string>
     <string name="settings_neutral_mode">Neutral</string>
-    <string name="settings_neutral_mode_desc">The application tries to schedule all tasks and minimize
-        battery use. It relies on OS\'s AlarmManager and mightn\'t bring exact user feelings.</string>
-    <string name="settings_pause_resume">Let me pause or work\?</string>
+    <string name="settings_neutral_mode_desc">Recommend mode if your OS version is lower than Android 4.4.</string>
     <string name="settings_pause">pause</string>
     <string name="settings_resume">work</string>
     <string name="settings_quick_title">Quick settings</string>
@@ -127,6 +122,7 @@
     <string name="settings_run_boot">Do we do all schedules at boot of device?</string>
     <string name="settings_run_boot_on">Yes</string>
     <string name="settings_run_boot_off">No</string>
+    <string name="settings_current_os">[Currently]</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

@@ -83,12 +83,12 @@
     <string name="msg_brightness">如何设置屏幕亮度？</string>
 
     <!--Settings-->
-    <string name="settings_hungry_mode">精确</string>
-    <string name="settings_hungry_mode_desc">应用会保持执行任务精确到每一分钟。任务会在每分钟起始执行。本模式带来精确的用户体验，但是牺牲了能耗，慎重选择。</string>
-    <string name="settings_thirsty_mode">准确</string>
-    <string name="settings_thirsty_mode_desc">应用会准时执行任务，本模式依赖于系统时钟管理器的性能，执行性能和能耗完全取决于系统时钟管理器。</string>
-    <string name="settings_neutral_mode">中和</string>
-    <string name="settings_neutral_mode_desc">应用执行任务并尽力节省能耗，本模式依赖于系统时钟管理器，但是不能带来很好的精确即准时执行任务的效果。</string>
+    <string name="settings_hungry_mode">模式1</string>
+    <string name="settings_hungry_mode_desc">推荐在充电或者电量充足时选择。</string>
+    <string name="settings_thirsty_mode">模式2</string>
+    <string name="settings_thirsty_mode_desc">推荐Android 4.4 以上用户选择。</string>
+    <string name="settings_neutral_mode">模式3</string>
+    <string name="settings_neutral_mode_desc">推荐Android 4.3 以下用户选择。</string>
     <string name="settings_pause_resume">暂停还是继续工作?</string>
     <string name="settings_pause">暂停</string>
     <string name="settings_resume">工作</string>
@@ -97,6 +97,7 @@
     <string name="settings_run_boot">是否在启动机器后，立即开始按计划触发所有预定项目？</string>
     <string name="settings_run_boot_on">是</string>
     <string name="settings_run_boot_off">不</string>
+    <string name="settings_current_os">[目前就是]</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

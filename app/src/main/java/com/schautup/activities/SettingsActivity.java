@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -61,22 +62,28 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 			//Select different mode to do the schedules.
 			String title = null;
 			String summary = null;
+			boolean isKitkat = android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT;
 			switch (Integer.valueOf(newValue.toString())) {
 			case 0:
 				title = getString(R.string.settings_hungry_mode);
 				summary = getString(R.string.settings_hungry_mode_desc);
+
+				preference.setSummary(String.format("%s", summary ));
 				break;
 			case 1:
 				title = getString(R.string.settings_thirsty_mode);
 				summary = getString(R.string.settings_thirsty_mode_desc);
+
+				preference.setSummary(String.format("%s %s", summary, isKitkat ? getString(R.string.settings_current_os) : ""));
 				break;
 			case 2:
 				title = getString(R.string.settings_neutral_mode);
 				summary = getString(R.string.settings_neutral_mode_desc);
+
+				preference.setSummary(String.format("%s %s", summary, !isKitkat ? getString(R.string.settings_current_os) : ""));
 				break;
 			}
 			preference.setTitle(title);
-			preference.setSummary(summary);
 			if(mInitModeList) {
 				stopService(new Intent(getApplication(), ScheduleManager.class));
 				startService(new Intent(getApplication(), ScheduleManager.class));
