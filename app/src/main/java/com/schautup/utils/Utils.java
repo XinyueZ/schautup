@@ -2,8 +2,10 @@ package com.schautup.utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -17,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.data.ScheduleItem;
+import com.schautup.db.DB;
 import com.schautup.views.BadgeView;
 
 import org.joda.time.DateTime;
@@ -281,5 +284,21 @@ public final class Utils {
 	 */
 	public static String toString(Object boolObj) {
 		return boolObj == null ? null : boolObj.toString();
+	}
+
+	/**
+	 * Util method to fetch all scheduled items from DB according to the sorting type.
+	 *
+	 * @param app
+	 * 		{@link android.app.Application}.
+	 *
+	 * @return The {@link java.util.List} of {@link com.schautup.data.ScheduleItem}.
+	 */
+	public static List<ScheduleItem> getAllSchedules(Application app) {
+		if (Prefs.getInstance(app).isSortedByLastEdit()) {
+			return DB.getInstance(app).getAllSchedulesOrderByEditTime();
+		} else {
+			return DB.getInstance(app).getAllSchedulesOrderByScheduleTime();
+		}
 	}
 }

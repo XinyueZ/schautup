@@ -2,6 +2,7 @@ package com.schautup.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build.VERSION_CODES;
 
 import com.chopping.application.BasicPrefs;
 
@@ -194,7 +195,7 @@ public final class Prefs extends BasicPrefs {
 	 * @return The current schedule mode.
 	 */
 	public String getScheduleMode() {
-		return getString(KEY_SCHEDULE_MODE, android.os.Build.VERSION.SDK_INT >= 19 ? "1" : "2");
+		return getString(KEY_SCHEDULE_MODE, android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT ? "1" : "2");
 	}
 
 	/**

@@ -19,7 +19,8 @@ import com.schautup.bus.ScheduleNextEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
-import com.schautup.utils.Prefs;
+import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -28,7 +29,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public   class Thirsty extends Service {
+public class Thirsty extends Service {
 	/**
 	 * Current time zone.
 	 */
@@ -92,13 +93,18 @@ public   class Thirsty extends Service {
 	public void onCreate() {
 		EventBus.getDefault().register(this);
 		super.onCreate();
-		List<ScheduleItem> items;
-		if (Prefs.getInstance( getApplication()).isSortedByLastEdit()) {
-			items =  DB.getInstance( getApplication()).getAllSchedulesOrderByEditTime();
-		} else {
-			items =  DB.getInstance( getApplication()).getAllSchedulesOrderByScheduleTime();
-		}
-		addAll(items);
+		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return Utils.getAllSchedules(getApplication());
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> items) {
+				super.onPostExecute(items);
+				addAll(items);
+			}
+		}.executeParallel();
 		LL.i(getClass().getSimpleName() + "#Create.");
 	}
 

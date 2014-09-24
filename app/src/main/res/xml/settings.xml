@@ -6,8 +6,7 @@
             android:title="@string/settings_thirsty_mode"
             android:summary="@string/settings_thirsty_mode_desc"
             android:entries="@array/settings_schedule_modes"
-            android:entryValues="@array/settings_schedule_modes_values"
-            android:defaultValue="1"/>
+            android:entryValues="@array/settings_schedule_modes_values" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_run_boot">
         <CheckBoxPreference

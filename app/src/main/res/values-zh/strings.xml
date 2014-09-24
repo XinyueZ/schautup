@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">定时榜首</string>
+    <string name="app_name">定时助手</string>
     <string name="btn_close">关闭</string>
     <string name="btn_confirm">确认</string>
     <string name="btn_cancel">取消</string>

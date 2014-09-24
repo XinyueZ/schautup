@@ -25,9 +25,8 @@ import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
-import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
-import com.schautup.utils.Prefs;
+import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
@@ -206,11 +205,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
-				if (Prefs.getInstance(getActivity().getApplication()).isSortedByLastEdit()) {
-					return DB.getInstance(getActivity().getApplication()).getAllSchedulesOrderByEditTime();
-				} else {
-					return DB.getInstance(getActivity().getApplication()).getAllSchedulesOrderByScheduleTime();
-				}
+				return Utils.getAllSchedules(getActivity().getApplication());
 			}
 
 			@Override

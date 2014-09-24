@@ -243,11 +243,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				if (!success) {
 					return null;
 				} else {
-					if (Prefs.getInstance( getApplication()).isSortedByLastEdit()) {
-						return db.getAllSchedulesOrderByEditTime();
-					} else {
-						return db.getAllSchedulesOrderByScheduleTime();
-					}
+					return Utils.getAllSchedules(getApplication());
 				}
 			}
 
