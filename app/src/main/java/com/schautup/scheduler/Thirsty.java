@@ -229,9 +229,10 @@ public class Thirsty extends Service {
 		//that whether the schedule should be continued or not.
 		List<ScheduleItem> items = DB.getInstance(getApplication()).getSchedules(id);
 		ScheduleItem item = items.get(0);
-		if (item != null) {
-			add(items.get(0));
+		if (item != null) {//Removed old pending what has been finished.
+			remove(item.getId());
 		}
+		add(items.get(0));
 	}
 
 	/**
