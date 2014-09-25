@@ -37,7 +37,12 @@ public class Thirsty extends Service {
 	/**
 	 * Extras store the item id (also the id of pending) when event will be fired by {@link android.app.AlarmManager}.
 	 */
-	public static final String EXTRAS_ITEM_ID = "com.schautup.scheduler.Thirsty.ItemId";
+	static final String EXTRAS_ITEM_ID = "com.schautup.scheduler.Thirsty.ItemId";
+
+	/**
+	 * Extras boolean to indicate whether the {@link com.schautup.bus.ScheduleNextEvent} should be called no not.
+	 */
+	static final String EXTRAS_DO_NEXT = "com.schautup.scheduler.Thirsty.do.next";
 	/**
 	 * Cache of all intents that are under way to do the tasks scheduled by {@link android.app.AlarmManager}.
 	 */
@@ -168,7 +173,7 @@ public class Thirsty extends Service {
 		Calendar calendar = Calendar.getInstance();
 		// Important! Otherwise there's deviation.
 		calendar.setTimeInMillis(System.currentTimeMillis());
-//		calendar.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
+		//		calendar.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		calendar.set(Calendar.HOUR_OF_DAY, hour);
 		calendar.set(Calendar.MINUTE, minute);
 		calendar.set(Calendar.SECOND, 0);
@@ -182,11 +187,9 @@ public class Thirsty extends Service {
 		// A difference between setTime and currentTime plus total time since boot equal to the time
 		// point we wanna.
 		long timeToAlarm = firstTime + (setTime - currentTime);
-		Intent intent = new Intent(this, doGetReceiver());
+		Intent intent = new Intent(this, ScheduleReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent,
-				PendingIntent.FLAG_ONE_SHOT);
-		doSetAlarmManager(mgr, timeToAlarm, pendingIntent);
+		PendingIntent pendingIntent = doCreateAlarmPending(mgr, timeToAlarm, intent);
 		mScheduledIntents.put(item.getId(), pendingIntent);
 	}
 
@@ -241,19 +244,11 @@ public class Thirsty extends Service {
 					remove(item.getId());
 					add(item);
 				}
+
 			}
 		}.executeParallel();
 	}
 
-	/**
-	 * Specify the {@link android.content.BroadcastReceiver} that will be called by {@link android.app.AlarmManager}.
-	 *
-	 * @return The type of {@link android.content.BroadcastReceiver} to get callback from {@link
-	 * android.app.AlarmManager}.
-	 */
-	protected Class<?> doGetReceiver() {
-		return ThirstyReceiver.class;
-	}
 
 	/**
 	 * Specify the implementation of starting {@link android.app.AlarmManager}.
@@ -262,14 +257,18 @@ public class Thirsty extends Service {
 	 * 		A {@link android.app.AlarmManager}.
 	 * @param timeToAlarm
 	 * 		First time to do the task.
-	 * @param pendingIntent
+	 * @param intent
 	 * 		The pending that will be fired when task will be done by {@link android.app.AlarmManager} future.
 	 */
-	protected void doSetAlarmManager(AlarmManager mgr, long timeToAlarm, PendingIntent pendingIntent) {
+	protected PendingIntent doCreateAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
+		intent.putExtra(EXTRAS_DO_NEXT, true);
+		PendingIntent pi = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
+			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
 		} else {
-			mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pendingIntent);
+			mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
 		}
+		return pi;
 	}
 }

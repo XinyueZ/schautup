@@ -27,6 +27,7 @@ import com.schautup.bus.DoSchedulesAtTimeEvent;
 import com.schautup.bus.DoSchedulesForIdEvent;
 import com.schautup.bus.ScheduleManagerPauseEvent;
 import com.schautup.bus.ScheduleManagerWorkEvent;
+import com.schautup.bus.ScheduleNextEvent;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
@@ -79,13 +80,26 @@ public class ScheduleManager extends Service {
 	 * 		Event {@link com.schautup.bus.DoSchedulesForIdEvent}.
 	 */
 	public void onEvent(DoSchedulesForIdEvent e) {
-		new ParallelTask<DoSchedulesForIdEvent, Void, Void>(false) {
+		new ParallelTask<DoSchedulesForIdEvent, DoSchedulesForIdEvent, DoSchedulesForIdEvent>(false) {
 			@Override
-			protected Void doInBackground(DoSchedulesForIdEvent... params) {
-				doSchedules(params[0].getId());
-				return null;
+			protected DoSchedulesForIdEvent doInBackground(DoSchedulesForIdEvent... params) {
+				DoSchedulesForIdEvent event = params[0];
+				doSchedules(event.getId());
+				return event;
+			}
+
+			@Override
+			protected void onPostExecute(DoSchedulesForIdEvent event) {
+				super.onPostExecute(event);
+				if (event.isDoNext()) {
+					//For "Neutral", this call must be ignored.
+					//Only for "Thirsty".
+					EventBus.getDefault().post(new ScheduleNextEvent(event.getId()));
+				}
+
 			}
 		}.executeParallel(e);
+
 	}
 
 	/**
