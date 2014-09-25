@@ -368,6 +368,7 @@ public class ScheduleManager extends Service {
 				time.getMinuteOfHour(), Utils.dateTimeDay2String(time.getDayOfWeek()));
 
 		for (ScheduleItem item : items) {
+			LL.d("Doing task by " + item.getId() );
 			doScheduleTask(item);
 		}
 	}

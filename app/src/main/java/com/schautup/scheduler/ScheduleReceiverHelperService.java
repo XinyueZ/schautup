@@ -1,10 +1,9 @@
 package com.schautup.scheduler;
 
-import java.util.concurrent.TimeUnit;
-
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.chopping.application.LL;
 import com.schautup.bus.DoSchedulesForIdEvent;
 
 import de.greenrobot.event.EventBus;
@@ -31,14 +30,9 @@ public class ScheduleReceiverHelperService extends IntentService {
 		if (intent != null) {
 			long taskId = intent.getLongExtra(Thirsty.EXTRAS_ITEM_ID, -1);//Id in DB and also the id in pending-list.
 			boolean doNext = intent.getBooleanExtra(Thirsty.EXTRAS_DO_NEXT, false);
+			LL.d("Post event to do schedule, item id: " + taskId );
 			EventBus.getDefault().post(new DoSchedulesForIdEvent(taskId, doNext));
-
-			try {
-				TimeUnit.MINUTES.sleep(1);
-			} catch (InterruptedException e) {
-			} finally {
-				ScheduleReceiver.completeWakefulIntent(intent);
-			}
+			ScheduleReceiver.completeWakefulIntent(intent);
 		}
 	}
 

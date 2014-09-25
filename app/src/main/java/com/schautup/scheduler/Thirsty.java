@@ -262,8 +262,9 @@ public class Thirsty extends Service {
 	 */
 	protected PendingIntent doCreateAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
 		intent.putExtra(EXTRAS_DO_NEXT, true);
-		PendingIntent pi = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		int reqCode = (int) System.currentTimeMillis();
+		PendingIntent pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		LL.d("Pending reqCode: " + reqCode);
 		if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 			mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
 		} else {
