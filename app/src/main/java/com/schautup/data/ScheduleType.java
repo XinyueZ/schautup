@@ -10,8 +10,10 @@ import com.schautup.R;
 public enum ScheduleType {
 	MUTE(0, R.drawable.ic_mute, R.string.type_mute), VIBRATE(1, R.drawable.ic_vibrate, R.string.type_vibrate), SOUND(2,
 			R.drawable.ic_sound, R.string.type_sound), WIFI(3, R.drawable.ic_wifi_btn, R.string.type_wifi),
-	MOBILE(4, R.drawable.ic_mobile_data_btn, R.string.type_mobile_data),BRIGHTNESS(5, R.drawable.ic_brightness_btn,
-			R.string.type_brightness);
+	MOBILE(4, R.drawable.ic_mobile_data_btn, R.string.type_mobile_data), BRIGHTNESS(5, R.drawable.ic_brightness_btn,
+			R.string.type_brightness), BLUETOOTH(6, R.drawable.ic_bluetooth_btn, R.string.type_bluetooth), STARTAPP(7,
+			R.drawable.ic_app_list_btn, R.string.type_app_start), CALLABORT(8, R.drawable.ic_dail_abort_btn,
+			R.string.type_call_abort);
 
 	/**
 	 * Code of type.
@@ -81,6 +83,12 @@ public enum ScheduleType {
 			return MOBILE;
 		case 5:
 			return BRIGHTNESS;
+		case 6:
+			return BLUETOOTH;
+		case 7:
+			return STARTAPP;
+		case 8:
+			return CALLABORT;
 		default:
 			return null;
 		}
@@ -90,7 +98,7 @@ public enum ScheduleType {
 	 * Get code of type.
 	 *
 	 * @return code.
-	*/
+	 */
 	public int toCode() {
 		return mCode;
 	}

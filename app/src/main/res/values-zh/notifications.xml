@@ -28,4 +28,8 @@
     <string name="notify_brightness_simple_content">屏幕亮度变为%s</string>
     <string name="notify_brightness_headline">提示</string>
     <string name="notify_brightness_content">我已经了屏幕亮度到%1$s。</string>
+    <!--Bluetooth-->
+    <string name="notify_bluetooth_simple_content">%s了蓝牙</string>
+    <string name="notify_bluetooth_headline">提示</string>
+    <string name="notify_bluetooth_content">我已经%1$s了蓝牙通讯。</string>
 </resources>

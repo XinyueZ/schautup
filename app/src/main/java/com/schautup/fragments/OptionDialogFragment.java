@@ -67,6 +67,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	private View mSelWifiV;
 	/**
+	 * {@link android.view.View} represent selection on bluetooth.
+	 */
+	private View mSelBluetoothV;
+	/**
 	 * {@link android.view.View} represent selection on mobile network.
 	 */
 	private View mSelMobileV;
@@ -122,6 +126,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Information about wifi setting ON/OFF.
 	 */
 	private BadgeView mWifiInfoBgb;
+	/**
+	 * Information about bluetooth setting ON/OFF.
+	 */
+	private BadgeView mBluetoothInfoBgb;
 	/**
 	 * Information about mobile setting ON/OFF.
 	 */
@@ -214,6 +222,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelBrightnessV.setTag(l);
 			Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(l.getLevelShortResId()));
 			break;
+		case BLUETOOTH:
+			mSelBluetoothV.setSelected(true);
+			mSelBluetoothV.setTag(item.getReserveLeft());
+			Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+					Boolean.parseBoolean(item.getReserveLeft())));
+			break;
 		}
 
 		EventBus.getDefault().removeStickyEvent(ShowSetOptionEvent.class);
@@ -301,6 +315,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelSoundV.setOnClickListener(this);
 		mSelWifiV = view.findViewById(R.id.set_wifi_ll);
 		mSelWifiV.setOnClickListener(this);
+		mSelBluetoothV = view.findViewById(R.id.set_bluetooth_ll);
+		mSelBluetoothV.setOnClickListener(this);
 		mSelMobileV = view.findViewById(R.id.set_mobile_data_ll);
 		mSelMobileV.setOnClickListener(this);
 		mSelBrightnessV = view.findViewById(R.id.set_brightness_ll);
@@ -359,6 +375,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelBluetoothV.setSelected(false);
+			mBluetoothInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelBrightnessV.setSelected(false);
@@ -372,6 +390,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelBluetoothV.setSelected(false);
+			mBluetoothInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelBrightnessV.setSelected(false);
@@ -385,6 +405,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelVibrateV.setSelected(false);
 			mSelWifiV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelBluetoothV.setSelected(false);
+			mBluetoothInfoBgb.setVisibility(View.GONE);
 			mSelMobileV.setSelected(false);
 			mMobileInfoBgb.setVisibility(View.GONE);
 			mSelBrightnessV.setSelected(false);
@@ -408,6 +430,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelBrightnessV.setSelected(false);
 					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
@@ -425,6 +449,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelBrightnessV.setSelected(false);
 					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
@@ -435,6 +461,56 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelWifiV.setTag(null);
 					mSelWifiV.setSelected(false);
+				}
+			}).create().show();
+			break;
+		case R.id.set_bluetooth_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(R.string.msg_bluetooth_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.BLUETOOTH;
+
+					mSelBluetoothV.setTag(true);
+					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+					mSelBluetoothV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNegativeButton(R.string.lbl_off, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = ScheduleType.BLUETOOTH;
+
+					mSelBluetoothV.setTag(false);
+					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
+					mSelBluetoothV.setSelected(true);
+
+					mSelVibrateV.setSelected(false);
+					mSelMuteV.setSelected(false);
+					mSelSoundV.setSelected(false);
+					mSelWifiV.setSelected(false);
+					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelMobileV.setSelected(false);
+					mMobileInfoBgb.setVisibility(View.GONE);
+					mSelBrightnessV.setSelected(false);
+					mBrightnessInfoBgb.setVisibility(View.GONE);
+				}
+			}).setNeutralButton(R.string.btn_cancel, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mSelectedType = null;
+
+					mSelBluetoothV.setTag(null);
+					mSelBluetoothV.setSelected(false);
 				}
 			}).create().show();
 			break;
@@ -455,6 +531,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelBrightnessV.setSelected(false);
 					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
@@ -473,6 +551,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelBrightnessV.setSelected(false);
 					mBrightnessInfoBgb.setVisibility(View.GONE);
 				}
@@ -503,6 +583,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 							mSelSoundV.setSelected(false);
 							mSelWifiV.setSelected(false);
 							mWifiInfoBgb.setVisibility(View.GONE);
+							mSelBluetoothV.setSelected(false);
+							mBluetoothInfoBgb.setVisibility(View.GONE);
 							mSelMobileV.setSelected(false);
 							mMobileInfoBgb.setVisibility(View.GONE);
 						}
@@ -520,6 +602,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
 				}
@@ -537,6 +621,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
+					mSelBluetoothV.setSelected(false);
+					mBluetoothInfoBgb.setVisibility(View.GONE);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
 				}
@@ -552,6 +638,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
 				mSelWifiV.setSelected(false);
+				mSelBluetoothV.setSelected(false);
 				mSelMobileV.setSelected(false);
 				mSelBrightnessV.setSelected(false);
 			} else if (mEventRecurrence == null ||
@@ -572,6 +659,12 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						case WIFI:
 							if (TextUtils.equals(mPreScheduleItem.getReserveLeft(), Utils.toString(
 									mSelWifiV.getTag()))) {
+								dismiss();
+							}
+							break;
+						case BLUETOOTH:
+							if (TextUtils.equals(mPreScheduleItem.getReserveLeft(), Utils.toString(
+									mSelBluetoothV.getTag()))) {
 								dismiss();
 							}
 							break;
@@ -626,6 +719,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				switch (mSelectedType) {
 				case WIFI:
 					scheduleItem.setReserveLeft(Utils.toString(mSelWifiV.getTag()));
+					scheduleItem.setReserveRight("boolean");
+					break;
+				case BLUETOOTH:
+					scheduleItem.setReserveLeft(Utils.toString(mSelBluetoothV.getTag()));
 					scheduleItem.setReserveRight("boolean");
 					break;
 				case MOBILE:

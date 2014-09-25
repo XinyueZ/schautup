@@ -31,4 +31,8 @@
     <string name="notify_brightness_simple_content">Display brightness changed to %s</string>
     <string name="notify_brightness_headline">Caution!</string>
     <string name="notify_brightness_content">I\'ve changed brightness to %1$s.</string>
+    <!--Bluetooth-->
+    <string name="notify_bluetooth_simple_content">Bluetooth %s</string>
+    <string name="notify_bluetooth_headline">Caution!</string>
+    <string name="notify_bluetooth_content">I\'ve turned %s your Bluetooth.</string>
 </resources>

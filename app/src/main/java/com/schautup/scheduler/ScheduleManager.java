@@ -515,6 +515,44 @@ public class ScheduleManager extends Service {
 						R.drawable.ic_brightness_notify));
 			}
 			break;
+		case BLUETOOTH:
+			try {
+				boolean bluetoothSuccess;
+				if (Boolean.valueOf(item.getReserveLeft())) {
+					bluetoothSuccess = DeviceUtils.setBluetoothEnabled(true);
+					if (bluetoothSuccess) {
+						sendNotification(this, new Result(String.format(getString(
+								R.string.notify_bluetooth_simple_content), getString(R.string.lbl_on)), getString(
+								R.string.notify_bluetooth_headline), String.format(getString(
+								R.string.notify_bluetooth_content), getString(R.string.lbl_on)),
+								R.drawable.ic_bluetooth_on_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_bluetooth),
+								getString(R.string.lbl_on_small));
+					}
+				} else {
+					bluetoothSuccess = DeviceUtils.setWifiEnabled(this, false);
+					if (bluetoothSuccess) {
+						sendNotification(this, new Result(String.format(getString(R.string.notify_bluetooth_content),
+								getString(R.string.lbl_off)), getString(R.string.notify_bluetooth_headline),
+								String.format(getString(R.string.notify_bluetooth_content), getString(R.string.lbl_off)),
+								R.drawable.ic_bluetooth_off_notify));
+					} else {
+						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_bluetooth),
+								getString(R.string.lbl_off_small));
+					}
+				}
+			} catch (OperationFailException e) {
+				comment = new StringBuilder().append(getString(R.string.lbl_can_not_set, getString(
+						R.string.option_bluetooth))).append(getString(R.string.lbl_operation_fail)).toString();
+			}
+			break;
+		case STARTAPP:
+			com.chopping.utils.Utils.showLongToast(this, "Coming soon...");
+			break;
+		case CALLABORT:
+			com.chopping.utils.Utils.showLongToast(this, "Coming soon...");
+			break;
 		}
 		DB db = DB.getInstance(getApplication());
 		historyItem = new HistoryItem(item.getType());
@@ -522,5 +560,4 @@ public class ScheduleManager extends Service {
 		db.logHistory(historyItem);
 		EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
 	}
-
 }
