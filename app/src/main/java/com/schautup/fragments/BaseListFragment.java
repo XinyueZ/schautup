@@ -237,7 +237,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			//ListView moving, add button can dismiss.
 			if (translationY == 0) {
 				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight() * 2).setDuration(500);
+				animator.translationY(getActionBarHeight() * 4).setDuration(500);
 			}
 		}
 		if (view.getId() == mLv.getId()) {
