@@ -295,7 +295,7 @@ public final class Utils {
 	 * @return The {@link java.util.List} of {@link com.schautup.data.ScheduleItem}.
 	 */
 	public static List<ScheduleItem> getAllSchedules(Application app) {
-		if (Prefs.getInstance(app).isSortedByLastEdit()) {
+		if (Prefs.getInstance(app).isSortedByLastEdit().equals("0")) {
 			return DB.getInstance(app).getAllSchedulesOrderByEditTime();
 		} else {
 			return DB.getInstance(app).getAllSchedulesOrderByScheduleTime();

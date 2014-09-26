@@ -65,7 +65,7 @@ public final class Prefs extends BasicPrefs {
 	/**
 	 * Storage. Whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
-	private static final String KEY_SORTED_BY_EDIT = "key_sorted_by_edit";
+	public static final String KEY_SORTED_BY_EDIT = "key_sorted_by_edit";
 	//----------------------------------------------------------
 
 
@@ -249,14 +249,14 @@ public final class Prefs extends BasicPrefs {
 	/**
 	 * Get whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
-	public boolean isSortedByLastEdit() {
-		return getBoolean(KEY_SORTED_BY_EDIT, true);
+	public String isSortedByLastEdit() {
+		return getString(KEY_SORTED_BY_EDIT, "0");
 	}
 
 	/**
 	 * Set whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
-	public void setSortedByLastEdit(boolean sortedByEdit) {
-		setBoolean(KEY_SORTED_BY_EDIT, sortedByEdit);
+	public void setSortedByLastEdit(String sortedByEdit) {
+		setString(KEY_SORTED_BY_EDIT,sortedByEdit);
 	}
 }

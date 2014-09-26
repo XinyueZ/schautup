@@ -1,7 +1,5 @@
 package com.schautup.activities;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -409,11 +407,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
-		MenuItem itemSc = menu.findItem(R.id.action_sort_by_schedule);
-		MenuItem itemEd =  menu.findItem(R.id.action_sort_by_edit_time);
-		boolean byEd = Prefs.getInstance(getApplication()).isSortedByLastEdit();
-		itemEd.setChecked(byEd);
-		itemSc.setChecked(!byEd);
+
 		return true;
 	}
 
@@ -434,35 +428,34 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				showGridView();
 			}
 			break;
-		case R.id.action_sort_by_schedule:
-		case R.id.action_sort_by_edit_time:
-			new ParallelTask<Void, Void, AllScheduleLoadedEvent>(true) {
-				@Override
-				protected AllScheduleLoadedEvent doInBackground(Void[] params) {
-					boolean bySchedule = item.getItemId() == R.id.action_sort_by_schedule;
-					DB db = DB.getInstance(getApplication());
-					List<ScheduleItem> list =
-							bySchedule ? db.getAllSchedulesOrderByScheduleTime() :
-									db.getAllSchedulesOrderByEditTime();
-					Prefs.getInstance(getApplication()).setSortedByLastEdit(!bySchedule);
-					if (list.size() > 0) {
-						return new AllScheduleLoadedEvent(list);
-					} else {
-						return null;
-					}
-				}
-
-				@Override
-				protected void onPostExecute(AllScheduleLoadedEvent e) {
-					super.onPostExecute(e);
-					if (e != null) {
-						EventBus.getDefault().post(e);
-					}
-				}
-			}.executeParallel();
-
-			item.setChecked(true);
-			break;
+//		case R.id.action_sort_by_schedule:
+//		case R.id.action_sort_by_edit_time:
+//			new ParallelTask<Void, Void, AllScheduleLoadedEvent>(true) {
+//				@Override
+//				protected AllScheduleLoadedEvent doInBackground(Void[] params) {
+//					boolean bySchedule = item.getItemId() == R.id.action_sort_by_schedule;
+//					DB db = DB.getInstance(getApplication());
+//					List<ScheduleItem> list =
+//							bySchedule ? db.getAllSchedulesOrderByScheduleTime() :
+//									db.getAllSchedulesOrderByEditTime();
+//					if (list.size() > 0) {
+//						return new AllScheduleLoadedEvent(list);
+//					} else {
+//						return null;
+//					}
+//				}
+//
+//				@Override
+//				protected void onPostExecute(AllScheduleLoadedEvent e) {
+//					super.onPostExecute(e);
+//					if (e != null) {
+//						EventBus.getDefault().post(e);
+//					}
+//				}
+//			}.executeParallel();
+//
+//			item.setChecked(true);
+//			break;
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);
 			break;

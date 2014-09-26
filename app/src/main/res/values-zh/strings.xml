@@ -48,8 +48,8 @@
     <!--Menu-->
     <string name="menu_add">添加</string>
     <string name="menu_view">界面</string>
-    <string name="menu_sort_by_schedule">按照设定时间排序</string>
-    <string name="menu_sort_by_edited_time">按照被编辑时间排序</string>
+    <string name="menu_sort_by_schedule">按照设定时间排序。</string>
+    <string name="menu_sort_by_edited_time">按照被编辑时间排序。</string>
     <string name="menu_share_app">分享App</string>
     <string name="menu_about">关于</string>
     <string name="menu_settings">设置</string>
@@ -103,6 +103,7 @@
     <string name="settings_run_boot_on">是</string>
     <string name="settings_run_boot_off">不</string>
     <string name="settings_current_os">[目前就是]</string>
+    <string name="settings_sort_types">视图如何排序？</string>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

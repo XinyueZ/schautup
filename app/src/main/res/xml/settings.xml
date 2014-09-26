@@ -8,6 +8,13 @@
             android:entries="@array/settings_schedule_modes"
             android:entryValues="@array/settings_schedule_modes_values" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_sort_types">
+        <ListPreference
+            android:key="key_sorted_by_edit"
+            android:title="@string/settings_sort_types"
+            android:entries="@array/settings_sort_types"
+            android:entryValues="@array/settings_sort_types_values" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_run_boot">
         <CheckBoxPreference
             android:key="key_run_boot"

@@ -26,6 +26,7 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 	 * Tricky to avoid first call.
 	 */
 	private boolean mInitModeList;
+
 	/**
 	 * Show an instance of SettingsActivity.
 	 *
@@ -45,11 +46,20 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 		getSupportActionBar().setIcon(R.drawable.ic_action_settings);
 		addPreferencesFromResource(R.xml.settings);
 
+		String val;
 		//Schedule running mode.
 		ListPreference modeList = (ListPreference) findPreference(Prefs.KEY_SCHEDULE_MODE);
 		modeList.setOnPreferenceChangeListener(this);
-		modeList.setValue(Prefs.getInstance(getApplication()).getScheduleMode());
-		onPreferenceChange(modeList, Prefs.getInstance(getApplication()).getScheduleMode());
+		val = Prefs.getInstance(getApplication()).getScheduleMode();
+		modeList.setValue(val);
+		onPreferenceChange(modeList, val);
+
+		//Sort
+		ListPreference sortByEdit = (ListPreference) findPreference(Prefs.KEY_SORTED_BY_EDIT);
+		sortByEdit.setOnPreferenceChangeListener(this);
+		val = Prefs.getInstance(getApplication()).isSortedByLastEdit();
+		sortByEdit.setValue(val);
+		onPreferenceChange(sortByEdit, val);
 
 		//Run at boot or not.
 		CheckBoxPreference runBoot = (CheckBoxPreference) findPreference(Prefs.KEY_RUN_BOOT);
@@ -68,28 +78,41 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 				title = getString(R.string.settings_hungry_mode);
 				summary = getString(R.string.settings_hungry_mode_desc);
 
-				preference.setSummary(String.format("%s", summary ));
+				preference.setSummary(String.format("%s", summary));
 				break;
 			case 1:
 				title = getString(R.string.settings_thirsty_mode);
 				summary = getString(R.string.settings_thirsty_mode_desc);
 
-				preference.setSummary(String.format("%s %s", summary, isKitkat ? getString(R.string.settings_current_os) : ""));
+				preference.setSummary(String.format("%s %s", summary, isKitkat ? getString(
+						R.string.settings_current_os) : ""));
 				break;
 			case 2:
 				title = getString(R.string.settings_neutral_mode);
 				summary = getString(R.string.settings_neutral_mode_desc);
 
-				preference.setSummary(String.format("%s %s", summary, !isKitkat ? getString(R.string.settings_current_os) : ""));
+				preference.setSummary(String.format("%s %s", summary, !isKitkat ? getString(
+						R.string.settings_current_os) : ""));
 				break;
 			}
 			preference.setTitle(title);
-			if(mInitModeList) {
+			if (mInitModeList) {
 				stopService(new Intent(getApplication(), ScheduleManager.class));
 				startService(new Intent(getApplication(), ScheduleManager.class));
 			} else {
-				 mInitModeList = true;
+				mInitModeList = true;
 			}
+		} else if (preference.getKey().equals(Prefs.KEY_SORTED_BY_EDIT)) {
+			String title = null;
+			switch (Integer.valueOf(newValue.toString())) {
+			case 0:
+				title = getString(R.string.menu_sort_by_edited_time);
+				break;
+			case 1:
+				title = getString(R.string.menu_sort_by_schedule);
+				break;
+			}
+			preference.setTitle(title);
 		} else if (preference.getKey().equals(Prefs.KEY_RUN_BOOT)) {
 			//On or Off that begins doing schedules at the boot of device.
 			ComponentName receiver = new ComponentName(getApplication(), BootReceiver.class);
@@ -102,8 +125,7 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 				pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
 						PackageManager.DONT_KILL_APP);
 			}
-		}
-		return true;
+		} return true;
 	}
 
 	@Override
