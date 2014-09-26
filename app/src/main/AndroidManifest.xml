@@ -131,10 +131,10 @@
         </receiver>
         <receiver
             android:name=".scheduler.ScheduleReceiver"
-            android:enabled="true" />
+            android:enabled="true"  />
         <service
             android:name=".scheduler.ScheduleReceiverHelperService"
-            android:exported="false" />
+            android:exported="false"  />
         <service
             android:name="com.schautup.scheduler.Hungry"
             android:enabled="true"

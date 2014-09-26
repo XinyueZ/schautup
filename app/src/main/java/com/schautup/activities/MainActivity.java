@@ -350,7 +350,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		setContentView(LAYOUT);
-		initDrawer();
+		if(getResources().getBoolean(R.bool.flag_stage)) {
+			initDrawer();
+		}
 		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);

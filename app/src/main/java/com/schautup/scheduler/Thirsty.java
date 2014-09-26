@@ -207,17 +207,23 @@ public class Thirsty extends Service {
 	/**
 	 * To remove a task from pending of {@link android.app.AlarmManager}.
 	 *
-	 * @param cxt  {@link android.content.Context}.
+	 * @param cxt
+	 * 		{@link android.content.Context}.
 	 * @param id
 	 * 		The id pending in the list of pending.
+	 *
+	 * @return {@code true} if find the pending with {@code id} and has been removed. {@code false} if the pending with
+	 * {@code id} can't be found.
 	 */
-	public static void remove(Context cxt, long id) {
+	public synchronized  static boolean remove(Context cxt, long id) {
 		AlarmManager mgr = (AlarmManager) cxt.getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = sScheduledIntents.get(id);
 		if (pi != null) {
 			sScheduledIntents.remove(id);
 			mgr.cancel(pi);
+			return true;
 		}
+		return false;
 	}
 
 	/**

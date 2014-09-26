@@ -40,20 +40,39 @@ android {
     }
     productFlavors {
         live {
-            applicationId project.APP_APPLICATIONID
+            applicationId project.APP_APPLICATION_LIVE_ID
             minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
             targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
             versionCode Integer.parseInt(project.APP_VERSIONCODE)
             versionName project.APP_VERSIONNAME
         }
         stage {
-            applicationId project.APP_APPLICATIONID
+            applicationId project.APP_APPLICATION_STAGE_ID
             minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
             targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
             versionCode Integer.parseInt(project.APP_VERSIONCODE)
             versionName project.APP_VERSIONNAME
         }
     }
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+        }
+        live {
+            assets.srcDirs = ['src/live/assets']
+            res.srcDirs = ['src/live/res']
+            java.srcDirs = ['src/live/java']
+        }
+        stage {
+            assets.srcDirs = ['src/stage/assets']
+            res.srcDirs = ['src/stage/res']
+            java.srcDirs = ['src/stage/java']
+        }
+    }
+
 }
 
 dependencies {
