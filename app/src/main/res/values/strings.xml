@@ -57,6 +57,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_forward">Forward</string>
     <string name="menu_backward">Backward</string>
+    <string name="menu_filter">Filter</string>
 
     <!--Option dialog-->
     <string name="option_dlg_title">Option</string>

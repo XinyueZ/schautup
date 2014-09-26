@@ -55,6 +55,7 @@
     <string name="menu_settings">设置</string>
     <string name="menu_forward">向前</string>
     <string name="menu_backward">后退</string>
+    <string name="menu_filter">过滤</string>
 
     <!--Option dialog-->
     <string name="option_dlg_title">选项</string>

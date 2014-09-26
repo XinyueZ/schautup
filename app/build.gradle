@@ -54,24 +54,6 @@ android {
             versionName project.APP_VERSIONNAME
         }
     }
-    sourceSets {
-        main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['src/main/assets']
-        }
-        live {
-            assets.srcDirs = ['src/live/assets']
-            res.srcDirs = ['src/live/res']
-            java.srcDirs = ['src/live/java']
-        }
-        stage {
-            assets.srcDirs = ['src/stage/assets']
-            res.srcDirs = ['src/stage/res']
-            java.srcDirs = ['src/stage/java']
-        }
-    }
 
 }
 

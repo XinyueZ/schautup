@@ -352,6 +352,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		setContentView(LAYOUT);
 		if(getResources().getBoolean(R.bool.flag_stage)) {
 			initDrawer();
+		} else {
+			final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 		}
 		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
@@ -416,7 +419,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
+		if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		switch (item.getItemId()) {
