@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="notify_can_not_set">一些问题!</string>
     <!--Foreground-->
     <string name="notify_foreground_simple_content">%1$s已经启动。</string>
-    <string name="notify_foreground_headline">提示</string>
+    <string name="notify_foreground_headline">@string/app_name</string>
     <string name="notify_foreground_content">安排您的响铃，静音及震动状态。</string>
     <!--mute-->
     <string name="notify_mute_simple_content">静音 开启！</string>

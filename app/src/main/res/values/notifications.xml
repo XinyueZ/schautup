@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="notify_can_not_set">Some problems!</string>
     <!--Foreground-->
     <string name="notify_foreground_simple_content">Hi! Here is %1$s.</string>
-    <string name="notify_foreground_headline">Caution!</string>
+    <string name="notify_foreground_headline">@string/app_name</string>
     <string name="notify_foreground_content">Schedule your device with different status(sound,
         vibrate, mute).</string>
     <!--mute-->

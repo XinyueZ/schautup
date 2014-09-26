@@ -102,7 +102,7 @@ public class HistoryListAdapter extends BaseActionModeExpandableListAdapter<Hist
 		}
 		HistoryItem item = mHistoryItems.get(groupPosition);
 		if (!TextUtils.isEmpty(item.getComment())) {
-			vh.mCommentTv.setText(Html.fromHtml(item.getComment()));
+			vh.mCommentTv.setText(item.getComment());
 		}
 		return convertView;
 	}

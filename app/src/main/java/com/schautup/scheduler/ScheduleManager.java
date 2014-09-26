@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
+import android.text.TextUtils;
 
 import com.chopping.application.LL;
 import com.chopping.exceptions.OperationFailException;
@@ -134,10 +136,11 @@ public class ScheduleManager extends Service {
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setWhen(System.currentTimeMillis())
-				.setTicker(getString(R.string.notify_foreground_simple_content, getString(R.string.app_name))).setAutoCancel(true).setSmallIcon(
-						R.drawable.ic_action_logo).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-						R.drawable.ic_action_logo)).setContentTitle(getString(R.string.notify_foreground_headline))
-				.setContentText(getString(R.string.notify_foreground_content)).setContentIntent(pendingIntent);
+				.setTicker(getString(R.string.notify_foreground_simple_content, getString(R.string.app_name)))
+				.setAutoCancel(true).setSmallIcon(R.drawable.ic_action_logo).setLargeIcon(BitmapFactory.decodeResource(
+						getResources(), R.drawable.ic_action_logo)).setContentTitle(getString(
+						R.string.notify_foreground_headline)).setContentText(getString(
+						R.string.notify_foreground_content)).setContentIntent(pendingIntent);
 		startForeground((int) System.currentTimeMillis(), builder.build());
 	}
 
@@ -303,10 +306,13 @@ public class ScheduleManager extends Service {
 	 * @param id
 	 * 		The id of this notification.
 	 *
+	 * @param bigText
+	 * 		Some more information.
+	 *
 	 * @return A {@link android.support.v4.app.NotificationCompat.Builder}.
 	 */
 	private static NotificationCompat.Builder buildNotificationCommon(Context cxt, String ticker,
-			@DrawableRes int smallIcon, String contentTitle, String content, int id) {
+			@DrawableRes int smallIcon, String contentTitle, String content, int id, String bigText) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(cxt).setWhen(System.currentTimeMillis())
 				.setTicker(ticker).setAutoCancel(true).setSmallIcon(smallIcon).setLargeIcon(
 						BitmapFactory.decodeResource(cxt.getResources(), R.drawable.ic_action_logo)).setContentIntent(
@@ -320,7 +326,15 @@ public class ScheduleManager extends Service {
 			builder.setSound(Uri.parse(String.format("android.resource://%s/%s", cxt.getPackageName(),
 					R.raw.sound_bell)));
 		}
-		builder.setLights(Color.RED, 3000, 3000);
+		builder.setLights(Color.BLUE, 3000, 3000);
+
+		if(!TextUtils.isEmpty(bigText)) {
+			BigTextStyle inboxStyle = new NotificationCompat.BigTextStyle();
+			inboxStyle.setBigContentTitle(contentTitle);
+			inboxStyle.bigText(bigText);
+			inboxStyle.setSummaryText(content);
+			builder.setStyle(inboxStyle);
+		}
 		return builder;
 	}
 
@@ -347,15 +361,31 @@ public class ScheduleManager extends Service {
 	 * 		{@link android.content.Context}.
 	 * @param res
 	 * 		The feedback after finishing schedule.
+	 * @param bigText
+	 *      More text.
 	 */
-	private void sendNotification(Context cxt, Result res) {
+	private void sendNotification(Context cxt, Result res, String bigText) {
 		int notificationID = (int) System.currentTimeMillis();
 		((NotificationManager) cxt.getSystemService(Context.NOTIFICATION_SERVICE)).notify(notificationID,
 				buildNotificationCommon(cxt, res.getSimpleContent(), res.getIcon(), res.getHeadline(), res.getContent(),
-						notificationID).build());
+						notificationID, bigText).build());
 
 
 	}
+
+	/**
+	 * Send a {@link android.app.Notification} when do schedule.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param res
+	 * 		The feedback after finishing schedule.
+	 */
+	private void sendNotification(Context cxt, Result res) {
+		sendNotification(cxt, res, null);
+	}
+
+
 
 	/**
 	 * Do schedules at {@code time}.
@@ -368,7 +398,7 @@ public class ScheduleManager extends Service {
 				time.getMinuteOfHour(), Utils.dateTimeDay2String(time.getDayOfWeek()));
 
 		for (ScheduleItem item : items) {
-			LL.d("Doing task by " + item.getId() );
+			LL.d("Doing task by " + item.getId());
 			doScheduleTask(item);
 		}
 	}
@@ -386,18 +416,21 @@ public class ScheduleManager extends Service {
 				now.getMinuteOfHour(), Utils.dateTimeDay2String(now.getDayOfWeek()));
 
 		for (ScheduleItem item : items) {
-			 doScheduleTask(item);
+			doScheduleTask(item);
 		}
 	}
 
 
 	/**
 	 * Run the scheduled task.
-	 * @param item The data-module of a schedule.
+	 *
+	 * @param item
+	 * 		The data-module of a schedule.
 	 */
 	private void doScheduleTask(ScheduleItem item) {
 		HistoryItem historyItem;
-		String comment =   null;
+		String actionContent = null;
+		String comment = null;
 		switch (item.getType()) {
 		case MUTE:
 			if (DeviceUtils.setRingMode(this, RINGER_MODE_SILENT)) {
@@ -405,6 +438,7 @@ public class ScheduleManager extends Service {
 						R.string.notify_mute_headline), getString(R.string.notify_mute_content),
 						R.drawable.ic_mute_notify));
 			} else {
+				actionContent = getString(R.string.notify_mute_simple_content);
 				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mute), getString(
 						R.string.lbl_on_small));
 			}
@@ -415,6 +449,7 @@ public class ScheduleManager extends Service {
 						R.string.notify_vibrate_headline), getString(R.string.notify_vibrate_content),
 						R.drawable.ic_vibrate_notify));
 			} else {
+				actionContent = getString(R.string.notify_vibrate_simple_content);
 				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_vibrate), getString(
 						R.string.lbl_on_small));
 			}
@@ -425,6 +460,7 @@ public class ScheduleManager extends Service {
 						R.string.notify_sound_headline), getString(R.string.notify_sound_content),
 						R.drawable.ic_sound_notify));
 			} else {
+				actionContent = getString(R.string.notify_sound_simple_content);
 				comment = getString(R.string.lbl_function_is_running, getString(R.string.option_sound), getString(
 						R.string.lbl_on_small));
 			}
@@ -435,12 +471,13 @@ public class ScheduleManager extends Service {
 				if (Boolean.valueOf(item.getReserveLeft())) {
 					wifiSuccess = DeviceUtils.setWifiEnabled(this, true);
 					if (wifiSuccess) {
-						sendNotification(this, new Result(String.format(getString(
-								R.string.notify_wifi_simple_content), getString(R.string.lbl_on)), getString(
-								R.string.notify_wifi_headline), String.format(getString(
-								R.string.notify_wifi_content), getString(R.string.lbl_on)),
+						sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_simple_content),
+								getString(R.string.lbl_on)), getString(R.string.notify_wifi_headline), String.format(
+								getString(R.string.notify_wifi_content), getString(R.string.lbl_on)),
 								R.drawable.ic_wifi_notify));
 					} else {
+						actionContent = String.format(getString(R.string.notify_wifi_simple_content),
+								getString(R.string.lbl_on));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
 								getString(R.string.lbl_on_small));
 					}
@@ -448,12 +485,14 @@ public class ScheduleManager extends Service {
 					wifiSuccess = DeviceUtils.setWifiEnabled(this, false);
 					if (wifiSuccess) {
 						sendNotification(this, new Result(String.format(getString(R.string.notify_wifi_content),
-								getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline),
-								String.format(getString(R.string.notify_wifi_content), getString(R.string.lbl_off)),
+								getString(R.string.lbl_off)), getString(R.string.notify_wifi_headline), String.format(
+								getString(R.string.notify_wifi_content), getString(R.string.lbl_off)),
 								R.drawable.ic_no_wifi_notify));
 					} else {
+						actionContent = String.format(getString(R.string.notify_wifi_content),
+								getString(R.string.lbl_off));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
-								getString(R.string.lbl_off_small)) + "<p/>" + getString(R.string.lbl_left_from_wifi);
+								getString(R.string.lbl_off_small)) + "\n" + getString(R.string.lbl_left_from_wifi);
 					}
 				}
 			} catch (OperationFailException e) {
@@ -473,8 +512,10 @@ public class ScheduleManager extends Service {
 								R.string.notify_mobile_content), getString(R.string.lbl_on_small), getString(
 								R.string.lbl_can)), R.drawable.ic_mobile_data_notify));
 					} else {
+						actionContent = String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_on));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
-								getString(R.string.lbl_on_small));
+								getString(R.string.lbl_on_small))+ "\n" + getString(R.string.lbl_left_from_mobile);
 					}
 				} else {
 					mobileDataSuccess = DeviceUtils.setMobileDataEnabled(this, false);
@@ -485,6 +526,8 @@ public class ScheduleManager extends Service {
 								R.string.notify_mobile_content), getString(R.string.lbl_off_small), getString(
 								R.string.lbl_can_not)), R.drawable.ic_no_mobile_data_notify));
 					} else {
+						actionContent = String.format(getString(
+								R.string.notify_mobile_simple_content), getString(R.string.lbl_off));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_mobile),
 								getString(R.string.lbl_off_small));
 					}
@@ -507,11 +550,10 @@ public class ScheduleManager extends Service {
 				DeviceUtils.setBrightness(this, Brightness.MIN);
 				break;
 			}
-			if(level != null) {
-				sendNotification(this, new Result(String.format(getString(
-						R.string.notify_brightness_simple_content), getString(level.getLevelResId())), getString(
-						R.string.notify_brightness_headline), String.format(getString(
-						R.string.notify_brightness_content), getString(level.getLevelResId())),
+			if (level != null) {
+				sendNotification(this, new Result(String.format(getString(R.string.notify_brightness_simple_content),
+						getString(level.getLevelResId())), getString(R.string.notify_brightness_headline),
+						String.format(getString(R.string.notify_brightness_content), getString(level.getLevelResId())),
 						R.drawable.ic_brightness_notify));
 			}
 			break;
@@ -527,6 +569,8 @@ public class ScheduleManager extends Service {
 								R.string.notify_bluetooth_content), getString(R.string.lbl_on)),
 								R.drawable.ic_bluetooth_on_notify));
 					} else {
+						actionContent = String.format(getString(
+								R.string.notify_bluetooth_simple_content), getString(R.string.lbl_on));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_bluetooth),
 								getString(R.string.lbl_on_small));
 					}
@@ -535,9 +579,11 @@ public class ScheduleManager extends Service {
 					if (bluetoothSuccess) {
 						sendNotification(this, new Result(String.format(getString(R.string.notify_bluetooth_content),
 								getString(R.string.lbl_off)), getString(R.string.notify_bluetooth_headline),
-								String.format(getString(R.string.notify_bluetooth_content), getString(R.string.lbl_off)),
-								R.drawable.ic_bluetooth_off_notify));
+								String.format(getString(R.string.notify_bluetooth_content), getString(
+										R.string.lbl_off)), R.drawable.ic_bluetooth_off_notify));
 					} else {
+						actionContent = String.format(getString(R.string.notify_bluetooth_content),
+								getString(R.string.lbl_off));
 						comment = getString(R.string.lbl_function_is_running, getString(R.string.option_bluetooth),
 								getString(R.string.lbl_off_small));
 					}
@@ -558,6 +604,10 @@ public class ScheduleManager extends Service {
 		historyItem = new HistoryItem(item.getType());
 		historyItem.setComment(comment);
 		db.logHistory(historyItem);
+		if (!TextUtils.isEmpty(comment)) {
+			sendNotification(this, new Result(getString(R.string.notify_can_not_set), getString(R.string.lbl_avoid_change),
+					actionContent, R.drawable.ic_some_warnings_notify), comment);
+		}
 		EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
 	}
 }
