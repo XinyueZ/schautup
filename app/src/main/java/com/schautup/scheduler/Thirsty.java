@@ -46,7 +46,7 @@ public class Thirsty extends Service {
 	/**
 	 * Cache of all intents that are under way to do the tasks scheduled by {@link android.app.AlarmManager}.
 	 */
-	private LongSparseArray<PendingIntent> mScheduledIntents = new LongSparseArray<PendingIntent>();
+	private static LongSparseArray<PendingIntent> sScheduledIntents = new LongSparseArray<PendingIntent>();
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -75,7 +75,7 @@ public class Thirsty extends Service {
 			long id;
 			for (int i = 0; i < items.size(); i++) {
 				id = items.keyAt(i);
-				remove(id);
+				remove(this, id);
 			}
 		}
 	}
@@ -88,8 +88,8 @@ public class Thirsty extends Service {
 	 */
 	public void onEvent(UpdatedItemEvent e) {
 		ScheduleItem item = e.getItem();
-		if (mScheduledIntents.get(item.getId()) != null) {//Removed the old one after update.
-			remove(item.getId());
+		if (sScheduledIntents.get(item.getId()) != null) {//Removed the old one after update.
+			remove(this, item.getId());
 		}
 		add(item);
 	}
@@ -190,7 +190,7 @@ public class Thirsty extends Service {
 		Intent intent = new Intent(this, ScheduleReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		PendingIntent pendingIntent = doCreateAlarmPending(mgr, timeToAlarm, intent);
-		mScheduledIntents.put(item.getId(), pendingIntent);
+		sScheduledIntents.put(item.getId(), pendingIntent);
 	}
 
 	/**
@@ -198,23 +198,24 @@ public class Thirsty extends Service {
 	 */
 	private void removeAll() {
 		long id;
-		for (int i = 0; i < mScheduledIntents.size(); i++) {
-			id = mScheduledIntents.keyAt(i);
-			remove(id);
+		for (int i = 0; i < sScheduledIntents.size(); i++) {
+			id = sScheduledIntents.keyAt(i);
+			remove(this, id);
 		}
 	}
 
 	/**
 	 * To remove a task from pending of {@link android.app.AlarmManager}.
 	 *
+	 * @param cxt  {@link android.content.Context}.
 	 * @param id
 	 * 		The id pending in the list of pending.
 	 */
-	private void remove(long id) {
-		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = mScheduledIntents.get(id);
+	public static void remove(Context cxt, long id) {
+		AlarmManager mgr = (AlarmManager) cxt.getSystemService(Context.ALARM_SERVICE);
+		PendingIntent pi = sScheduledIntents.get(id);
 		if (pi != null) {
-			mScheduledIntents.remove(id);
+			sScheduledIntents.remove(id);
 			mgr.cancel(pi);
 		}
 	}
@@ -240,11 +241,14 @@ public class Thirsty extends Service {
 			protected void onPostExecute(List<ScheduleItem> items) {
 				super.onPostExecute(items);
 				ScheduleItem item = items.get(0);
-				if (item != null) {//Removed old pending what has been finished and re-add.
-					remove(item.getId());
+				//Plane next schedule
+				if (item != null) {
+					// Removed old pending what has been finished and re-add.
+					// It should have been removed when the helper-service work off the schedule.
+					remove(Thirsty.this, item.getId());
+					// Add new to pending list.
 					add(item);
 				}
-
 			}
 		}.executeParallel();
 	}

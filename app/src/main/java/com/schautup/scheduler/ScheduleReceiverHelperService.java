@@ -29,6 +29,7 @@ public class ScheduleReceiverHelperService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		if (intent != null) {
 			long taskId = intent.getLongExtra(Thirsty.EXTRAS_ITEM_ID, -1);//Id in DB and also the id in pending-list.
+			Thirsty.remove(this, taskId);
 			boolean doNext = intent.getBooleanExtra(Thirsty.EXTRAS_DO_NEXT, false);
 			LL.d("Post event to do schedule, item id: " + taskId );
 			EventBus.getDefault().post(new DoSchedulesForIdEvent(taskId, doNext));

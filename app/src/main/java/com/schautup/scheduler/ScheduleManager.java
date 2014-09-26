@@ -531,7 +531,7 @@ public class ScheduleManager extends Service {
 								getString(R.string.lbl_on_small));
 					}
 				} else {
-					bluetoothSuccess = DeviceUtils.setWifiEnabled(this, false);
+					bluetoothSuccess = DeviceUtils.setBluetoothEnabled(false);
 					if (bluetoothSuccess) {
 						sendNotification(this, new Result(String.format(getString(R.string.notify_bluetooth_content),
 								getString(R.string.lbl_off)), getString(R.string.notify_bluetooth_headline),
