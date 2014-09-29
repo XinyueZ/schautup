@@ -867,32 +867,37 @@ public final class App extends Application {
 	 */
 	protected PendingIntent doCreateAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
 		String mod = Prefs.getInstance(this).getScheduleMode();
-
+		int mode = Integer.valueOf(mod.toString());
+		int reqCode;
+		PendingIntent pi;
+		switch (mode) {
 		// Usage of repeating on the alarmmanger for android >= 4.4 .
 		// The Thirsty mode.
-		if (Integer.valueOf(mod.toString()) != 1) {
+		case 1:
 			intent.putExtra(EXTRAS_DO_NEXT, true);
-			int reqCode = (int) System.currentTimeMillis();
-			PendingIntent pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			LL.d("Pending reqCode: " + reqCode);
+			reqCode = (int) System.currentTimeMillis();
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			LL.d("Pending reqCode(Thirsty): " + reqCode);
 			if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 				mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
 			} else {
 				mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
 			}
 			return pi;
-		}
+
 
 		//Neutral mode, for repeating on the alarmmanger below android 4.4 .
-		if (Integer.valueOf(mod.toString()) != 2) {
+		case 2:
 			intent.putExtra(EXTRAS_DO_NEXT, false);
+			reqCode = (int) System.currentTimeMillis();
 			//http://stackoverflow.com/questions/4700058/android-repeating-alarm-not-working
-			PendingIntent pi = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), intent,
-					PendingIntent.FLAG_UPDATE_CURRENT);
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			LL.d("Pending reqCode(Neutral): " + reqCode);
 			//http://stackoverflow.com/questions/16308783/timeunit-seconds-tomillis
 			//http://stackoverflow.com/questions/6980376/convert-from-days-to-milliseconds
 			mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, TimeUnit.DAYS.toMillis(1), pi);
 			return pi;
+
 		}
 		return null;
 	}

@@ -22,7 +22,7 @@
     <!-- For setting bluetooth.-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <!-- Wake up device when mode2, mode3 is working.-->
+    <!-- Wake up device when mode2, mode3 is working, also for some settings that should be effected only when all waked.-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens android:xlargeScreens="true" />
