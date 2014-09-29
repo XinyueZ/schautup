@@ -24,6 +24,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <!-- Wake up device when mode2, mode3 is working, also for some settings that should be effected only when all waked.-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--Abort incoming call.-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.PROCESS_INCOMING_CALLS" />
 
     <supports-screens android:xlargeScreens="true" />
 

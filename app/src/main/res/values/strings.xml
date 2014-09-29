@@ -155,7 +155,7 @@
     <string name="type_wifi">Wifi</string>
     <string name="type_mobile_data">Mobile</string>
     <string name="type_brightness">Brightness</string>
-    <string name="type_call_abort">Abort\ncall</string>
+    <string name="type_call_abort">Abort\nincoming</string>
     <string name="type_bluetooth">Bluetooth</string>
     <string name="type_app_start">Start\nApps</string>
 
