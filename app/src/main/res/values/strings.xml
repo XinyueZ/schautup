@@ -37,6 +37,7 @@
     <string name="lbl_function_is_running"># Because %1$s is already %2$s.</string>
     <string name="lbl_can_not_set"># I couldn\'t change %1$s status.</string>
     <string name="lbl_operation_fail"># Warning! Exception happened while switching.</string>
+    <string name="lbl_wifi_in_sleep">＃ Device is in sleep.</string>
     <string name="lbl_left_from_wifi"># You might have left from an Wifi environment before.</string>
     <string name="lbl_left_from_mobile"># You might be in a Wifi environment.</string>
     <string name="lbl_max">Maximum</string>

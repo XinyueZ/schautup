@@ -35,7 +35,8 @@
     <string name="lbl_function_is_running">＃%1$s已经正处于%2$s状态。</string>
     <string name="lbl_can_not_set">＃无法通过改变本机%1$s状态。</string>
     <string name="lbl_operation_fail">＃警告！操作时出现了异常。</string>
-    <string name="lbl_left_from_wifi">＃你可能已经离开了一个无限网络环境。</string>
+    <string name="lbl_wifi_in_sleep">＃设备处于休眠。</string>
+    <string name="lbl_left_from_wifi">＃你可能已经离开了一个无线网络环境。</string>
     <string name="lbl_left_from_mobile">＃你可能正在一个无线网络环境吧。</string>
     <string name="lbl_max">最亮</string>
     <string name="lbl_medium">中等</string>

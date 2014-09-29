@@ -24,8 +24,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.schautup.App;
 import com.schautup.R;
-import com.schautup.scheduler.Hungry;
 import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
 
@@ -243,13 +243,14 @@ public final class AboutDialogFragment extends DialogFragment {
 							Application cxt = getActivity().getApplication();
 							prefs.setEULAOnceConfirmed(true);
 							cxt.startService(new Intent(cxt, ScheduleManager.class));
+							App.getInstance().work();
 							dialog.dismiss();
 						}
 					}).setNegativeButton(R.string.btn_not_agree, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							Application cxt = getActivity().getApplication();
 							Prefs.getInstance(cxt).setEULAOnceConfirmed(false);
-							cxt.stopService(new Intent(cxt, Hungry.class));
+							App.getInstance().pause();
 							getActivity().finish();
 						}
 					}).create();

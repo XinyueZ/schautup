@@ -129,24 +129,13 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!--Event handler for the AlarmManager, Thirsty and Neutral modes.-->
         <receiver
-            android:name=".scheduler.ScheduleReceiver"
+            android:name=".scheduler.AlarmReceiver"
             android:enabled="true"  />
-        <service
-            android:name=".scheduler.ScheduleReceiverHelperService"
-            android:exported="false"  />
-        <service
-            android:name="com.schautup.scheduler.Hungry"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="com.schautup.scheduler.Thirsty"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="com.schautup.scheduler.Neutral"
-            android:enabled="true"
-            android:exported="false" />
+
+        <!--Tray the application in the notification center.-->
         <service
             android:name="com.schautup.scheduler.ScheduleManager"
             android:enabled="true"

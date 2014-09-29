@@ -12,9 +12,9 @@ import android.preference.Preference;
 import android.support.v7.app.ActionBarPreferenceActivity;
 import android.view.MenuItem;
 
+import com.schautup.App;
 import com.schautup.BootReceiver;
 import com.schautup.R;
-import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.Prefs;
 
 /**
@@ -73,7 +73,8 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 			String title = null;
 			String summary = null;
 			boolean isKitkat = android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT;
-			switch (Integer.valueOf(newValue.toString())) {
+			int newMode = Integer.valueOf(newValue.toString());
+			switch (newMode) {
 			case 0:
 				title = getString(R.string.settings_hungry_mode);
 				summary = getString(R.string.settings_hungry_mode_desc);
@@ -97,8 +98,7 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 			}
 			preference.setTitle(title);
 			if (mInitModeList) {
-				stopService(new Intent(getApplication(), ScheduleManager.class));
-				startService(new Intent(getApplication(), ScheduleManager.class));
+				App.getInstance().changeMode(newMode);
 			} else {
 				mInitModeList = true;
 			}
@@ -125,7 +125,8 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 				pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
 						PackageManager.DONT_KILL_APP);
 			}
-		} return true;
+		}
+		return true;
 	}
 
 	@Override

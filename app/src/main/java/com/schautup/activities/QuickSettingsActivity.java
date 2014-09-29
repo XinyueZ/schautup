@@ -8,12 +8,9 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.schautup.App;
 import com.schautup.R;
-import com.schautup.bus.ScheduleManagerPauseEvent;
-import com.schautup.bus.ScheduleManagerWorkEvent;
 import com.schautup.utils.Prefs;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * An {@link android.app.Activity} which shows as a dialog for user to set some options directly instead of opening the
@@ -52,11 +49,9 @@ public final class QuickSettingsActivity extends Activity implements OnCheckedCh
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		Prefs.getInstance(getApplication()).setPause(!isChecked);
 		if (isChecked) {
-			//work
-			EventBus.getDefault().post(new ScheduleManagerWorkEvent());
+			App.getInstance().work();
 		} else {
-			//pause
-			EventBus.getDefault().post(new ScheduleManagerPauseEvent());
+			App.getInstance().pause();
 		}
 	}
 
