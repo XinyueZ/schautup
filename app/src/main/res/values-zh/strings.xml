@@ -110,6 +110,8 @@
     <string name="drawer_item_settings">@string/menu_settings</string>
     <string name="drawer_item_log_history">记录</string>
     <string name="drawer_item_home_page">首页</string>
+    <string name="drawer_item_filter">过滤器</string>
+    <string name="drawer_item_labels">便签</string>
 
 
     <!--Type names-->

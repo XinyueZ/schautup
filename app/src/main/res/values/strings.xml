@@ -147,6 +147,8 @@
     <string name="drawer_item_settings">@string/menu_settings</string>
     <string name="drawer_item_log_history">Log history</string>
     <string name="drawer_item_home_page">Home</string>
+    <string name="drawer_item_filter">Filters</string>
+    <string name="drawer_item_labels">Labels</string>
 
     <!--Type names-->
     <string name="type_mute">Mute</string>

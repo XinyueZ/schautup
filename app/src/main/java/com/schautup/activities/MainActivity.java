@@ -348,12 +348,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		setContentView(LAYOUT);
-		if(getResources().getBoolean(R.bool.flag_stage)) {
-			initDrawer();
-		} else {
-			final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-		}
+
+		initDrawer();
+
 		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
@@ -417,9 +414,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			return true;
 		}
 		switch (item.getItemId()) {
-		case R.id.action_add:
-			EventBus.getDefault().post(new AddNewScheduleItemEvent());
-			break;
+//		case R.id.action_add:
+//			EventBus.getDefault().post(new AddNewScheduleItemEvent());
+//			break;
 		case R.id.action_view:
 			if (!mListViewCurrent) {
 				//Current is grid, then switch to list.
@@ -428,34 +425,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				showGridView();
 			}
 			break;
-//		case R.id.action_sort_by_schedule:
-//		case R.id.action_sort_by_edit_time:
-//			new ParallelTask<Void, Void, AllScheduleLoadedEvent>(true) {
-//				@Override
-//				protected AllScheduleLoadedEvent doInBackground(Void[] params) {
-//					boolean bySchedule = item.getItemId() == R.id.action_sort_by_schedule;
-//					DB db = DB.getInstance(getApplication());
-//					List<ScheduleItem> list =
-//							bySchedule ? db.getAllSchedulesOrderByScheduleTime() :
-//									db.getAllSchedulesOrderByEditTime();
-//					if (list.size() > 0) {
-//						return new AllScheduleLoadedEvent(list);
-//					} else {
-//						return null;
-//					}
-//				}
-//
-//				@Override
-//				protected void onPostExecute(AllScheduleLoadedEvent e) {
-//					super.onPostExecute(e);
-//					if (e != null) {
-//						EventBus.getDefault().post(e);
-//					}
-//				}
-//			}.executeParallel();
-//
-//			item.setChecked(true);
-//			break;
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);
 			break;
@@ -566,6 +535,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Initialize the navigation drawer.
 	 */
 	private void initDrawer() {
+		boolean isStage = getResources().getBoolean(R.bool.flag_stage);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
@@ -595,22 +565,27 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			});
 
 			View drawerItemHomePage = findViewById(R.id.drawer_item_home_page_ll);
-			drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					drawerLayout.closeDrawers();
-					HomePageWebViewActivity.showInstance(MainActivity.this);
-				}
-			});
-
 			View drawerItemLogHistory = findViewById(R.id.drawer_item_log_history_ll);
-			drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					drawerLayout.closeDrawers();
-					LogHistoryActivity.showInstance(MainActivity.this);
-				}
-			});
+			if(isStage) {
+				drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						drawerLayout.closeDrawers();
+						HomePageWebViewActivity.showInstance(MainActivity.this);
+					}
+				});
+
+				drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						drawerLayout.closeDrawers();
+						LogHistoryActivity.showInstance(MainActivity.this);
+					}
+				});
+			} else {
+				drawerItemHomePage.setVisibility(View.GONE);
+				drawerItemLogHistory.setVisibility(View.GONE);
+			}
 		}
 	}
 }

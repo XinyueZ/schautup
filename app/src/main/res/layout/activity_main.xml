@@ -109,6 +109,72 @@
             android:layout_height="1dp"
             android:background="@drawable/lv_divider" />
 
+        <!--Labels define.-->
+
+        <LinearLayout
+            android:id="@+id/drawer_item_labels_ll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_item"
+            android:orientation="horizontal"
+            android:background="@drawable/selector_bg1_btn"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_label_btn"
+                android:layout_weight="0.5" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/drawer_item_labels"
+                android:textColor="@color/text_common_black"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_weight="1.5" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/lv_divider" />
+
+        <!--Filter define.-->
+
+        <LinearLayout
+            android:id="@+id/drawer_item_filter_ll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_item"
+            android:orientation="horizontal"
+            android:background="@drawable/selector_bg1_btn"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_filter_btn"
+                android:layout_weight="0.5" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/drawer_item_filter"
+                android:textColor="@color/text_common_black"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_weight="1.5" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/lv_divider" />
+
         <!--Settings.-->
         <LinearLayout
             android:id="@+id/drawer_item_settings_ll"
