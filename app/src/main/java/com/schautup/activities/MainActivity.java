@@ -1,5 +1,7 @@
 package com.schautup.activities;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -532,6 +535,15 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 	/**
+	 * All labels, for add schedules by a group.
+	 */
+	private LongSparseArray<WeakReference<ViewGroup>> mLabelsList;
+	/**
+	 * All filters, for user easy to do filtering.
+	 */
+	private LongSparseArray<WeakReference<ViewGroup>> mFiltersList;
+
+	/**
 	 * Initialize the navigation drawer.
 	 */
 	private void initDrawer() {
@@ -586,6 +598,43 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				drawerItemHomePage.setVisibility(View.GONE);
 				drawerItemLogHistory.setVisibility(View.GONE);
 			}
+
+			View addNewLabel =  findViewById(R.id.drawer_item_add_label);
+			addNewLabel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ViewGroup parentV  = (ViewGroup) findViewById(R.id.labels_list_ll);
+					View newLabelV = getLayoutInflater().inflate(R.layout.inc_label, parentV, false);
+					parentV.addView(newLabelV);
+					View rmvV = newLabelV.findViewById(R.id.label_remove_ibtn);
+					rmvV.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							ViewGroup parentV  = (ViewGroup) findViewById(R.id.labels_list_ll);
+							ViewGroup hostV  = (ViewGroup) v.getParent();
+							parentV.removeView(hostV);
+						}
+					});
+				}
+			});
+			View addNewFilter = findViewById(R.id.drawer_item_add_filter);
+			addNewFilter.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ViewGroup parentV  = (ViewGroup) findViewById(R.id.filters_list_ll);
+					View newFilterV = getLayoutInflater().inflate(R.layout.inc_filter, parentV, false);
+					parentV.addView(newFilterV);
+					View rmvV = newFilterV.findViewById(R.id.filter_remove_ibtn);
+					rmvV.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							ViewGroup parentV  = (ViewGroup) findViewById(R.id.filters_list_ll);
+							ViewGroup hostV  = (ViewGroup) v.getParent();
+							parentV.removeView(hostV);
+						}
+					});
+				}
+			});
 		}
 	}
 }

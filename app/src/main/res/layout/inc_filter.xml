@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal"
-    android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="4">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="4.5"
+    style="@style/Drawer_Subitem_Layout">
 
 
     <TextView
+        android:id="@+id/name_tv"
         android:layout_weight="3"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:text="Filter"
-        android:layout_marginLeft="20dp"
-        android:gravity="fill_vertical" />
+        style="@style/TextView_Drawer_Subitem" />
 
 
     <ImageButton
-        android:id="@+id/filter_label_ibtn"
+        android:id="@+id/filter_remove_ibtn"
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_remove_btn"
+        style="@style/ImageButton_Subitem_Drawer" />
+
+    <ImageButton
+        android:id="@+id/filter_edit_ibtn"
         android:layout_weight="0.5"
         android:src="@drawable/ic_edited"
         style="@style/ImageButton_Subitem_Drawer" />
 
 
     <ImageButton
-        android:id="@+id/filter_from_setting_ibtn"
+        android:id="@+id/filter_do_ibtn"
         android:layout_weight="0.5"
-        android:src="@drawable/ic_do_filter_btn"
-        style="@style/ImageButton_Subitem_Drawer"/>
+        android:src="@drawable/ic_bolt"
+        style="@style/ImageButton_Subitem_Drawer" />
 
 </LinearLayout>

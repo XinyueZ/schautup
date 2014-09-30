@@ -29,9 +29,29 @@
     </style>
 
     <style name="ImageButton_Subitem_Drawer">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:background">@drawable/selector_bg1_btn</item>
+    </style>
+
+    <style name="TextView_Drawer_Subitem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:gravity">fill_vertical</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Drawer_Subitem_Layout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 </resources>

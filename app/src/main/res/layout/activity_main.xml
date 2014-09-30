@@ -34,7 +34,7 @@
 
     </FrameLayout>
 
-    <ScrollView
+    <com.schautup.views.OneDirectionScrollView
         android:layout_width="wrap_content"
         android:layout_gravity="left"
         android:scrollbars="none"
@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:id="@+id/drawer_menu_ll"
-            android:layout_width="@dimen/width_drawer"
+            android:layout_width="wrap_content"
             android:orientation="vertical"
             android:layout_height="wrap_content">
 
@@ -157,13 +157,6 @@
 
                 </LinearLayout>
 
-                <include layout="@layout/inc_label" />
-
-                <include layout="@layout/inc_label" />
-
-                <include layout="@layout/inc_label" />
-
-                <include layout="@layout/inc_label" />
 
             </LinearLayout>
 
@@ -207,14 +200,6 @@
                     android:text="@string/btn_add"
                     style="@style/Small_Button_Drawer" />
             </LinearLayout>
-
-            <include layout="@layout/inc_filter" />
-
-            <include layout="@layout/inc_filter" />
-
-            <include layout="@layout/inc_filter" />
-
-            <include layout="@layout/inc_filter" />
         </LinearLayout>
 
             <View
@@ -249,5 +234,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </com.schautup.views.OneDirectionScrollView>
 </android.support.v4.widget.DrawerLayout>
