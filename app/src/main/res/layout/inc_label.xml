@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="4">
+
+
+    <TextView
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="Label"
+        android:layout_marginLeft="20dp"
+        android:gravity="fill_vertical" />
+
+
+    <ImageButton
+        android:id="@+id/edit_label_ibtn"
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_edited"
+        style="@style/ImageButton_Subitem_Drawer" />
+
+
+    <ImageButton
+        android:id="@+id/add_event_from_label_ibtn"
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_bolt"
+        style="@style/ImageButton_Subitem_Drawer"/>
+
+</LinearLayout>

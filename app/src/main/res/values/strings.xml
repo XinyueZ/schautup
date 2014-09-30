@@ -9,7 +9,7 @@
     <string name="btn_ok">Ok</string>
     <string name="btn_agree">I agree.</string>
     <string name="btn_not_agree">I do not agree.</string>
-
+    <string name="btn_add">Add</string>
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>
@@ -105,6 +105,11 @@
     <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?\n\nNote!\nIf you\'re in a WIFI environment, your current setting would be ignored.</string>
     <string name="msg_brightness">How to set your display brightness?\n\nNote!\nSome applications that can control screen brightness could interrupt your setting and your setting would be ignored.</string>
     <string name="msg_bluetooth_on_off">Do you want to turn off or on your Bluetooth?</string>
+    <string name="msg_reject_incoming_on_off">Do you want to reject all incoming calls?</string>
+    <string name="msg_reject_incoming_duration">Duration:</string>
+    <string name="msg_reject_incoming_duration_minutes">minute(s)</string>
+    <string name="msg_reject_incoming_duration_hours">hour(s)</string>
+    <string name="msg_reject_incoming_duration_hours_minutes">%1$sh%2$sm</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>

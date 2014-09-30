@@ -34,172 +34,220 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/drawer_menu_ll"
-        android:layout_width="@dimen/width_drawer"
-        android:background="@drawable/bg_drawer"
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_gravity="left"
+        android:scrollbars="none"
+        android:background="@drawable/bg_drawer"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/drawer_header_v"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <!--Home page.--><LinearLayout
-        android:id="@+id/drawer_item_home_page_ll"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_drawer_item"
-        android:orientation="horizontal"
-        android:background="@drawable/selector_bg1_btn"
-        android:weightSum="2">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_home_page_btn"
-            android:layout_weight="0.5" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/drawer_item_home_page"
-            android:textColor="@color/text_common_black"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="1.5" />
-    </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/lv_divider" />
-
-        <!--Log.--><LinearLayout
-        android:id="@+id/drawer_item_log_history_ll"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_drawer_item"
-        android:orientation="horizontal"
-        android:background="@drawable/selector_bg1_btn"
-        android:weightSum="2">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_log_btn"
-            android:layout_weight="0.5" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/drawer_item_log_history"
-            android:textColor="@color/text_common_black"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="1.5" />
-    </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/lv_divider" />
-
-        <!--Labels define.-->
-
         <LinearLayout
-            android:id="@+id/drawer_item_labels_ll"
+            android:id="@+id/drawer_menu_ll"
+            android:layout_width="@dimen/width_drawer"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/drawer_header_v"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--Home page.-->
+
+            <LinearLayout
+                android:id="@+id/drawer_item_home_page_ll"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_drawer_item"
+                android:orientation="horizontal"
+                android:background="@drawable/selector_bg1_btn"
+                android:weightSum="2.5">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_home_page_btn"
+                    android:layout_weight="0.5" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/drawer_item_home_page"
+                    android:textColor="@color/text_common_black"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1.5" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/lv_divider" />
+
+            <!--Log.-->
+
+            <LinearLayout
+                android:id="@+id/drawer_item_log_history_ll"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_drawer_item"
+                android:orientation="horizontal"
+                android:background="@drawable/selector_bg1_btn"
+                android:weightSum="2.5">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_log_btn"
+                    android:layout_weight="0.5" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/drawer_item_log_history"
+                    android:textColor="@color/text_common_black"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1.5" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/lv_divider" />
+
+            <!--Labels define.-->
+
+            <LinearLayout
+                android:id="@+id/labels_list_ll"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/drawer_item_labels_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_drawer_item"
+                    android:orientation="horizontal"
+                    android:background="@drawable/selector_bg1_btn"
+                    android:weightSum="2.5">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_label_btn"
+                        android:layout_weight="0.5" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/drawer_item_labels"
+                        android:textColor="@color/text_common_black"
+                        android:gravity="center_vertical"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_weight="1.5" />
+
+                    <Button
+                        android:id="@+id/drawer_item_add_label"
+                        android:text="@string/btn_add"
+                        style="@style/Small_Button_Drawer" />
+
+                </LinearLayout>
+
+                <include layout="@layout/inc_label" />
+
+                <include layout="@layout/inc_label" />
+
+                <include layout="@layout/inc_label" />
+
+                <include layout="@layout/inc_label" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/lv_divider" />
+
+            <!--Filter define.--><LinearLayout
+            android:id="@+id/filters_list_ll"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_drawer_item"
-            android:orientation="horizontal"
-            android:background="@drawable/selector_bg1_btn"
-            android:weightSum="2">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_label_btn"
-                android:layout_weight="0.5" />
+            <LinearLayout
+                android:id="@+id/drawer_item_filters_ll"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_drawer_item"
+                android:orientation="horizontal"
+                android:background="@drawable/selector_bg1_btn"
+                android:weightSum="2.5">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="@string/drawer_item_labels"
-                android:textColor="@color/text_common_black"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1.5" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_filter_btn"
+                    android:layout_weight="0.5" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/drawer_item_filter"
+                    android:textColor="@color/text_common_black"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1.5" />
+
+                <Button
+                    android:id="@+id/drawer_item_add_filter"
+                    android:text="@string/btn_add"
+                    style="@style/Small_Button_Drawer" />
+            </LinearLayout>
+
+            <include layout="@layout/inc_filter" />
+
+            <include layout="@layout/inc_filter" />
+
+            <include layout="@layout/inc_filter" />
+
+            <include layout="@layout/inc_filter" />
         </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/lv_divider" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/lv_divider" />
+            <!--Settings.-->
+            <LinearLayout
+                android:id="@+id/drawer_item_settings_ll"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_drawer_item"
+                android:orientation="horizontal"
+                android:background="@drawable/selector_bg1_btn"
+                android:weightSum="2.5">
 
-        <!--Filter define.-->
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_settings_btn"
+                    android:layout_weight="0.5" />
 
-        <LinearLayout
-            android:id="@+id/drawer_item_filter_ll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_drawer_item"
-            android:orientation="horizontal"
-            android:background="@drawable/selector_bg1_btn"
-            android:weightSum="2">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/drawer_item_settings"
+                    android:textColor="@color/text_common_black"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1.5" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_filter_btn"
-                android:layout_weight="0.5" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="@string/drawer_item_filter"
-                android:textColor="@color/text_common_black"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1.5" />
         </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/lv_divider" />
-
-        <!--Settings.-->
-        <LinearLayout
-            android:id="@+id/drawer_item_settings_ll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_drawer_item"
-            android:orientation="horizontal"
-            android:background="@drawable/selector_bg1_btn"
-            android:weightSum="2">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_settings_btn"
-                android:layout_weight="0.5" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="@string/drawer_item_settings"
-                android:textColor="@color/text_common_black"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1.5" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 </android.support.v4.widget.DrawerLayout>

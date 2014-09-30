@@ -1,10 +1,10 @@
 <resources>
     <dimen name="recurrence_picker_height">250dp</dimen>
     <dimen name="height_item">65dp</dimen>
-    <dimen name="height_drawer_item">70dp</dimen>
+    <dimen name="height_drawer_item">60dp</dimen>
     <dimen name="height_divider">1dp</dimen>
     <dimen name="height_sticky">90dp</dimen>
-    <dimen name="width_drawer">270dp</dimen>
+    <dimen name="width_drawer">275dp</dimen>
     <dimen name="margin_padding_status_level">3dp</dimen>
     <dimen name="padding_eula">16dp</dimen>
     <dimen name="padding_week_days">5dp</dimen>

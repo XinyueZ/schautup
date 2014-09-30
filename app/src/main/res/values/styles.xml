@@ -17,4 +17,21 @@
     <style name="ScheduleEditedTimeTextStyle" parent="@style/LogTimeTextStyle">
         <item name="android:gravity">left</item>
     </style>
+
+    <style name="Small_Button_Drawer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:background">@drawable/selector_bg2_btn</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_weight">0.5</item>
+    </style>
+
+    <style name="ImageButton_Subitem_Drawer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/selector_bg1_btn</item>
+    </style>
 </resources>

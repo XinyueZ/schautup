@@ -79,6 +79,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	private View mSelBrightnessV;
 	/**
+	 * {@link android.view.View} represent setting on reject incoming.
+	 */
+	private View mSelRejectIncomingV;
+	/**
 	 * {@link android.widget.TextView} for selected hour.
 	 */
 	private TextView mHourTv;
@@ -138,6 +142,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Information about setting brightness.
 	 */
 	private BadgeView mBrightnessInfoBgb;
+	/**
+	 * Information about setting reject incoming.
+	 */
+	private BadgeView mRejectIncomingInfoBgb;
 	/**
 	 * Information about selected recurrence.
 	 */
@@ -317,6 +325,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelWifiV.setOnClickListener(this);
 		mSelBluetoothV = view.findViewById(R.id.set_bluetooth_ll);
 		mSelBluetoothV.setOnClickListener(this);
+		mSelRejectIncomingV = view.findViewById(R.id.set_call_abort_ll);
+		mSelRejectIncomingV.setOnClickListener(this);
 		mSelMobileV = view.findViewById(R.id.set_mobile_data_ll);
 		mSelMobileV.setOnClickListener(this);
 		mSelBrightnessV = view.findViewById(R.id.set_brightness_ll);
@@ -329,6 +339,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mMobileInfoBgb.setVisibility(View.GONE);
 		mBrightnessInfoBgb = (BadgeView) view.findViewById(R.id.info_brightness_bgv);
 		mBrightnessInfoBgb.setVisibility(View.GONE);
+		mRejectIncomingInfoBgb = (BadgeView) view.findViewById(R.id.info_call_abort_bgv);
+		mRejectIncomingInfoBgb.setVisibility(View.GONE);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
