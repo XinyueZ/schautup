@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -299,6 +300,30 @@ public final class Utils {
 			return DB.getInstance(app).getAllSchedulesOrderByEditTime();
 		} else {
 			return DB.getInstance(app).getAllSchedulesOrderByScheduleTime();
+		}
+	}
+
+	/**
+	 * Show information about pre-selected recurrence.
+	 *
+	 * @param activity
+	 * @param eventRecurrence
+	 * @param bgv
+	 */
+	public static void showRecurrenceBadge(Activity activity, EventRecurrence eventRecurrence, BadgeView bgv) {
+		if (eventRecurrence != null && eventRecurrence.byday != null) {
+			if (eventRecurrence.bydayCount > 1) {
+				showBadgeView(activity, bgv, "..");
+			} else {
+				int sel = eventRecurrence.byday[0];
+				showBadgeView(activity, bgv, recurrenceDay2String(activity, sel));
+			}
+		} else {
+			String todayInWeek = dateTimeDay2String(DateTime.now().getDayOfWeek());
+			eventRecurrence = new EventRecurrence();
+			eventRecurrence.parse("FREQ=WEEKLY;WKST=SU;BYDAY=" + todayInWeek);
+			int sel = eventRecurrence.byday[0];
+			showBadgeView(activity, bgv, recurrenceDay2String(activity, sel));
 		}
 	}
 }

@@ -66,6 +66,10 @@ public final class Prefs extends BasicPrefs {
 	 * Storage. Whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
 	public static final String KEY_SORTED_BY_EDIT = "key_sorted_by_edit";
+	/**
+	 * Storage. Total and max for subitems on drawer, labels, filters define.
+	 */
+	private static final String KEY_MAX_SUBITEMS = "key_max_subitems";
 	//----------------------------------------------------------
 
 
@@ -257,6 +261,15 @@ public final class Prefs extends BasicPrefs {
 	 * Set whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
 	public void setSortedByLastEdit(String sortedByEdit) {
-		setString(KEY_SORTED_BY_EDIT,sortedByEdit);
+		setString(KEY_SORTED_BY_EDIT, sortedByEdit);
+	}
+
+	/**
+	 * Get total and max for subitems on drawer, labels, filters define.
+	 *
+	 * @return subitems on drawer, labels, filters define.
+	 */
+	public int getMaxSubItems() {
+		return getInt(KEY_MAX_SUBITEMS, 5);
 	}
 }

@@ -47,6 +47,7 @@
     <string name="lbl_medium_short">Med</string>
     <string name="lbl_min_short">Min</string>
     <string name="lbl_play_service">This application needs Google Play Service, you must install it first.</string>
+    <string name="lbl_filter_name">Filter name…</string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>
@@ -110,6 +111,7 @@
     <string name="msg_reject_incoming_duration_minutes">minute(s)</string>
     <string name="msg_reject_incoming_duration_hours">hour(s)</string>
     <string name="msg_reject_incoming_duration_hours_minutes">%1$sh%2$sm</string>
+    <string name="msg_filter_name_must_given">Filter\'s name must be given.</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>
@@ -166,10 +168,13 @@
     <string name="type_bluetooth">Bluetooth</string>
     <string name="type_app_start">Start\nApps</string>
 
+    <string name="type_mobile_data_nb">Mobile</string>
+    <string name="type_call_abort_nb">Abort incoming</string>
+    <string name="type_app_start_nb">Start Apps</string>
+
     <!--debug:-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <!--release:-->
-    <!--<string name="banner_ad_unit_id">ca-app-pub-9133982521997162/3545646131</string>-->
+    <!--release:--><!--<string name="banner_ad_unit_id">ca-app-pub-9133982521997162/3545646131</string>-->
 
     <string name="play_service_url">market://details?id=com.google.android.gms</string>
 

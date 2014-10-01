@@ -178,7 +178,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mEventRecurrence = e.getEventRecurrence();
 		mRecurrenceV.setSelected(false);
 
-		showRecurrenceBadge();
+		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelectedType = item.getType();
 		mEventRecurrence = item.getEventRecurrence();
 
-		showRecurrenceBadge();
+		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 
 		//Init all values that have been set before.
 		switch (item.getType()) {
@@ -271,7 +271,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mRecurrenceBgv = (BadgeView) view.findViewById(R.id.recurrence_bgv);
-		showRecurrenceBadge();
+		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 
 		mSettingTypesLl = view.findViewById(R.id.setting_types_ll);
 		DateTime now = DateTime.now();
@@ -370,7 +370,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	@Override
 	public void onPause() {
 		EventBus.getDefault().unregister(this);
-		super.onDestroyView();
+		super.onPause();
 	}
 
 	@Override
@@ -759,23 +759,4 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		}
 	}
 
-	/**
-	 * Show information about pre-selected recurrence.
-	 */
-	private void showRecurrenceBadge() {
-		if (mEventRecurrence != null && mEventRecurrence.byday != null) {
-			if (mEventRecurrence.bydayCount > 1) {
-				Utils.showBadgeView(getActivity(), mRecurrenceBgv, "..");
-			} else {
-				int sel = mEventRecurrence.byday[0];
-				Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(), sel));
-			}
-		} else {
-			String todayInWeek = Utils.dateTimeDay2String(DateTime.now().getDayOfWeek());
-			mEventRecurrence = new EventRecurrence();
-			mEventRecurrence.parse("FREQ=WEEKLY;WKST=SU;BYDAY=" + todayInWeek);
-			int sel = mEventRecurrence.byday[0];
-			Utils.showBadgeView(getActivity(), mRecurrenceBgv, Utils.recurrenceDay2String(getActivity(), sel));
-		}
-	}
 }

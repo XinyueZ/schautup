@@ -46,6 +46,7 @@
     <string name="lbl_medium_short">中等</string>
     <string name="lbl_min_short">最小</string>
     <string name="lbl_play_service">本应用需要谷歌服务，必须先安装然后使用。</string>
+    <string name="lbl_filter_name">过滤器名…</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -93,6 +94,7 @@
     <string name="msg_reject_incoming_duration_minutes">分钟</string>
     <string name="msg_reject_incoming_duration_hours">小时</string>
     <string name="msg_reject_incoming_duration_hours_minutes">%1$s时%2$s分</string>
+    <string name="msg_filter_name_must_given">过滤器名必须填。</string>
 
     <!--Settings-->
     <string name="settings_hungry_mode">模式1</string>
@@ -130,4 +132,8 @@
     <string name="type_call_abort">拒绝\n来电</string>
     <string name="type_bluetooth">蓝牙</string>
     <string name="type_app_start">启动\n应用</string>
+
+    <string name="type_mobile_data_nb">移动网络</string>
+    <string name="type_call_abort_nb">拒绝来电</string>
+    <string name="type_app_start_nb">启动应用</string>
 </resources>

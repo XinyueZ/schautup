@@ -56,6 +56,7 @@ import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
+import com.schautup.fragments.FiltersDefineDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
@@ -623,7 +624,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				public void onClick(View v) {
 					ViewGroup parentV  = (ViewGroup) findViewById(R.id.filters_list_ll);
 					View newFilterV = getLayoutInflater().inflate(R.layout.inc_filter, parentV, false);
-					parentV.addView(newFilterV);
+//					parentV.addView(newFilterV);
+					showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
 					View rmvV = newFilterV.findViewById(R.id.filter_remove_ibtn);
 					rmvV.setOnClickListener(new OnClickListener() {
 						@Override

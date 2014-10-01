@@ -1,0 +1,299 @@
+package com.schautup.fragments;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
+import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
+import com.schautup.R;
+import com.schautup.bus.OpenRecurrencePickerEvent;
+import com.schautup.bus.OpenTimePickerEvent;
+import com.schautup.bus.SetRecurrenceEvent;
+import com.schautup.bus.SetTimeEvent;
+import com.schautup.data.Filter;
+import com.schautup.utils.Utils;
+import com.schautup.views.AnimImageButton;
+import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
+import com.schautup.views.AnimImageTextView;
+import com.schautup.views.BadgeView;
+
+import org.joda.time.DateTime;
+
+import de.greenrobot.event.EventBus;
+
+/**
+ * By this {@link android.support.v4.app.Fragment} we can define different filters.
+ *
+ * @author Xinyue Zhao
+ */
+public final class FiltersDefineDialogFragment extends DialogFragment implements OnClickListener {
+	/**
+	 * Main layout for this component.
+	 */
+	private static final int LAYOUT = R.layout.fragment_filters_define;
+	/**
+	 * The id of item if the item was inserted into DB before.
+	 */
+	private long mId;
+	/**
+	 * Name of filter.
+	 */
+	private String mName;
+	/**
+	 * Selected hour.
+	 */
+	private int mHour;
+	/**
+	 * Selected minute.
+	 */
+	private int mMinute;
+	/**
+	 * {@link android.widget.TextView} for selected hour.
+	 */
+	private TextView mHourTv;
+	/**
+	 * {@link android.widget.TextView} for selected minute.
+	 */
+	private TextView mMinuteTv;
+	/**
+	 * Select mute in filter.
+	 */
+	private View mSetMuteV;
+	/**
+	 * Select vibrate in filter.
+	 */
+	private View mSetVibrateV;
+	/**
+	 * Select sound in filter.
+	 */
+	private View mSetSoundV;
+	/**
+	 * Select wifi in filter.
+	 */
+	private View mSetWifiV;
+	/**
+	 * Select mobile data in filter.
+	 */
+	private View mSetMobileDataV;
+	/**
+	 * Select bluetooth in filter.
+	 */
+	private View mSetBluetoothV;
+	/**
+	 * Select call abort(reject incoming) in filter.
+	 */
+	private View mSetCallAbortV;
+	/**
+	 * Select start app in filter.
+	 */
+	private View mSetStartAppV;
+	/**
+	 * Select brightness in filter.
+	 */
+	private View mSetBrightnessV;
+	/**
+	 * The recurrence settings.
+	 */
+	private EventRecurrence mEventRecurrence;
+	/**
+	 * Open setting dialog for recurrence.
+	 */
+	private View mRecurrenceV;
+	/**
+	 * Information about selected recurrence.
+	 */
+	private BadgeView mRecurrenceBgv;
+	//------------------------------------------------
+	//Subscribes, event-handlers
+	//------------------------------------------------
+
+	/**
+	 * Handler for {@link com.schautup.bus.SetTimeEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.SetTimeEvent}.
+	 */
+	public void onEvent(SetTimeEvent e) {
+		mHour = e.getHour();
+		mMinute = e.getMinute();
+		mHourTv.setText(Utils.convertValue(mHour));
+		mMinuteTv.setText(Utils.convertValue(mMinute));
+	}
+
+
+	/**
+	 * Handler for {@link com.schautup.bus.SetRecurrenceEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.SetRecurrenceEvent}.
+	 */
+	public void onEvent(SetRecurrenceEvent e) {
+		mEventRecurrence = e.getEventRecurrence();
+		mRecurrenceV.setSelected(false);
+
+		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+	}
+
+	//------------------------------------------------
+
+	/**
+	 * Initialize an {@link com.schautup.fragments.FiltersDefineDialogFragment}.
+	 *
+	 * @param context
+	 * 		A {@link android.content.Context} object.
+	 *
+	 * @return An instance of {@link com.schautup.fragments.FiltersDefineDialogFragment}.
+	 */
+	public static DialogFragment newInstance(Context context) {
+		return (DialogFragment) Fragment.instantiate(context, FiltersDefineDialogFragment.class.getName());
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setCancelable(true);
+		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_Base_AppCompat_Dialog_FixedSize);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(LAYOUT, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mRecurrenceBgv = (BadgeView) view.findViewById(R.id.recurrence_bgv);
+		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+
+		DateTime now = DateTime.now();
+		mHour = now.getHourOfDay();
+		mMinute = now.getMinuteOfHour();
+		mHourTv = (TextView) view.findViewById(R.id.sel_hour_tv);
+		mHourTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
+			@Override
+			public void onClick() {
+				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
+						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
+						.setMaxNumber(23).setStyleResId(R.style.BetterPickersDialogFragment_Light)
+						.addNumberPickerDialogHandler(new NumberPickerDialogFragment.NumberPickerDialogHandler() {
+							@Override
+							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
+									double fullNumber) {
+								mHourTv.setText(Utils.convertValue(number));
+								mHour = number;
+							}
+						});
+				npb.show();
+			}
+		});
+		mHourTv.setText(Utils.convertValue(mHour));
+		mMinuteTv = (TextView) view.findViewById(R.id.sel_minute_tv);
+		mMinuteTv.setOnClickListener(new AnimImageTextView.OnAnimTextViewClickedListener() {
+			@Override
+			public void onClick() {
+				NumberPickerBuilder npb = new NumberPickerBuilder().setPlusMinusVisibility(View.INVISIBLE)
+						.setDecimalVisibility(View.INVISIBLE).setFragmentManager(getFragmentManager()).setMinNumber(0)
+						.setMaxNumber(60).setStyleResId(R.style.BetterPickersDialogFragment_Light)
+						.addNumberPickerDialogHandler(new NumberPickerDialogFragment.NumberPickerDialogHandler() {
+							@Override
+							public void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative,
+									double fullNumber) {
+								mMinuteTv.setText(Utils.convertValue(number));
+								mMinute = number;
+							}
+						});
+				npb.show();
+			}
+		});
+		mMinuteTv.setText(Utils.convertValue(mMinute));
+
+		mSetMuteV = view.findViewById(R.id.set_mute_ll);
+		mSetMuteV.setOnClickListener(this);
+		mSetVibrateV= view.findViewById(R.id.set_vibrate_ll);
+		mSetVibrateV.setOnClickListener(this);
+		mSetSoundV= view.findViewById(R.id.set_sound_ll);
+		mSetSoundV.setOnClickListener(this);
+
+		mSetWifiV= view.findViewById(R.id.set_wifi_ll);
+		mSetWifiV.setOnClickListener(this);
+		mSetMobileDataV= view.findViewById(R.id.set_mobile_data_ll);
+		mSetMobileDataV.setOnClickListener(this);
+		mSetBluetoothV= view.findViewById(R.id.set_bluetooth_ll);
+		mSetBluetoothV.setOnClickListener(this);
+
+		mSetCallAbortV= view.findViewById(R.id.set_call_abort_ll);
+		mSetCallAbortV.setOnClickListener(this);
+		mSetStartAppV= view.findViewById(R.id.set_start_app_ll);
+		mSetStartAppV.setOnClickListener(this);
+		mSetBrightnessV= view.findViewById(R.id.set_brightness_ll);
+		mSetBrightnessV.setOnClickListener(this);
+
+		view.findViewById(R.id.close_cancel_btn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dismiss();
+			}
+		});
+
+		view.findViewById(R.id.close_confirm_btn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mName = ((TextView)getView().findViewById(R.id.filter_name_et)).getText().toString();
+				if(TextUtils.isEmpty(mName)) {
+					com.chopping.utils.Utils.showLongToast(getActivity(), R.string.msg_filter_name_must_given);
+				} else {
+					EventBus.getDefault().post(new Filter(mId, mName, mHour, mMinute, mEventRecurrence));
+					dismiss();
+				}
+			}
+		});
+
+		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
+				new AnimImageButton.OnAnimImageButtonClickedListener() {
+					@Override
+					public void onClick() {
+						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
+					}
+				});
+		mRecurrenceV = view.findViewById(R.id.open_recurrence_btn);
+		mRecurrenceV.setOnClickListener(new OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				EventBus.getDefault().post(new OpenRecurrencePickerEvent(
+						mEventRecurrence == null ? null : mEventRecurrence.toString()));
+			}
+		});
+
+	}
+
+	@Override
+	public void onResume() {
+		EventBus.getDefault().registerSticky(this);
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		EventBus.getDefault().unregister(this);
+		super.onPause();
+	}
+
+	@Override
+	public void onClick(View v) {
+		ViewGroup vp = (ViewGroup) v;
+		CheckBox cb = (CheckBox) vp.getChildAt(2);
+		cb.setChecked(!cb.isChecked());
+	}
+}
