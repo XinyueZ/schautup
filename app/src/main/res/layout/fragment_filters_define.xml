@@ -20,7 +20,9 @@
             android:inputType="textNoSuggestions"
             android:layout_width="@dimen/size_option_dialog"
             android:layout_height="wrap_content"
-            android:hint="@string/lbl_filter_name"/>
+            android:textColor="@color/text_common_black"
+            android:hint="@string/lbl_filter_name"
+            android:textCursorDrawable="@null"/>
         <LinearLayout
 
             android:weightSum="5"
