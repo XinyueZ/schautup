@@ -37,6 +37,7 @@ import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
+import com.schautup.bus.AddedFilterEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
 import com.schautup.bus.DeletedConfirmEvent;
@@ -333,6 +334,15 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		}
 	}
 
+	/**
+	 * Handler for {@link com.schautup.bus.AddedFilterEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.AddedFilterEvent}.
+	 */
+	public void onEvent(AddedFilterEvent e) {
+		com.chopping.utils.Utils.showLongToast(this, "AddedFilterEvent");
+	}
 	//------------------------------------------------
 
 	/**

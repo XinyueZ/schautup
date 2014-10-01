@@ -17,11 +17,13 @@ import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
+import com.schautup.bus.AddedFilterEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.data.Filter;
+import com.schautup.data.ScheduleType;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
@@ -114,6 +116,11 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 	 * Information about selected recurrence.
 	 */
 	private BadgeView mRecurrenceBgv;
+	/**
+	 * Filter to create.
+	 */
+	private Filter mFilter = new Filter();
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -221,24 +228,33 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 
 		mSetMuteV = view.findViewById(R.id.set_mute_ll);
 		mSetMuteV.setOnClickListener(this);
+		mSetMuteV.setTag(ScheduleType.MUTE);
 		mSetVibrateV= view.findViewById(R.id.set_vibrate_ll);
 		mSetVibrateV.setOnClickListener(this);
+		mSetVibrateV.setTag(ScheduleType.VIBRATE);
 		mSetSoundV= view.findViewById(R.id.set_sound_ll);
 		mSetSoundV.setOnClickListener(this);
+		mSetSoundV.setTag(ScheduleType.SOUND);
 
 		mSetWifiV= view.findViewById(R.id.set_wifi_ll);
 		mSetWifiV.setOnClickListener(this);
+		mSetWifiV.setTag(ScheduleType.WIFI);
 		mSetMobileDataV= view.findViewById(R.id.set_mobile_data_ll);
 		mSetMobileDataV.setOnClickListener(this);
+		mSetMobileDataV.setTag(ScheduleType.MOBILE);
 		mSetBluetoothV= view.findViewById(R.id.set_bluetooth_ll);
 		mSetBluetoothV.setOnClickListener(this);
+		mSetBluetoothV.setTag(ScheduleType.BLUETOOTH);
 
 		mSetCallAbortV= view.findViewById(R.id.set_call_abort_ll);
 		mSetCallAbortV.setOnClickListener(this);
+		mSetCallAbortV.setTag(ScheduleType.CALLABORT);
 		mSetStartAppV= view.findViewById(R.id.set_start_app_ll);
 		mSetStartAppV.setOnClickListener(this);
+		mSetStartAppV.setTag(ScheduleType.STARTAPP);
 		mSetBrightnessV= view.findViewById(R.id.set_brightness_ll);
 		mSetBrightnessV.setOnClickListener(this);
+		mSetBrightnessV.setTag(ScheduleType.BRIGHTNESS);
 
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(new OnClickListener() {
 			@Override
@@ -254,7 +270,11 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 				if(TextUtils.isEmpty(mName)) {
 					com.chopping.utils.Utils.showLongToast(getActivity(), R.string.msg_filter_name_must_given);
 				} else {
-					EventBus.getDefault().post(new Filter(mId, mName, mHour, mMinute, mEventRecurrence));
+					mFilter.setName(mName);
+					mFilter.setHour(mHour);
+					mFilter.setMinute(mMinute);
+					mFilter.setEventRecurrence(mEventRecurrence);
+					EventBus.getDefault().post(new AddedFilterEvent(mFilter));
 					dismiss();
 				}
 			}
@@ -295,5 +315,11 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 		ViewGroup vp = (ViewGroup) v;
 		CheckBox cb = (CheckBox) vp.getChildAt(2);
 		cb.setChecked(!cb.isChecked());
+		ScheduleType type = (ScheduleType) v.getTag();
+		if(!cb.isChecked()) {
+			mFilter.getSelectedTypes().delete(type.getCode());
+		} else {
+			mFilter.getSelectedTypes().put(type.getCode(), type);
+		}
 	}
 }

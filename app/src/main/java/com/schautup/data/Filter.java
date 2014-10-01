@@ -1,5 +1,7 @@
 package com.schautup.data;
 
+import android.support.v4.util.SparseArrayCompat;
+
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 
 /**
@@ -28,6 +30,11 @@ public final class Filter {
 	 * The recurrence defined in filter.
 	 */
 	private EventRecurrence mEventRecurrence;
+	/**
+	 * Selected types.
+	 */
+	private SparseArrayCompat<ScheduleType> mSelectedTypes = new SparseArrayCompat<ScheduleType>();
+
 
 	/**
 	 * Constructor of {@link Filter}.
@@ -96,5 +103,37 @@ public final class Filter {
 	 */
 	public EventRecurrence getEventRecurrence() {
 		return mEventRecurrence;
+	}
+	/**
+	 * Get selected types.
+	 * @return Selected types.
+	 */
+	public SparseArrayCompat<ScheduleType> getSelectedTypes() {
+		return mSelectedTypes;
+	}
+
+
+	public Filter() {
+
+	}
+
+	public void setId(long _id) {
+		mId = _id;
+	}
+
+	public void setName(String _name) {
+		mName = _name;
+	}
+
+	public void setHour(int _hour) {
+		mHour = _hour;
+	}
+
+	public void setMinute(int _minute) {
+		mMinute = _minute;
+	}
+
+	public void setEventRecurrence(EventRecurrence _eventRecurrence) {
+		mEventRecurrence = _eventRecurrence;
 	}
 }
