@@ -440,7 +440,7 @@ public final class App extends Application {
 					} else {
 						actionContent = String.format(getString(R.string.notify_wifi_content), getString(
 								R.string.lbl_off));
-						comment = new StringBuilder().append(getString(R.string.lbl_wifi_in_sleep)).append(getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
+						comment = new StringBuilder().append(getString(R.string.lbl_wifi_in_sleep)).append('\n').append(getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
 								getString(R.string.lbl_off_small))).append('\n').append(getString(R.string.lbl_left_from_wifi)).toString();
 					}
 				}

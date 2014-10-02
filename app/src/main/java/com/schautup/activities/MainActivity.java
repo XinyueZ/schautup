@@ -1,6 +1,6 @@
 package com.schautup.activities;
 
-import java.lang.ref.WeakReference;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +54,7 @@ import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.bus.UpdatedItemEvent;
+import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
@@ -113,6 +114,23 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * {@link android.support.v7.view.ActionMode} on the list-view then it is not null.
 	 */
 	private ActionMode mActionMode;
+
+	/**
+	 * List of all stored labels.
+	 */
+	private ViewGroup mLabelsVg;
+	/**
+	 * List of all stored filters.
+	 */
+	private ViewGroup mFiltersVg;
+	/**
+	 * All labels, for add schedules by a group.
+	 */
+	private LongSparseArray<ViewGroup> mLabelsList;
+	/**
+	 * All filters, for user easy to do filtering.
+	 */
+	private LongSparseArray<Filter> mFiltersList = new LongSparseArray<Filter>();
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -341,8 +359,18 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.AddedFilterEvent}.
 	 */
 	public void onEvent(AddedFilterEvent e) {
-		com.chopping.utils.Utils.showLongToast(this, "AddedFilterEvent");
+		final Filter newFilter  = e.getNewFilter();
+		addedNewFilter(newFilter);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				DB.getInstance(getApplication()).addFilter(newFilter);
+				mFiltersList.put(newFilter.getId(), newFilter);
+			}
+		}).start();
 	}
+
+
 	//------------------------------------------------
 
 	/**
@@ -545,14 +573,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 
-	/**
-	 * All labels, for add schedules by a group.
-	 */
-	private LongSparseArray<WeakReference<ViewGroup>> mLabelsList;
-	/**
-	 * All filters, for user easy to do filtering.
-	 */
-	private LongSparseArray<WeakReference<ViewGroup>> mFiltersList;
 
 	/**
 	 * Initialize the navigation drawer.
@@ -609,44 +629,87 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				drawerItemHomePage.setVisibility(View.GONE);
 				drawerItemLogHistory.setVisibility(View.GONE);
 			}
-
+			mLabelsVg = (ViewGroup) findViewById(R.id.labels_list_ll);
 			View addNewLabel =  findViewById(R.id.drawer_item_add_label);
 			addNewLabel.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					ViewGroup parentV  = (ViewGroup) findViewById(R.id.labels_list_ll);
-					View newLabelV = getLayoutInflater().inflate(R.layout.inc_label, parentV, false);
-					parentV.addView(newLabelV);
+
+					View newLabelV = getLayoutInflater().inflate(R.layout.inc_label, mLabelsVg, false);
+					mLabelsVg.addView(newLabelV);
 					View rmvV = newLabelV.findViewById(R.id.label_remove_ibtn);
 					rmvV.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							ViewGroup parentV  = (ViewGroup) findViewById(R.id.labels_list_ll);
 							ViewGroup hostV  = (ViewGroup) v.getParent();
-							parentV.removeView(hostV);
+							mLabelsVg.removeView(hostV);
 						}
 					});
 				}
 			});
-			View addNewFilter = findViewById(R.id.drawer_item_add_filter);
+
+			// Init the list of all filters.
+			mFiltersVg  = (ViewGroup) findViewById(R.id.filters_list_ll);
+			final View addNewFilter = findViewById(R.id.drawer_item_add_filter);
 			addNewFilter.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					ViewGroup parentV  = (ViewGroup) findViewById(R.id.filters_list_ll);
-					View newFilterV = getLayoutInflater().inflate(R.layout.inc_filter, parentV, false);
-//					parentV.addView(newFilterV);
 					showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
-					View rmvV = newFilterV.findViewById(R.id.filter_remove_ibtn);
-					rmvV.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							ViewGroup parentV  = (ViewGroup) findViewById(R.id.filters_list_ll);
-							ViewGroup hostV  = (ViewGroup) v.getParent();
-							parentV.removeView(hostV);
-						}
-					});
 				}
 			});
+			new ParallelTask<Void, List<Filter>, List<Filter>>(false) {
+				@Override
+				protected List<Filter> doInBackground(Void... params) {
+					return DB.getInstance(getApplication()).getAllFilters();
+				}
+
+				@Override
+				protected void onPostExecute(List<Filter> result) {
+					super.onPostExecute(result);
+					if(result != null && result.size() > 0) {
+						for(Filter filter : result) {
+							addedNewFilter(filter);
+						}
+					}
+				}
+			}.executeParallel();
 		}
+	}
+
+	/**
+	 * Helper method to add a new {@link com.schautup.data.Filter}.
+	 * @param filter A {@link com.schautup.data.Filter} to show.
+	 */
+	private void addedNewFilter(Filter filter) {
+		final ViewGroup newFilterV = (ViewGroup) getLayoutInflater().inflate(R.layout.inc_filter, mFiltersVg, false);
+		TextView nameTv = (TextView) newFilterV.findViewById(R.id.name_tv);
+		nameTv.setText(filter.getName());
+		mFiltersVg.addView(newFilterV);
+		View rmvV = newFilterV.findViewById(R.id.filter_remove_ibtn);
+		rmvV.setTag(filter);
+		rmvV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				removeFilter(v);
+			}
+		});
+	}
+
+
+	/**
+	 * Helper method to remove a {@link com.schautup.data.Filter}.
+	 * @param v The remove button view.
+	 */
+	private void removeFilter(View v) {
+		final Filter oldFilter = (Filter) v.getTag();
+		ViewGroup hostV = (ViewGroup) v.getParent();
+		mFiltersVg.removeView(hostV);
+		mFiltersList.remove(oldFilter.getId());
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				DB.getInstance(getApplication()).removeFilter(oldFilter);
+			}
+		}).start();
 	}
 }

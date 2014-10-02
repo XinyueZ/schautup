@@ -178,7 +178,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mEventRecurrence = e.getEventRecurrence();
 		mRecurrenceV.setSelected(false);
 
-		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelectedType = item.getType();
 		mEventRecurrence = item.getEventRecurrence();
 
-		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 
 		//Init all values that have been set before.
 		switch (item.getType()) {
@@ -271,7 +271,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mRecurrenceBgv = (BadgeView) view.findViewById(R.id.recurrence_bgv);
-		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 
 		mSettingTypesLl = view.findViewById(R.id.setting_types_ll);
 		DateTime now = DateTime.now();

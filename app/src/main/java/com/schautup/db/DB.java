@@ -8,8 +8,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.SparseArrayCompat;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
+import com.schautup.data.Filter;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
@@ -537,5 +539,163 @@ public final class DB {
 			close();
 		}
 		return rowsRemain;
+	}
+
+	/**
+	 * Returns all {@link com.schautup.data.Filter}s from DB order by edited time.
+	 *
+	 * @return All {@link com.schautup.data.Filter}s from DB order by edited time.
+	 */
+	public synchronized List<Filter> getAllFilters() {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, null, null, null, null,
+				FilterTbl.EDIT_TIME + " DESC");
+		Filter item = null;
+		List<Filter> list = new LinkedList<Filter>();
+		try {
+			EventRecurrence er;
+			while (c.moveToNext()) {
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(FilterTbl.RECURRENCE)));
+				item = new Filter(
+						c.getLong(c.getColumnIndex(FilterTbl.ID)),
+						c.getString(c.getColumnIndex(FilterTbl.NAME)),
+						c.getInt(c.getColumnIndex(FilterTbl.HOUR)),
+						c.getInt(c.getColumnIndex(FilterTbl.MINUTE)),
+						er,
+						c.getLong(c.getColumnIndex(FilterTbl.EDIT_TIME)));
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+	/**
+	 * Add a filter into DB.
+	 *
+	 * @param item
+	 * 		{@link com.schautup.data.Filter} to insert.
+	 *
+	 * @return {@code true} if insert is success.
+	 */
+	public synchronized boolean addFilter(Filter item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId = -1;
+			//Do "insert" command.
+			ContentValues v = new ContentValues();
+			SparseArrayCompat<ScheduleType>  types = item.getSelectedTypes();
+			StringBuilder stringBuilder = convertTypesForFilter(types);
+			v.put(FilterTbl.NAME, item.getName());
+			v.put(FilterTbl.HOUR, item.getHour());
+			v.put(FilterTbl.MINUTE, item.getMinute());
+			v.put(FilterTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(FilterTbl.TYPES, stringBuilder.toString());
+			v.put(FilterTbl.EDIT_TIME, System.currentTimeMillis());
+			rowId = mDB.insert(FilterTbl.TABLE_NAME, null, v);
+			item.setId(rowId);
+			success = rowId != -1;
+		} finally {
+			close();
+		}
+		return success;
+	}
+
+
+	/**
+	 * Update a schedule in DB.
+	 *
+	 * @param item
+	 * 		{@link com.schautup.data.Filter} to insert.
+	 *
+	 * @return {@code true} if insert is success.
+	 */
+	public synchronized boolean updateFilter(Filter item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId = -1;
+			//Do "update" command.
+			ContentValues v = new ContentValues();
+			SparseArrayCompat<ScheduleType>  types = item.getSelectedTypes();
+			StringBuilder stringBuilder = convertTypesForFilter(types);
+			v.put(FilterTbl.NAME, item.getName());
+			v.put(FilterTbl.HOUR, item.getHour());
+			v.put(FilterTbl.MINUTE, item.getMinute());
+			v.put(FilterTbl.RECURRENCE, item.getEventRecurrence().toString());
+			v.put(FilterTbl.TYPES, stringBuilder.toString());
+			String[] args = new String[] { item.getId() + "" };
+			rowId = mDB.update(FilterTbl.TABLE_NAME, v, FilterTbl.ID + " = ?", args);
+			success = rowId != -1;
+		} finally {
+			close();
+		}
+		return success;
+	}
+
+	/**
+	 * Remove one {@link com.schautup.data.Filter} from DB.
+	 *
+	 * @param item
+	 * 		The item to remove.
+	 *
+	 * @return The count of rows remain in DB after removed item.
+	 * <p/>
+	 * Return -1 if there's error when removed data.
+	 */
+	public synchronized int removeFilter(Filter item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		int rowsRemain = -1;
+		boolean success;
+		try {
+			long rowId;
+			String whereClause = FilterTbl.ID + "=?";
+			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
+			rowId = mDB.delete(FilterTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+			if (success) {
+				Cursor c = mDB.query(FilterTbl.TABLE_NAME, new String[] { FilterTbl.ID }, null, null, null,
+						null, null);
+				rowsRemain = c.getCount();
+			} else {
+				rowsRemain = -1;
+			}
+		} finally {
+			close();
+		}
+		return rowsRemain;
+	}
+
+	/**
+	 * Helper method to convert list of selected types of a {@link com.schautup.data.Filter} to a string with sep "|".
+	 * @param types A list of all {@link com.schautup.data.Filter}s.
+	 * @return Selected {@link com.schautup.data.Filter}s in string with sep "|".
+	 */
+	private static StringBuilder convertTypesForFilter(SparseArrayCompat<ScheduleType> types) {
+		StringBuilder stringBuilder  = new StringBuilder();
+		int key;
+		for(int i = 0; i < types.size(); i++) {
+			key = types.keyAt(i);
+			ScheduleType type = types.get(key);
+			stringBuilder.append(type.getCode());
+			if(i != types.size() - 1) {//Last one?
+				stringBuilder.append('|');
+			}
+		}
+		return stringBuilder;
 	}
 }

@@ -13,7 +13,7 @@ public final class Filter {
 	/**
 	 * Id in database.
 	 */
-	private long mId;
+	private long mId = -1;
 	/**
 	 * Name of filter.
 	 */
@@ -34,7 +34,10 @@ public final class Filter {
 	 * Selected types.
 	 */
 	private SparseArrayCompat<ScheduleType> mSelectedTypes = new SparseArrayCompat<ScheduleType>();
-
+	/**
+	 * Edited time.
+	 */
+	private long mEditedTime;
 
 	/**
 	 * Constructor of {@link Filter}.
@@ -49,13 +52,16 @@ public final class Filter {
 	 * 		Selected minute.
 	 * @param eventRecurrence
 	 * 		The recurrence defined in filter.
+	 * 	@param editTime
+	 * 		Edited time in {@link com.schautup.db.DB}.
 	 */
-	public Filter(long id, String name, int hour, int minute, EventRecurrence eventRecurrence) {
+	public Filter(long id, String name, int hour, int minute, EventRecurrence eventRecurrence, long editTime ) {
 		mId = id;
 		mName = name;
 		mHour = hour;
 		mMinute = minute;
 		mEventRecurrence = eventRecurrence;
+		mEditedTime = editTime;
 	}
 
 	/**
@@ -69,9 +75,9 @@ public final class Filter {
 	 * @param eventRecurrence
 	 * 		The recurrence defined in filter.
 	 */
-	public Filter(String name, int hour, int minute, EventRecurrence eventRecurrence) {
-		this(-1, name, hour, minute, eventRecurrence);
-	}
+//	public Filter(String name, int hour, int minute, EventRecurrence eventRecurrence) {
+//		this(-1, name, hour, minute, eventRecurrence, System.currentTimeMillis());
+//	}
 	/**
 	 * Get id in database.
 	 */
@@ -114,7 +120,7 @@ public final class Filter {
 
 
 	public Filter() {
-
+		mEditedTime =  System.currentTimeMillis();
 	}
 
 	public void setId(long _id) {

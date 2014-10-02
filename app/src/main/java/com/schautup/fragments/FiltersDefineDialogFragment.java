@@ -149,7 +149,7 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 		mEventRecurrence = e.getEventRecurrence();
 		mRecurrenceV.setSelected(false);
 
-		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 	}
 
 	//------------------------------------------------
@@ -182,7 +182,7 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mRecurrenceBgv = (BadgeView) view.findViewById(R.id.recurrence_bgv);
-		Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 
 		DateTime now = DateTime.now();
 		mHour = now.getHourOfDay();

@@ -306,11 +306,13 @@ public final class Utils {
 	/**
 	 * Show information about pre-selected recurrence.
 	 *
-	 * @param activity
-	 * @param eventRecurrence
-	 * @param bgv
+	 * @param activity The {@link android.app.Activity} that holds {@link com.schautup.views.BadgeView}.
+	 * @param eventRecurrence An {@link EventRecurrence}, when it is null, the return value will be a fresh new.
+	 * @param bgv {@link com.schautup.views.BadgeView}.
+	 *
+	 * @return EventRecurrence
 	 */
-	public static void showRecurrenceBadge(Activity activity, EventRecurrence eventRecurrence, BadgeView bgv) {
+	public static EventRecurrence showRecurrenceBadge(Activity activity, EventRecurrence eventRecurrence, BadgeView bgv) {
 		if (eventRecurrence != null && eventRecurrence.byday != null) {
 			if (eventRecurrence.bydayCount > 1) {
 				showBadgeView(activity, bgv, "..");
@@ -325,5 +327,6 @@ public final class Utils {
 			int sel = eventRecurrence.byday[0];
 			showBadgeView(activity, bgv, recurrenceDay2String(activity, sel));
 		}
+		return eventRecurrence;
 	}
 }
