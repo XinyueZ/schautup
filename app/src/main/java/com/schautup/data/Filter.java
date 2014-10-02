@@ -30,10 +30,13 @@ public final class Filter {
 	 * The recurrence defined in filter.
 	 */
 	private EventRecurrence mEventRecurrence;
+
+
 	/**
 	 * Selected types.
 	 */
 	private SparseArrayCompat<ScheduleType> mSelectedTypes = new SparseArrayCompat<ScheduleType>();
+
 	/**
 	 * Edited time.
 	 */
@@ -45,17 +48,17 @@ public final class Filter {
 	 * @param id
 	 * 		Id in database.
 	 * @param name
-	 *      Name of filter.
+	 * 		Name of filter.
 	 * @param hour
 	 * 		Selected hour.
 	 * @param minute
 	 * 		Selected minute.
 	 * @param eventRecurrence
 	 * 		The recurrence defined in filter.
-	 * 	@param editTime
+	 * @param editTime
 	 * 		Edited time in {@link com.schautup.db.DB}.
 	 */
-	public Filter(long id, String name, int hour, int minute, EventRecurrence eventRecurrence, long editTime ) {
+	public Filter(long id, String name, int hour, int minute, EventRecurrence eventRecurrence, long editTime) {
 		mId = id;
 		mName = name;
 		mHour = hour;
@@ -75,9 +78,10 @@ public final class Filter {
 	 * @param eventRecurrence
 	 * 		The recurrence defined in filter.
 	 */
-//	public Filter(String name, int hour, int minute, EventRecurrence eventRecurrence) {
-//		this(-1, name, hour, minute, eventRecurrence, System.currentTimeMillis());
-//	}
+	//	public Filter(String name, int hour, int minute, EventRecurrence eventRecurrence) {
+	//		this(-1, name, hour, minute, eventRecurrence, System.currentTimeMillis());
+	//	}
+
 	/**
 	 * Get id in database.
 	 */
@@ -98,48 +102,90 @@ public final class Filter {
 	public int getHour() {
 		return mHour;
 	}
+
 	/**
 	 * Get selected minute.
 	 */
 	public int getMinute() {
 		return mMinute;
 	}
+
 	/**
 	 * Get the recurrence defined in filter.
 	 */
 	public EventRecurrence getEventRecurrence() {
 		return mEventRecurrence;
 	}
+
+	/**
+	 * Get last edit time.
+	 * @return time in long.
+	 */
+	public long getEditedTime() {
+		return mEditedTime;
+	}
+
 	/**
 	 * Get selected types.
+	 *
 	 * @return Selected types.
 	 */
 	public SparseArrayCompat<ScheduleType> getSelectedTypes() {
 		return mSelectedTypes;
 	}
 
-
+	/**
+	 * Default constructor of {@link com.schautup.data.Filter}.
+	 */
 	public Filter() {
-		mEditedTime =  System.currentTimeMillis();
+		mEditedTime = System.currentTimeMillis();
 	}
 
-	public void setId(long _id) {
-		mId = _id;
+	/**
+	 * Clone value from {@code filterToClone}.
+	 * @param filterToClone {@link com.schautup.data.Filter} that provides data for {@code this} {@link com.schautup.data.Filter}.
+	 */
+	public void clone(Filter filterToClone) {
+		this.setId(filterToClone.getId());
+		this.setName(filterToClone.getName());
+		this.setHour(filterToClone.getHour());
+		this.setMinute(filterToClone.getMinute());
+		this.setEventRecurrence(filterToClone.getEventRecurrence());
+		this.setSelectedTypes(filterToClone.getSelectedTypes());
+		this.setEditedTime(filterToClone.getEditedTime());
 	}
 
-	public void setName(String _name) {
-		mName = _name;
+	/**
+	 * Set id when from {@link com.schautup.db.DB}.
+	 * @param id Location of {@link com.schautup.data.Filter} in {@link com.schautup.db.DB}.
+	 */
+	public void setId(long id) {
+		mId = id;
 	}
 
-	public void setHour(int _hour) {
-		mHour = _hour;
+	public void setName(String name) {
+		mName = name;
 	}
 
-	public void setMinute(int _minute) {
-		mMinute = _minute;
+	public void setHour(int hour) {
+		mHour = hour;
 	}
 
-	public void setEventRecurrence(EventRecurrence _eventRecurrence) {
-		mEventRecurrence = _eventRecurrence;
+	public void setMinute(int minute) {
+		mMinute = minute;
 	}
+
+	public void setEventRecurrence(EventRecurrence eventRecurrence) {
+		mEventRecurrence = eventRecurrence;
+	}
+
+	public void setSelectedTypes(SparseArrayCompat<ScheduleType> selectedTypes) {
+		mSelectedTypes = selectedTypes;
+	}
+
+	public void setEditedTime(long editedTime) {
+		mEditedTime = editedTime;
+	}
+
+
 }

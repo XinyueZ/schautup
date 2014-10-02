@@ -37,7 +37,6 @@ import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.schautup.R;
 import com.schautup.bus.AddNewScheduleItemEvent;
-import com.schautup.bus.AddedFilterEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
 import com.schautup.bus.DeletedConfirmEvent;
@@ -50,9 +49,11 @@ import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowActionModeEvent;
+import com.schautup.bus.ShowSetFilterEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
+import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
@@ -66,6 +67,10 @@ import com.schautup.fragments.ScheduleListFragment;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
+import com.schautup.views.AnimImageButton;
+import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
+import com.schautup.views.AnimImageTextView;
+import com.schautup.views.AnimImageTextView.OnAnimTextViewClickedListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -353,21 +358,45 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 	/**
-	 * Handler for {@link com.schautup.bus.AddedFilterEvent}.
+	 * Handler for {@link com.schautup.bus.UpdateFilterEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.AddedFilterEvent}.
+	 * 		Event {@link com.schautup.bus.UpdateFilterEvent}.
 	 */
-	public void onEvent(AddedFilterEvent e) {
-		final Filter newFilter  = e.getNewFilter();
-		addedNewFilter(newFilter);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				DB.getInstance(getApplication()).addFilter(newFilter);
-				mFiltersList.put(newFilter.getId(), newFilter);
-			}
-		}).start();
+	public void onEvent(UpdateFilterEvent e) {
+		  Filter newFilter  = e.getFilter();
+		if(!e.isEdit()) {
+			new ParallelTask<Filter, Filter, Filter>(false) {
+				@Override
+				protected Filter doInBackground(Filter... params) {
+					DB.getInstance(getApplication()).addFilter(params[0]);
+					return params[0];
+				}
+				@Override
+				protected void onPostExecute(Filter filter) {
+					super.onPostExecute(filter);
+					addedNewFilter(filter);
+				}
+			}.executeParallel(newFilter);
+		} else {
+			new ParallelTask<Filter, Filter, Filter>(false) {
+				@Override
+				protected Filter doInBackground(Filter... params) {
+					DB.getInstance(getApplication()).updateFilter(params[0]);
+					return params[0];
+				}
+				@Override
+				protected void onPostExecute(Filter filter) {
+					super.onPostExecute(filter);
+					mFiltersList.get(filter.getId()).clone(filter);
+					View hostOfFilterV =   mFiltersVg.findViewById((int) filter.getId());
+					if(hostOfFilterV != null) {
+						TextView nameTv = (TextView) hostOfFilterV.findViewById(R.id.filter_name_tv);
+						nameTv.setText(filter.getName());
+					}
+				}
+			}.executeParallel(newFilter);
+		}
 	}
 
 
@@ -633,14 +662,14 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			View addNewLabel =  findViewById(R.id.drawer_item_add_label);
 			addNewLabel.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(final View v) {
 
 					View newLabelV = getLayoutInflater().inflate(R.layout.inc_label, mLabelsVg, false);
 					mLabelsVg.addView(newLabelV);
-					View rmvV = newLabelV.findViewById(R.id.label_remove_ibtn);
-					rmvV.setOnClickListener(new OnClickListener() {
+					AnimImageButton rmvV = (AnimImageButton)newLabelV.findViewById(R.id.label_remove_ibtn);
+					rmvV.setOnClickListener(new OnAnimImageButtonClickedListener() {
 						@Override
-						public void onClick(View v) {
+						public void onClick() {
 							ViewGroup hostV  = (ViewGroup) v.getParent();
 							mLabelsVg.removeView(hostV);
 						}
@@ -650,10 +679,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 			// Init the list of all filters.
 			mFiltersVg  = (ViewGroup) findViewById(R.id.filters_list_ll);
-			final View addNewFilter = findViewById(R.id.drawer_item_add_filter);
-			addNewFilter.setOnClickListener(new OnClickListener() {
+			final AnimImageTextView addNewFilter = (AnimImageTextView)findViewById(R.id.drawer_item_add_filter);
+			addNewFilter.setOnClickListener(new OnAnimTextViewClickedListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick() {
 					showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
 				}
 			});
@@ -680,19 +709,30 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Helper method to add a new {@link com.schautup.data.Filter}.
 	 * @param filter A {@link com.schautup.data.Filter} to show.
 	 */
-	private void addedNewFilter(Filter filter) {
-		final ViewGroup newFilterV = (ViewGroup) getLayoutInflater().inflate(R.layout.inc_filter, mFiltersVg, false);
-		TextView nameTv = (TextView) newFilterV.findViewById(R.id.name_tv);
+	private void addedNewFilter(final Filter filter) {
+		final ViewGroup filterV = (ViewGroup) getLayoutInflater().inflate(R.layout.inc_filter, mFiltersVg, false);
+		filterV.setId((int) filter.getId());
+		TextView nameTv = (TextView) filterV.findViewById(R.id.filter_name_tv);
 		nameTv.setText(filter.getName());
-		mFiltersVg.addView(newFilterV);
-		View rmvV = newFilterV.findViewById(R.id.filter_remove_ibtn);
+		final AnimImageButton rmvV = (AnimImageButton) filterV.findViewById(R.id.filter_remove_ibtn);
 		rmvV.setTag(filter);
-		rmvV.setOnClickListener(new OnClickListener() {
+		rmvV.setOnClickListener(new OnAnimImageButtonClickedListener() {
 			@Override
-			public void onClick(View v) {
-				removeFilter(v);
+			public void onClick() {
+				removeFilter(rmvV);
 			}
 		});
+		AnimImageButton editV = (AnimImageButton) filterV.findViewById(R.id.filter_edit_ibtn);
+		editV.setTag(filter);
+		editV.setOnClickListener(new OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				EventBus.getDefault().postSticky(new ShowSetFilterEvent(filter));
+				showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
+			}
+		});
+		mFiltersList.put(filter.getId(), filter);
+		mFiltersVg.addView(filterV);
 	}
 
 

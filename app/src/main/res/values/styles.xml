@@ -22,20 +22,21 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_marginRight">10dp</item>
-        <item name="android:background">@drawable/selector_bg2_btn</item>
+        <item name="android:background">@color/bg_add_new</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">center</item>
     </style>
 
-    <style name="ImageButton_Subitem_Drawer">
+    <style name="ImageButton_SubItem_Drawer">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/selector_bg1_btn</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="TextView_Drawer_Subitem">
+    <style name="TextView_Drawer_SubItem">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">20dp</item>
@@ -47,7 +48,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Drawer_Subitem_Layout">
+    <style name="Drawer_SubItem_Layout">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

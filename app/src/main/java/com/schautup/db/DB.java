@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.SparseArrayCompat;
+import android.text.TextUtils;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.Filter;
@@ -26,6 +27,10 @@ import com.schautup.data.ScheduleType;
  * @author Xinyue Zhao
  */
 public final class DB {
+	/**
+	 * Divide for all selected types for filters.
+	 */
+	private static final String DIV = "|";
 	/**
 	 * {@link android.content.Context}.
 	 */
@@ -556,6 +561,7 @@ public final class DB {
 		List<Filter> list = new LinkedList<Filter>();
 		try {
 			EventRecurrence er;
+			String types;
 			while (c.moveToNext()) {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(FilterTbl.RECURRENCE)));
@@ -566,6 +572,17 @@ public final class DB {
 						c.getInt(c.getColumnIndex(FilterTbl.MINUTE)),
 						er,
 						c.getLong(c.getColumnIndex(FilterTbl.EDIT_TIME)));
+				types = c.getString(c.getColumnIndex(FilterTbl.TYPES));
+				String[] typesArr = types.split(DIV);
+				ScheduleType sc;
+				if(typesArr != null && typesArr.length > 0) {
+					for(String t : typesArr) {
+						if( !TextUtils.isEmpty(t) && !TextUtils.equals(DIV, t)) {
+							sc = ScheduleType.fromCode(Integer.parseInt(t));
+							item.getSelectedTypes().put(sc.getCode(), sc);
+						}
+					}
+				}
 				list.add(item);
 			}
 		} finally {
@@ -681,19 +698,20 @@ public final class DB {
 	}
 
 	/**
-	 * Helper method to convert list of selected types of a {@link com.schautup.data.Filter} to a string with sep "|".
+	 * Helper method to convert list of selected types of a {@link com.schautup.data.Filter} to a string with sep {@link #DIV}.
 	 * @param types A list of all {@link com.schautup.data.Filter}s.
-	 * @return Selected {@link com.schautup.data.Filter}s in string with sep "|".
+	 * @return Selected {@link com.schautup.data.Filter}s in string with sep {@link #DIV}.
 	 */
 	private static StringBuilder convertTypesForFilter(SparseArrayCompat<ScheduleType> types) {
 		StringBuilder stringBuilder  = new StringBuilder();
 		int key;
+		ScheduleType type;
 		for(int i = 0; i < types.size(); i++) {
 			key = types.keyAt(i);
-			ScheduleType type = types.get(key);
+			type = types.get(key);
 			stringBuilder.append(type.getCode());
 			if(i != types.size() - 1) {//Last one?
-				stringBuilder.append('|');
+				stringBuilder.append(DIV);
 			}
 		}
 		return stringBuilder;

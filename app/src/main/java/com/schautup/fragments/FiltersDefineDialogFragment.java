@@ -5,23 +5,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
-import com.schautup.bus.AddedFilterEvent;
+import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowSetFilterEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleType;
 import com.schautup.utils.Utils;
@@ -68,6 +71,10 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 	 * {@link android.widget.TextView} for selected minute.
 	 */
 	private TextView mMinuteTv;
+	/**
+	 * {@link android.widget.EditText} for filter's name.
+	 */
+	private EditText mNameEt;
 	/**
 	 * Select mute in filter.
 	 */
@@ -120,6 +127,10 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 	 * Filter to create.
 	 */
 	private Filter mFilter = new Filter();
+	/**
+	 * {@code true} for edit, {@code false} for add new.
+	 */
+	private boolean mIsEdit;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -152,6 +163,63 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 	}
 
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowSetFilterEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link  com.schautup.bus.ShowSetFilterEvent}.
+	 */
+	public void onEvent(ShowSetFilterEvent e) {
+		mIsEdit = true;
+		Filter item = e.getFilter();
+		mId = item.getId();
+		mName = item.getName();
+		mHour = item.getHour();
+		mMinute = item.getMinute();
+		mNameEt.setText(mName);
+		mHourTv.setText(Utils.convertValue(mHour));
+		mMinuteTv.setText(Utils.convertValue(mMinute));
+		SparseArrayCompat<ScheduleType> types= item.getSelectedTypes();
+		int key;
+		ScheduleType type;
+		for(int i = 0; i < types.size(); i++) {
+			key = types.keyAt(i);
+			type = types.get(key);
+			switch (type) {
+			case MUTE:
+				mSetMuteV.performClick();
+				break;
+			case VIBRATE:
+				mSetVibrateV.performClick();
+				break;
+			case SOUND:
+				mSetSoundV.performClick();
+				break;
+			case WIFI:
+				mSetWifiV.performClick();
+				break;
+			case MOBILE:
+				mSetMobileDataV.performClick();
+				break;
+			case BRIGHTNESS:
+				mSetBrightnessV.performClick();
+				break;
+			case BLUETOOTH:
+				mSetBluetoothV.performClick();
+				break;
+			case STARTAPP:
+				mSetStartAppV.performClick();
+				break;
+			case CALLABORT:
+				mSetCallAbortV.performClick();
+				break;
+			}
+		}
+		mEventRecurrence = item.getEventRecurrence();
+		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		EventBus.getDefault().removeStickyEvent(ShowSetFilterEvent.class);
+	}
 	//------------------------------------------------
 
 	/**
@@ -183,7 +251,7 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 		super.onViewCreated(view, savedInstanceState);
 		mRecurrenceBgv = (BadgeView) view.findViewById(R.id.recurrence_bgv);
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
-
+		mNameEt = (EditText) view.findViewById(R.id.filter_name_et);
 		DateTime now = DateTime.now();
 		mHour = now.getHourOfDay();
 		mMinute = now.getMinuteOfHour();
@@ -266,15 +334,16 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mName = ((TextView)getView().findViewById(R.id.filter_name_et)).getText().toString();
+				mName = mNameEt.getText().toString();
 				if(TextUtils.isEmpty(mName)) {
 					com.chopping.utils.Utils.showLongToast(getActivity(), R.string.msg_filter_name_must_given);
 				} else {
+					mFilter.setId(mId);
 					mFilter.setName(mName);
 					mFilter.setHour(mHour);
 					mFilter.setMinute(mMinute);
 					mFilter.setEventRecurrence(mEventRecurrence);
-					EventBus.getDefault().post(new AddedFilterEvent(mFilter));
+					EventBus.getDefault().post(new UpdateFilterEvent(mFilter, mIsEdit));
 					dismiss();
 				}
 			}

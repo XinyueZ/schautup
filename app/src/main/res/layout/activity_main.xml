@@ -195,7 +195,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_weight="1.5" />
 
-                <Button
+                <com.schautup.views.AnimImageTextView
                     android:id="@+id/drawer_item_add_filter"
                     android:text="@string/btn_add"
                     style="@style/Small_Button_Drawer" />
