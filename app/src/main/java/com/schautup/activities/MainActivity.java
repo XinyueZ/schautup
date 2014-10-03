@@ -759,12 +759,19 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		ViewGroup hostV = (ViewGroup) v.getParent();
 		mFiltersVg.removeView(hostV);
 		mFiltersList.remove(oldFilter.getId());
-		new Thread(new Runnable() {
+		new ParallelTask<Void, Void, Void>(false) {
 			@Override
-			public void run() {
+			protected Void doInBackground(Void... params) {
 				DB.getInstance(getApplication()).removeFilter(oldFilter);
+				return null;
 			}
-		}).start();
+
+			@Override
+			protected void onPostExecute(Void _result) {
+				super.onPostExecute(_result);
+				makeFilterSpinner();
+			}
+		}.executeParallel();
 	}
 
 
