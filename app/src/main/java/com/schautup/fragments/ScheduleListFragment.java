@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -75,6 +76,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 		View headerV = getActivity().getLayoutInflater().inflate(LAYOUT_HEADER, listView, false);
 		listView.addHeaderView(headerV, null, false);
 		headerV.getLayoutParams().height = getActionBarHeight();
+		((MarginLayoutParams)listView.getLayoutParams()).bottomMargin = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
 	}
 

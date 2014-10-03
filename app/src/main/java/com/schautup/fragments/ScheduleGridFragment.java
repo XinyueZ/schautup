@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -60,6 +61,7 @@ public final class ScheduleGridFragment extends BaseListFragment {
 		View headerV = getActivity().getLayoutInflater().inflate(LAYOUT_HEADER, (ViewGroup) view, false);
 		((ViewGroup) (view.findViewById(R.id.header_fl))).addView(headerV);
 		headerV.getLayoutParams().height = getActionBarHeight();
+		((MarginLayoutParams)gridView.getLayoutParams()).bottomMargin = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
 	}
 
