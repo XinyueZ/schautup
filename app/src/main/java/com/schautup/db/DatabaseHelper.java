@@ -51,14 +51,14 @@ final class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion == 1 && newVersion == 2) {
-			db.execSQL(LogHistoryTbl.SQL_ALTER_ADD_COMMENT);
-		} else if (oldVersion == 2 && newVersion == 3) {
-			db.execSQL(FilterTbl.SQL_CREATE);
-		} else {
-			db.execSQL("DROP TABLE IF EXISTS " + ScheduleTbl.TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + LogHistoryTbl.TABLE_NAME);
-			onCreate(db);
-		}
+//		if (oldVersion == 1 && newVersion == 2) {
+//			db.execSQL(LogHistoryTbl.SQL_ALTER_ADD_COMMENT);
+//		} else if (oldVersion == 2 && newVersion == 3) {
+//			db.execSQL(FilterTbl.SQL_CREATE);
+//		} else {
+//			db.execSQL("DROP TABLE IF EXISTS " + ScheduleTbl.TABLE_NAME);
+//			db.execSQL("DROP TABLE IF EXISTS " + LogHistoryTbl.TABLE_NAME);
+//			onCreate(db);
+//		}
 	}
 }

@@ -7,17 +7,20 @@
         <!--android:title="@string/menu_add"-->
         <!--android:icon="@drawable/ic_action_add"-->
         <!--app:showAsAction="always" />-->
+
+    <item
+        android:id="@+id/action_filter"
+        android:title="@string/menu_filter"
+        android:icon="@drawable/ic_action_filter"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.Spinner"/>
+
     <item
         android:id="@+id/action_view"
         android:title="@string/menu_view"
         android:icon="@drawable/ic_action_listview"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_filter"
-        android:title="@string/menu_filter"
-        android:icon="@drawable/ic_action_filter"
-        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"

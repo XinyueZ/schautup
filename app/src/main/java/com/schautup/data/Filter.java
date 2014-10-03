@@ -187,5 +187,8 @@ public final class Filter {
 		mEditedTime = editedTime;
 	}
 
-
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

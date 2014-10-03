@@ -48,6 +48,7 @@
     <string name="lbl_min_short">Min</string>
     <string name="lbl_play_service">This application needs Google Play Service, you must install it first.</string>
     <string name="lbl_filter_name">Filter name…</string>
+    <string name="lbl_filter_selection">No filter</string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>

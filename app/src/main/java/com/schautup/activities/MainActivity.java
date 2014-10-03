@@ -1,5 +1,6 @@
 package com.schautup.activities;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
@@ -26,6 +27,9 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,6 +40,7 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.schautup.R;
+import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
@@ -136,6 +141,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * All filters, for user easy to do filtering.
 	 */
 	private LongSparseArray<Filter> mFiltersList = new LongSparseArray<Filter>();
+
+	/**
+	 * All defined {@link com.schautup.data.Filter}s to select.
+	 */
+	private Spinner mFilterSpinner;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -376,6 +386,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				protected void onPostExecute(Filter filter) {
 					super.onPostExecute(filter);
 					addedNewFilter(filter);
+					makeFilterSpinner();
 				}
 			}.executeParallel(newFilter);
 		} else {
@@ -394,6 +405,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 						TextView nameTv = (TextView) hostOfFilterV.findViewById(R.id.filter_name_tv);
 						nameTv.setText(filter.getName());
 					}
+					makeFilterSpinner();
 				}
 			}.executeParallel(newFilter);
 		}
@@ -475,7 +487,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
-
+		MenuItem menuFilter  = menu.findItem( R.id.action_filter);
+		mFilterSpinner = (Spinner)MenuItemCompat.getActionView(menuFilter);
+		makeFilterSpinner();
 		return true;
 	}
 
@@ -752,4 +766,43 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			}
 		}).start();
 	}
+
+
+
+	/**
+	 * Update {@link android.widget.Spinner} on {@link android.support.v7.app.ActionBar} for {@link com.schautup.data.Filter}s.
+	 */
+	private void makeFilterSpinner() {
+		new ParallelTask<Void, List<Filter>, List<Filter>>(false) {
+			@Override
+			protected List<Filter> doInBackground(Void... params) {
+				return DB.getInstance(getApplication()).getAllFilters();
+			}
+
+			@Override
+			protected void onPostExecute(List<Filter> result) {
+				super.onPostExecute(result);
+				Spinner spinner = (Spinner) mFilterSpinner;
+				List<Object> filters = new LinkedList<Object>();
+				filters.add(getString(R.string.lbl_filter_selection));
+				filters.addAll(result);
+				FiltersAdapter adapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
+						android.R.id.text1, filters);
+				adapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
+				spinner.setAdapter( adapter );
+				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+
+					}
+				});
+			}
+		}.executeParallel();
+	}
+
 }
