@@ -48,7 +48,6 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
-import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
@@ -309,15 +308,9 @@ public final class App extends Application {
 			protected void onPostExecute(List<ScheduleItem> items) {
 				super.onPostExecute(items);
 				if(items != null && items.size() > 0) {
-					final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "setWifiEnabled");
-					wl.acquire();
-
 					for (ScheduleItem item : items) {
 						doScheduleTask(item);
 					}
-
-					wl.release();
 				}
 			}
 		}.executeParallel(time);
@@ -334,7 +327,7 @@ public final class App extends Application {
 	 * @param doNext
 	 * 		{@code true} if called by alarm of Thirsty mode. {@code false} if it is from neutral mode.
 	 */
-	public void doSchedules(final long id, final boolean doNext) {
+	public synchronized  void doSchedules(final long id, final boolean doNext) {
 		new ParallelTask<Void, List<ScheduleItem>, List<ScheduleItem>>(false) {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
@@ -343,26 +336,16 @@ public final class App extends Application {
 						Utils.dateTimeDay2String(now.getDayOfWeek()));
 
 			}
-
 			@Override
 			protected void onPostExecute(List<ScheduleItem> items) {
 				if(items != null && items.size() > 0) {
-					final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "setWifiEnabled");
-					wl.acquire();
-
 					for (ScheduleItem item : items) {
 						doScheduleTask(item);
 					}
-
-
 					if (doNext) {
-						//For "Neutral", this call must be ignored.
-						//Only for "Thirsty".
+						//For "Neutral", this call must be ignored. Only for "Thirsty".
 						update(id);
 					}
-
-					wl.release();
 				}
 			}
 		}.executeParallel();
