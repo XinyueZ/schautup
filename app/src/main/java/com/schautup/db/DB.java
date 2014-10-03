@@ -474,6 +474,52 @@ public final class DB {
 
 
 	/**
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by  hour , minute , type and recurrence.
+	 *
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 * @param type
+	 * 		{@link com.schautup.data.ScheduleType}.
+	 * @param eventRecurrence {@link EventRecurrence}.
+	 *
+	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour , minute , type and recurrence.
+	 */
+	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, ScheduleType type, EventRecurrence eventRecurrence) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
+						"? AND " + ScheduleTbl.RECURRENCE + " = ? AND " +  ScheduleTbl.TYPE + " = ?",
+				new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null, null, null, null);
+		ScheduleItem item = null;
+		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		try {
+			EventRecurrence er;
+			while (c.moveToNext()) {
+				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+				item.setEventRecurrence(er);
+				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
+
+
+
+	/**
 	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by asking id.
 	 *
 	 * @param id

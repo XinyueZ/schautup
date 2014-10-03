@@ -55,11 +55,11 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 	 * <p/>
 	 * It's better to pass a  {@link java.util.LinkedList}.
 	 *
-	 * @param _itemList
+	 * @param itemList
 	 * 		The list of {@link com.schautup.data.ScheduleItem}.
 	 */
-	public void setItemList(List<ScheduleItem> _itemList) {
-		mItemList = _itemList;
+	public void setItemList(List<ScheduleItem> itemList) {
+		mItemList = itemList;
 	}
 
 

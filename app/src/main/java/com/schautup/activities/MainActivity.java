@@ -1,5 +1,6 @@
 package com.schautup.activities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -62,6 +64,7 @@ import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
+import com.schautup.data.ScheduleType;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.FiltersDefineDialogFragment;
@@ -87,7 +90,7 @@ import de.greenrobot.event.EventBus;
  * @author Xinyue Zhao
  */
 public final class MainActivity extends BaseActivity implements OnTimeSetListener, AnimationListener, Callback,
-		OnRecurrenceSetListener {
+		OnRecurrenceSetListener, OnItemSelectedListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -789,27 +792,74 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			@Override
 			protected void onPostExecute(List<Filter> result) {
 				super.onPostExecute(result);
-				Spinner spinner = (Spinner) mFilterSpinner;
 				List<Object> filters = new LinkedList<Object>();
 				filters.add(getString(R.string.lbl_filter_selection));
 				filters.addAll(result);
 				FiltersAdapter adapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
 						android.R.id.text1, filters);
 				adapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
-				spinner.setAdapter( adapter );
-				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-					@Override
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-					}
-
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
-
-					}
-				});
+				mFilterSpinner.setAdapter( adapter );
+				mFilterSpinner.setOnItemSelectedListener(MainActivity.this);
 			}
 		}.executeParallel();
 	}
 
+	private boolean mInitSpinner;
+
+	@Override
+	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {
+		if(mInitSpinner) {
+			if( location > 0 ) {
+				new ParallelTask<Void, List<ScheduleItem>, List<ScheduleItem>>(false) {
+					@Override
+					protected List<ScheduleItem> doInBackground(Void... params) {
+						List<Filter> filters = DB.getInstance(getApplication()).getAllFilters();
+						Filter filter = filters.get(location - 1);
+						int hour = filter.getHour();
+						int minute = filter.getMinute();
+						EventRecurrence er = filter.getEventRecurrence();
+						SparseArrayCompat<ScheduleType> types = filter.getSelectedTypes();
+						List<ScheduleItem> items = new ArrayList<ScheduleItem>();
+						List<ScheduleItem> schedules = null;
+						int key = 0;
+						for (int i = 0; i < types.size(); i++) {
+							key = types.keyAt(i);
+							schedules = DB.getInstance(getApplication()).getSchedules(hour, minute, types.get(key), er);
+							if (schedules != null && schedules.size() > 0) {
+								items.addAll(schedules);
+							}
+						}
+						return items;
+					}
+
+					@Override
+					protected void onPostExecute(List<ScheduleItem> result) {
+						super.onPostExecute(result);
+						EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
+
+					}
+				}.executeParallel();
+			} else {
+				new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+					@Override
+					protected List<ScheduleItem> doInBackground(Void... params) {
+						return Utils.getAllSchedules(getApplication());
+					}
+
+					@Override
+					protected void onPostExecute(List<ScheduleItem> result) {
+						super.onPostExecute(result);
+						EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
+					}
+				}.executeParallel();
+			}
+		} else {
+			mInitSpinner = true;
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+
+	}
 }

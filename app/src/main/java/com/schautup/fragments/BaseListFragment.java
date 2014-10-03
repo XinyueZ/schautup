@@ -87,6 +87,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			//Show data.
 			mAdp.notifyDataSetChanged();
 		} else {
+			mAdp.setItemList(null);
+			mAdp.notifyDataSetChanged();
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
 
@@ -209,9 +211,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 
 			@Override
-			protected void onPostExecute(List<ScheduleItem> _result) {
-				super.onPostExecute(_result);
-				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(_result));
+			protected void onPostExecute(List<ScheduleItem> result) {
+				super.onPostExecute(result);
+				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
 			}
 		}.executeParallel();
 	}
