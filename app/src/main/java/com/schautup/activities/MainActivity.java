@@ -147,7 +147,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * All defined {@link com.schautup.data.Filter}s to select.
 	 */
 	private Spinner mFilterSpinner;
-
+	/**
+	 * Navigation drawer.
+	 */
+	private DrawerLayout mDrawerLayout;
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -627,8 +630,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.app_name,
+			mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
 					R.string.app_name) {
 				@Override
 				public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -638,7 +641,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					}
 				}
 			};
-			drawerLayout.setDrawerListener(mDrawerToggle);
+			mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight();
 
@@ -646,7 +649,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			drawerItemSettings.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					drawerLayout.closeDrawers();
+					mDrawerLayout.closeDrawers();
 					SettingsActivity.showInstance(MainActivity.this);
 				}
 			});
@@ -657,7 +660,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						drawerLayout.closeDrawers();
+						mDrawerLayout.closeDrawers();
 						HomePageWebViewActivity.showInstance(MainActivity.this);
 					}
 				});
@@ -665,7 +668,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						drawerLayout.closeDrawers();
+						mDrawerLayout.closeDrawers();
 						LogHistoryActivity.showInstance(MainActivity.this);
 					}
 				});
@@ -746,6 +749,14 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
 			}
 		});
+		AnimImageButton doFilterV = (AnimImageButton) filterV.findViewById(R.id.filter_do_ibtn);
+		doFilterV.setOnClickListener(new OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				mDrawerLayout.closeDrawers();
+				EventBus.getDefault().post(new FilterEvent(filter));
+			}
+		});
 		mFiltersList.put(filter.getId(), filter);
 		mFiltersVg.addView(filterV);
 	}
@@ -802,6 +813,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		}.executeParallel();
 	}
 
+	/**
+	 * To avoid onItemSelected when {@link android.widget.Spinner} initialized.
+	 */
 	private boolean mInitSpinner;
 
 	@Override
@@ -833,4 +847,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public void onNothingSelected(AdapterView<?> arg0) {
 
 	}
+
+
 }
