@@ -1,6 +1,5 @@
 package com.schautup.activities;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.LongSparseArray;
-import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -47,6 +45,7 @@ import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
 import com.schautup.bus.DeletedConfirmEvent;
+import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
@@ -64,7 +63,6 @@ import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
-import com.schautup.data.ScheduleType;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.FiltersDefineDialogFragment;
@@ -810,35 +808,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {
 		if(mInitSpinner) {
 			if( location > 0 ) {
-				new ParallelTask<Void, List<ScheduleItem>, List<ScheduleItem>>(false) {
-					@Override
-					protected List<ScheduleItem> doInBackground(Void... params) {
-						List<Filter> filters = DB.getInstance(getApplication()).getAllFilters();
-						Filter filter = filters.get(location - 1);
-						int hour = filter.getHour();
-						int minute = filter.getMinute();
-						EventRecurrence er = filter.getEventRecurrence();
-						SparseArrayCompat<ScheduleType> types = filter.getSelectedTypes();
-						List<ScheduleItem> items = new ArrayList<ScheduleItem>();
-						List<ScheduleItem> schedules = null;
-						int key = 0;
-						for (int i = 0; i < types.size(); i++) {
-							key = types.keyAt(i);
-							schedules = DB.getInstance(getApplication()).getSchedules(hour, minute, types.get(key), er);
-							if (schedules != null && schedules.size() > 0) {
-								items.addAll(schedules);
-							}
-						}
-						return items;
-					}
-
-					@Override
-					protected void onPostExecute(List<ScheduleItem> result) {
-						super.onPostExecute(result);
-						EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
-
-					}
-				}.executeParallel();
+				Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
+				EventBus.getDefault().postSticky(new FilterEvent(filter));
 			} else {
 				new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
 					@Override

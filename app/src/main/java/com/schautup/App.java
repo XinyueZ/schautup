@@ -735,7 +735,7 @@ public final class App extends Application {
 	/**
 	 * Cache of all intents that are under way to do the tasks scheduled by {@link android.app.AlarmManager}.
 	 */
-	private LongSparseArray<PendingIntent> mPendings = new LongSparseArray<PendingIntent>();
+	private volatile LongSparseArray<PendingIntent> mPendings = new LongSparseArray<PendingIntent>();
 
 
 	/**

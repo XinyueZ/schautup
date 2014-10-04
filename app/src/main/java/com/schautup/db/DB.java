@@ -1,5 +1,6 @@
 package com.schautup.db;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -446,8 +447,8 @@ public final class DB {
 			open();
 		}
 		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
-						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%' AND " + ScheduleTbl.ID + " = ?",
-				new String[] { hour + "", minute + "", id + "" }, null, null, null, null);
+						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%' AND " + ScheduleTbl.ID +
+						" = ?", new String[] { hour + "", minute + "", id + "" }, null, null, null, null);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
@@ -480,43 +481,54 @@ public final class DB {
 	 * 		Hour.
 	 * @param minute
 	 * 		Minute.
-	 * @param type
-	 * 		{@link com.schautup.data.ScheduleType}.
-	 * @param eventRecurrence {@link EventRecurrence}.
+	 * @param types
+	 * 		A list of selected {@link com.schautup.data.ScheduleType}.
+	 * @param eventRecurrence
+	 * 		{@link EventRecurrence}.
 	 *
 	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour , minute , type and recurrence.
 	 */
-	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, ScheduleType type, EventRecurrence eventRecurrence) {
+	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, SparseArrayCompat<ScheduleType> types,
+			EventRecurrence eventRecurrence) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
-						"? AND " + ScheduleTbl.RECURRENCE + " = ? AND " +  ScheduleTbl.TYPE + " = ?",
-				new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null, null, null, null);
-		ScheduleItem item = null;
-		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
+		List<ScheduleItem> items = new ArrayList<ScheduleItem>();
+		Cursor c = null;
+		ScheduleType type;
+		ScheduleItem item;
+		List<ScheduleItem> list;
 		try {
-			EventRecurrence er;
-			while (c.moveToNext()) {
-				item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
-						c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
-						c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(ScheduleTbl.EDIT_TIME)));
-				er = new EventRecurrence();
-				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
-				item.setEventRecurrence(er);
-				item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
-				item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
-				list.add(item);
+			int key;
+			for (int i = 0; i < types.size(); i++) {
+				key = types.keyAt(i);
+				type = types.get(key);
+				c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
+								"? AND " + ScheduleTbl.RECURRENCE + " = ? AND " + ScheduleTbl.TYPE + " = ?", new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null,
+						null, null, null);
+				list = new LinkedList<ScheduleItem>();
+				EventRecurrence er;
+				while (c.moveToNext()) {
+					item = new ScheduleItem(c.getLong(c.getColumnIndex(ScheduleTbl.ID)), ScheduleType.fromCode(c.getInt(
+							c.getColumnIndex(ScheduleTbl.TYPE))), c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(c.getColumnIndex(ScheduleTbl.MINUTE)), c.getLong(c.getColumnIndex(
+							ScheduleTbl.EDIT_TIME)));
+					er = new EventRecurrence();
+					er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
+					item.setEventRecurrence(er);
+					item.setReserveLeft(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_LEFT)));
+					item.setReserveRight(c.getString(c.getColumnIndex(ScheduleTbl.RESERVE_RIGHT)));
+					list.add(item);
+				}
+				items.addAll(list);
 			}
 		} finally {
 			if (c != null) {
 				c.close();
 			}
 			close();
-			return list;
+			return items;
 		}
 	}
-
 
 
 	/**
@@ -601,8 +613,7 @@ public final class DB {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, null, null, null, null,
-				FilterTbl.EDIT_TIME + " DESC");
+		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, null, null, null, null, FilterTbl.EDIT_TIME + " DESC");
 		Filter item = null;
 		List<Filter> list = new LinkedList<Filter>();
 		try {
@@ -611,19 +622,15 @@ public final class DB {
 			while (c.moveToNext()) {
 				er = new EventRecurrence();
 				er.parse(c.getString(c.getColumnIndex(FilterTbl.RECURRENCE)));
-				item = new Filter(
-						c.getLong(c.getColumnIndex(FilterTbl.ID)),
-						c.getString(c.getColumnIndex(FilterTbl.NAME)),
-						c.getInt(c.getColumnIndex(FilterTbl.HOUR)),
-						c.getInt(c.getColumnIndex(FilterTbl.MINUTE)),
-						er,
-						c.getLong(c.getColumnIndex(FilterTbl.EDIT_TIME)));
+				item = new Filter(c.getLong(c.getColumnIndex(FilterTbl.ID)), c.getString(c.getColumnIndex(
+						FilterTbl.NAME)), c.getInt(c.getColumnIndex(FilterTbl.HOUR)), c.getInt(c.getColumnIndex(
+						FilterTbl.MINUTE)), er, c.getLong(c.getColumnIndex(FilterTbl.EDIT_TIME)));
 				types = c.getString(c.getColumnIndex(FilterTbl.TYPES));
 				String[] typesArr = types.split(DIV);
 				ScheduleType sc;
-				if(typesArr != null && typesArr.length > 0) {
-					for(String t : typesArr) {
-						if( !TextUtils.isEmpty(t) && !TextUtils.equals(DIV, t)) {
+				if (typesArr != null && typesArr.length > 0) {
+					for (String t : typesArr) {
+						if (!TextUtils.isEmpty(t) && !TextUtils.equals(DIV, t)) {
 							sc = ScheduleType.fromCode(Integer.parseInt(t));
 							item.getSelectedTypes().put(sc.getCode(), sc);
 						}
@@ -657,7 +664,7 @@ public final class DB {
 			long rowId = -1;
 			//Do "insert" command.
 			ContentValues v = new ContentValues();
-			SparseArrayCompat<ScheduleType>  types = item.getSelectedTypes();
+			SparseArrayCompat<ScheduleType> types = item.getSelectedTypes();
 			StringBuilder stringBuilder = convertTypesForFilter(types);
 			v.put(FilterTbl.NAME, item.getName());
 			v.put(FilterTbl.HOUR, item.getHour());
@@ -692,7 +699,7 @@ public final class DB {
 			long rowId = -1;
 			//Do "update" command.
 			ContentValues v = new ContentValues();
-			SparseArrayCompat<ScheduleType>  types = item.getSelectedTypes();
+			SparseArrayCompat<ScheduleType> types = item.getSelectedTypes();
 			StringBuilder stringBuilder = convertTypesForFilter(types);
 			v.put(FilterTbl.NAME, item.getName());
 			v.put(FilterTbl.HOUR, item.getHour());
@@ -731,8 +738,7 @@ public final class DB {
 			rowId = mDB.delete(FilterTbl.TABLE_NAME, whereClause, whereArgs);
 			success = rowId > 0;
 			if (success) {
-				Cursor c = mDB.query(FilterTbl.TABLE_NAME, new String[] { FilterTbl.ID }, null, null, null,
-						null, null);
+				Cursor c = mDB.query(FilterTbl.TABLE_NAME, new String[] { FilterTbl.ID }, null, null, null, null, null);
 				rowsRemain = c.getCount();
 			} else {
 				rowsRemain = -1;
@@ -744,19 +750,23 @@ public final class DB {
 	}
 
 	/**
-	 * Helper method to convert list of selected types of a {@link com.schautup.data.Filter} to a string with sep {@link #DIV}.
-	 * @param types A list of all {@link com.schautup.data.Filter}s.
+	 * Helper method to convert list of selected types of a {@link com.schautup.data.Filter} to a string with sep {@link
+	 * #DIV}.
+	 *
+	 * @param types
+	 * 		A list of all {@link com.schautup.data.Filter}s.
+	 *
 	 * @return Selected {@link com.schautup.data.Filter}s in string with sep {@link #DIV}.
 	 */
 	private static StringBuilder convertTypesForFilter(SparseArrayCompat<ScheduleType> types) {
-		StringBuilder stringBuilder  = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
 		int key;
 		ScheduleType type;
-		for(int i = 0; i < types.size(); i++) {
+		for (int i = 0; i < types.size(); i++) {
 			key = types.keyAt(i);
 			type = types.get(key);
 			stringBuilder.append(type.getCode());
-			if(i != types.size() - 1) {//Last one?
+			if (i != types.size() - 1) {//Last one?
 				stringBuilder.append(DIV);
 			}
 		}

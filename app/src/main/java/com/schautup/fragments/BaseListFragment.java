@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 
+import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
@@ -20,11 +21,14 @@ import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
 import com.schautup.bus.DeletedConfirmEvent;
+import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.UpdatedItemEvent;
+import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
+import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
@@ -79,20 +83,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link  com.schautup.bus.AllScheduleLoadedEvent}.
 	 */
 	public void onEvent(AllScheduleLoadedEvent e) {
-		// Show all schedules on the ListView or GridView.
-		if (e.getScheduleItemList() != null && e.getScheduleItemList().size() > 0) {
-			//Never see the button "no data" after at least one item was added.
-			mNoDataBtn.setVisibility(View.GONE);
-			mAdp.setItemList(e.getScheduleItemList());
-			//Show data.
-			mAdp.notifyDataSetChanged();
-		} else {
-			mAdp.setItemList(null);
-			mAdp.notifyDataSetChanged();
-			mNoDataBtn.setVisibility(View.VISIBLE);
-		}
+		List<ScheduleItem> data = e.getScheduleItemList();
+		showAllSelectedData(data);
 
-		//		Utils.showShortToast(getActivity(), "load all.");
 	}
 
 
@@ -158,6 +151,32 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		if (mAdp == null || mAdp.getItemList() == null || mAdp.getItemList().size() == 0) {
 			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.FilterEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.FilterEvent}.
+	 */
+	public void onEvent(FilterEvent e) {
+		new ParallelTask<Filter, List<ScheduleItem>, List<ScheduleItem>>(true) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Filter... params) {
+				Filter filter = params[0];
+				int hour = filter.getHour();
+				int minute = filter.getMinute();
+				EventRecurrence er = filter.getEventRecurrence();
+				List<ScheduleItem> items =  DB.getInstance(getActivity().getApplication()).getSchedules(hour, minute, filter.getSelectedTypes(), er);
+				return items;
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> result) {
+				super.onPostExecute(result);
+				showAllSelectedData(result);
+			}
+		}.executeParallel(e.getFilter());
 	}
 
 	//------------------------------------------------
@@ -315,4 +334,25 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
 	}
+
+
+	/**
+	 * Show all selected data or filtered data.
+	 * @param data To show.
+	 */
+	private void showAllSelectedData(List<ScheduleItem> data) {
+		// Show all schedules on the ListView or GridView.
+		if (data != null && data.size() > 0) {
+			//Never see the button "no data" after at least one item was added.
+			mNoDataBtn.setVisibility(View.GONE);
+			mAdp.setItemList(data);
+			//Show data.
+			mAdp.notifyDataSetChanged();
+		} else {
+			mAdp.setItemList(null);
+			mAdp.notifyDataSetChanged();
+			mNoDataBtn.setVisibility(View.VISIBLE);
+		}
+	}
+
 }
