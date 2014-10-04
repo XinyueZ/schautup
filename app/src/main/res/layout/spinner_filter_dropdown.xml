@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:layout_width="@dimen/width_spinner_filter"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/height_spinner_filter"
     android:paddingLeft="5dp"
     android:gravity="center_vertical"
+    android:singleLine="true"
+    android:maxLines="1"
+    android:minLines="1"
+    android:inputType="textNoSuggestions"
     android:background="@color/bg_overflow"
     android:textColor="@color/text_common_white"
     android:textAppearance="?android:attr/textAppearanceMedium" />

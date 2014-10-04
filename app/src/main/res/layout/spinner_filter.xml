@@ -8,6 +8,10 @@
         android:layout_width="@dimen/width_spinner_filter"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:minLines="1"
+        android:inputType="textNoSuggestions"
         android:textColor="@color/text_common_white"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

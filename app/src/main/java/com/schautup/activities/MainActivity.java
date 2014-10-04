@@ -754,7 +754,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			@Override
 			public void onClick() {
 				mDrawerLayout.closeDrawers();
+				mFromDrawer = true;
 				EventBus.getDefault().post(new FilterEvent(filter));
+				if(mFiltersAdapter != null) {
+					for (int i = 0, sz = mFiltersAdapter.getCount(); i < sz; i++) {
+						Object spinnterItem = mFiltersAdapter.getItem(i);
+						if (spinnterItem instanceof Filter) {
+							Filter filterInSpinner = (Filter) spinnterItem;
+							if(filterInSpinner.getId() == filter.getId()){
+								mFilterSpinner.setSelection(i);
+								break;
+							}
+						}
+					}
+				}
 			}
 		});
 		mFiltersList.put(filter.getId(), filter);
@@ -804,10 +817,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				List<Object> filters = new LinkedList<Object>();
 				filters.add(getString(R.string.lbl_filter_selection));
 				filters.addAll(result);
-				FiltersAdapter adapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
+				mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
 						android.R.id.text1, filters);
-				adapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
-				mFilterSpinner.setAdapter( adapter );
+				mFiltersAdapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
+				mFilterSpinner.setAdapter( mFiltersAdapter );
 				mFilterSpinner.setOnItemSelectedListener(MainActivity.this);
 			}
 		}.executeParallel();
@@ -817,26 +830,38 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * To avoid onItemSelected when {@link android.widget.Spinner} initialized.
 	 */
 	private boolean mInitSpinner;
+	/**
+	 * When drawer(filter list) fired a filter, the {@link android.widget.Spinner} must select the correct position to indicate what was selected from drawer.
+	 */
+	private boolean mFromDrawer;
+	/**
+	 * {@link android.widget.Adapter} for {@link com.schautup.data.Filter}'s {@link android.widget.Spinner}.
+	 */
+	private FiltersAdapter mFiltersAdapter;
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {
 		if(mInitSpinner) {
-			if( location > 0 ) {
-				Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
-				EventBus.getDefault().postSticky(new FilterEvent(filter));
-			} else {
-				new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
-					@Override
-					protected List<ScheduleItem> doInBackground(Void... params) {
-						return Utils.getAllSchedules(getApplication());
-					}
+			if(!mFromDrawer) {
+				if (location > 0) {
+					Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
+					EventBus.getDefault().postSticky(new FilterEvent(filter));
+				} else {
+					new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+						@Override
+						protected List<ScheduleItem> doInBackground(Void... params) {
+							return Utils.getAllSchedules(getApplication());
+						}
 
-					@Override
-					protected void onPostExecute(List<ScheduleItem> result) {
-						super.onPostExecute(result);
-						EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
-					}
-				}.executeParallel();
+						@Override
+						protected void onPostExecute(List<ScheduleItem> result) {
+							super.onPostExecute(result);
+							EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
+						}
+					}.executeParallel();
+				}
+			} else {
+				mFromDrawer = false;
 			}
 		} else {
 			mInitSpinner = true;
