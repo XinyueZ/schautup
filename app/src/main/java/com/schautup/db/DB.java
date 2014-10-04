@@ -429,26 +429,21 @@ public final class DB {
 	}
 
 	/**
-	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by id, hour , minute and day in week.
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by id,  and day in week.
 	 *
 	 * @param id
-	 * 		Location id of the item in DB.
-	 * @param hour
-	 * 		Hour.
-	 * @param minute
-	 * 		Minute.
+	 * 		Location id of the item in DB. 
 	 * @param byDay
 	 * 		Recurrence day in week.
 	 *
 	 * @return {@link com.schautup.data.ScheduleItem}s from DB by id, hour , minute and day in week.
 	 */
-	public synchronized List<ScheduleItem> getSchedules(long id, int hour, int minute, String byDay) {
+	public synchronized List<ScheduleItem> getSchedules(long id, String byDay) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
-						"? AND " + ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%' AND " + ScheduleTbl.ID +
-						" = ?", new String[] { hour + "", minute + "", id + "" }, null, null, null, null);
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null,  ScheduleTbl.RECURRENCE + " LIKE '%BYDAY=%" + byDay + "%' AND " + ScheduleTbl.ID +
+						" = ?", new String[] {  id + "" }, null, null, null, null);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {

@@ -48,7 +48,6 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
-import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
@@ -332,7 +331,7 @@ public final class App extends Application {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
 				DateTime now = DateTime.now();
-				return DB.getInstance(App.this).getSchedules(id, now.getHourOfDay(), now.getMinuteOfHour(),
+				return DB.getInstance(App.this).getSchedules(id,
 						Utils.dateTimeDay2String(now.getDayOfWeek()));
 
 			}
@@ -791,19 +790,11 @@ public final class App extends Application {
 	 */
 	private void add(ScheduleItem item) {
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// Time since boot(as the time we see the view).
-		long firstTime = SystemClock.elapsedRealtime();
 		// Current time point.
 		long currentTime = System.currentTimeMillis();
-		// The time we wanna get alarm.
-		int hour = item.getHour();
-		int minute = item.getMinute();
 		Calendar calendar = Calendar.getInstance();
-		// Important! Otherwise there's deviation.
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		//		calendar.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
-		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE, minute);
+		calendar.set(Calendar.HOUR_OF_DAY, item.getHour());
+		calendar.set(Calendar.MINUTE,  item.getMinute());
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		long setTime = calendar.getTimeInMillis();
@@ -811,13 +802,9 @@ public final class App extends Application {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 			setTime = calendar.getTimeInMillis();
 		}
-		// Do alarm at the time point we wanna.
-		// A difference between setTime and currentTime plus total time since boot equal to the time
-		// point we wanna.
-		long timeToAlarm = firstTime + (setTime - currentTime);
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
-		PendingIntent pendingIntent = doCreateAlarmPending(mgr, timeToAlarm, intent);
+		PendingIntent pendingIntent = doCreateAlarmPending(mgr, setTime, intent);
 		mPendings.put(item.getId(), pendingIntent);
 	}
 
@@ -880,9 +867,9 @@ public final class App extends Application {
 			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			LL.d("Pending reqCode(Thirsty): " + reqCode);
 			if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-				mgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
+				mgr.setExact(AlarmManager.RTC_WAKEUP, timeToAlarm, pi);
 			} else {
-				mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, pi);
+				mgr.set(AlarmManager.RTC_WAKEUP, timeToAlarm, pi);
 			}
 			return pi;
 
@@ -896,7 +883,7 @@ public final class App extends Application {
 			LL.d("Pending reqCode(Neutral): " + reqCode);
 			//http://stackoverflow.com/questions/16308783/timeunit-seconds-tomillis
 			//http://stackoverflow.com/questions/6980376/convert-from-days-to-milliseconds
-			mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToAlarm, TimeUnit.DAYS.toMillis(1), pi);
+			mgr.setRepeating(AlarmManager.RTC_WAKEUP, timeToAlarm, TimeUnit.DAYS.toMillis(1), pi);
 			return pi;
 
 		}
