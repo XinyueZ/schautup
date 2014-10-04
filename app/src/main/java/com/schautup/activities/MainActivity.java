@@ -817,10 +817,16 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				List<Object> filters = new LinkedList<Object>();
 				filters.add(getString(R.string.lbl_filter_selection));
 				filters.addAll(result);
-				mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
-						android.R.id.text1, filters);
+				if(mFiltersAdapter != null ) {
+					mFiltersAdapter.clear();
+					for(Object o : filters) {
+						mFiltersAdapter.add(o);
+					}
+				} else {
+					mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter, android.R.id.text1, filters);
+					mFilterSpinner.setAdapter( mFiltersAdapter );
+				}
 				mFiltersAdapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
-				mFilterSpinner.setAdapter( mFiltersAdapter );
 				mFilterSpinner.setOnItemSelectedListener(MainActivity.this);
 			}
 		}.executeParallel();
