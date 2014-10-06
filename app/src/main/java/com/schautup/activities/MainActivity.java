@@ -2,7 +2,6 @@ package com.schautup.activities;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
@@ -575,6 +573,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 		MenuItem menuFilter  = menu.findItem( R.id.action_filter);
 		mFilterSpinner = (Spinner)MenuItemCompat.getActionView(menuFilter);
+		mNewSpinner = true;
 		makeFilterSpinner();
 		return true;
 	}
@@ -639,8 +638,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
 				ScheduleListFragment.newInstance(this), ScheduleListFragment.class.getName()).commit();
 		mListViewCurrent = true;
-
-		ActivityCompat.invalidateOptionsMenu(this);
+		supportInvalidateOptionsMenu();
 	}
 
 	/**
@@ -651,8 +649,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
 				ScheduleGridFragment.newInstance(this), ScheduleGridFragment.class.getName()).commit();
 		mListViewCurrent = false;
-
-		ActivityCompat.invalidateOptionsMenu(this);
+		supportInvalidateOptionsMenu();
 	}
 
 	@Override
@@ -896,17 +893,21 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			@Override
 			protected void onPostExecute(List<Filter> result) {
 				super.onPostExecute(result);
-				List<Object> filters = new LinkedList<Object>();
-				filters.add(getString(R.string.lbl_filter_selection));
-				filters.addAll(result);
-				if(mFiltersAdapter != null ) {
+				String first = getString(R.string.lbl_filter_selection);
+				if(mFiltersAdapter != null && !mNewSpinner ) {
 					mFiltersAdapter.clear();
-					for(Object o : filters) {
+					mFiltersAdapter.add(first);
+					for(Object o : result) {
 						mFiltersAdapter.add(o);
 					}
 				} else {
-					mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter, android.R.id.text1, filters);
+					mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter, android.R.id.text1 );
+					mFiltersAdapter.add(first);
+					for(Object o : result) {
+						mFiltersAdapter.add(o);
+					}
 					mFilterSpinner.setAdapter( mFiltersAdapter );
+					mNewSpinner = false;
 				}
 				mFiltersAdapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
 				mFilterSpinner.setOnItemSelectedListener(MainActivity.this);
@@ -926,6 +927,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * {@link android.widget.Adapter} for {@link com.schautup.data.Filter}'s {@link android.widget.Spinner}.
 	 */
 	private FiltersAdapter mFiltersAdapter;
+	/**
+	 * We use this flag to distinguish,unnecessary creation of {@link android.widget.ArrayAdapter} for {@link android.widget.Spinner} of {@link com.schautup.data.Filter}s.
+	 */
+	private boolean mNewSpinner;
+
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {

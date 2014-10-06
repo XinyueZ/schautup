@@ -1,7 +1,5 @@
 package com.schautup.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
@@ -20,10 +18,8 @@ public final class FiltersAdapter  extends ArrayAdapter<Object>{
 	 * 		The resource ID for a layout file containing a layout to use when instantiating views.
 	 * @param textViewResourceId
 	 * 		The id of the TextView within the layout resource to be populated
-	 * @param objects
-	 * 		The objects to represent in the ListView.
 	 */
-	public FiltersAdapter(Context context, int resource, int textViewResourceId, List<Object> objects) {
-		super(context, resource, textViewResourceId, objects);
+	public FiltersAdapter(Context context, int resource, int textViewResourceId ) {
+		super(context, resource, textViewResourceId );
 	}
 }
