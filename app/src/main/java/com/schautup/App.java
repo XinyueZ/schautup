@@ -133,7 +133,7 @@ public final class App extends Application {
 			long id;
 			for (int i = 0; i < items.size(); i++) {
 				id = items.keyAt(i);
-				remove(this, id);
+				remove( id);
 			}
 		}
 	}
@@ -147,7 +147,7 @@ public final class App extends Application {
 	public void onEvent(UpdatedItemEvent e) {
 		ScheduleItem item = e.getItem();
 		if (sPendingIntents.get(item.getId()) != null) {//Removed the old one after update.
-			remove(this, item.getId());
+			remove( item.getId());
 		}
 		add(item);
 	}
@@ -341,10 +341,11 @@ public final class App extends Application {
 					for (ScheduleItem item : items) {
 						doScheduleTask(item);
 					}
-					if (doNext) {
-						//For "Neutral", this call must be ignored. Only for "Thirsty".
-						update(id);
-					}
+				}
+
+				if (doNext) {
+					//For "Neutral", this call must be ignored. Only for "Thirsty".
+					update(id);
 				}
 			}
 		}.executeParallel();
@@ -744,22 +745,21 @@ public final class App extends Application {
 		long id;
 		for (int i = 0; i < sPendingIntents.size(); i++) {
 			id = sPendingIntents.keyAt(i);
-			remove(this, id);
+			remove(  id);
 		}
 	}
 
 	/**
 	 * To remove a task from pending of {@link android.app.AlarmManager}.
 	 *
-	 * @param cxt {@link android.content.Context}.
 	 * @param id
 	 * 		The id pending in the list of pending.
 	 *
 	 * @return {@code true} if find the pending with {@code id} and has been removed. {@code false} if the pending with
 	 * {@code id} can't be found.
 	 */
-	public static synchronized boolean remove(Context cxt, long id) {
-		AlarmManager mgr = (AlarmManager) cxt.getSystemService(Context.ALARM_SERVICE);
+	public  synchronized boolean remove(  long id) {
+		AlarmManager mgr = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = sPendingIntents.get(id);
 		if (pi != null) {
 			sPendingIntents.remove(id);
@@ -794,18 +794,19 @@ public final class App extends Application {
 		// Current time point.
 		long currentTime = System.currentTimeMillis();
 		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(currentTime);
 		calendar.set(Calendar.HOUR_OF_DAY, item.getHour());
 		calendar.set(Calendar.MINUTE,  item.getMinute());
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		long setTime = calendar.getTimeInMillis();
-		if (currentTime > setTime) {
+		if (currentTime >= setTime) {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 			setTime = calendar.getTimeInMillis();
 		}
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
-		PendingIntent pendingIntent = doCreateAlarmPending(mgr, setTime, intent);
+		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent);
 		sPendingIntents.put(item.getId(), pendingIntent);
 	}
 
@@ -835,7 +836,7 @@ public final class App extends Application {
 				if (item != null) {
 					// Removed old pending what has been finished and re-add.
 					// It should have been removed when the helper-service work off the schedule.
-					remove(App.this, item.getId());
+					remove(  item.getId());
 					// Add new to pending list.
 					add(item);
 				}
@@ -854,7 +855,7 @@ public final class App extends Application {
 	 * @param intent
 	 * 		The pending that will be fired when task will be done by {@link android.app.AlarmManager} future.
 	 */
-	protected PendingIntent doCreateAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
+	private PendingIntent createAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
 		String mod = Prefs.getInstance(this).getScheduleMode();
 		int mode = Integer.valueOf(mod.toString());
 		int reqCode;
