@@ -18,4 +18,5 @@
     <dimen name="size_schedule_item_fired_time_text">13sp</dimen>
     <dimen name="width_spinner_filter">140dp</dimen>
     <dimen name="height_spinner_filter">50dp</dimen>
+    <dimen name="padding_item_external_app">13dp</dimen>
 </resources>

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Aufgaben Helfer</string>
+
+    <!-- External Apps -->
+    <string name="extapp_title">Weitere Apps:</string>
+    <string name="extapp_download">gratis</string>
+    <string name="extapp_buy">Kuafen</string>
+    <string name="extapp_open">öffnen</string>
 </resources>

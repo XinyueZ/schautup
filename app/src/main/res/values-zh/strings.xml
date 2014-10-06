@@ -137,4 +137,10 @@
     <string name="type_mobile_data_nb">移动网络</string>
     <string name="type_call_abort_nb">拒绝来电</string>
     <string name="type_app_start_nb">启动应用</string>
+
+    <!-- External Apps -->
+    <string name="extapp_title">其他Apps:</string>
+    <string name="extapp_download">下载</string>
+    <string name="extapp_buy">购买</string>
+    <string name="extapp_open">启动</string>
 </resources>
