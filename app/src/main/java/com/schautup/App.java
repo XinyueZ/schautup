@@ -146,9 +146,7 @@ public final class App extends Application {
 	 */
 	public void onEvent(UpdatedItemEvent e) {
 		ScheduleItem item = e.getItem();
-		if (sPendingIntents.get(item.getId()) != null) {//Removed the old one after update.
-			remove( item.getId());
-		}
+		remove( item.getId());
 		add(item);
 	}
 
@@ -885,7 +883,7 @@ public final class App extends Application {
 		case 1:
 			intent.putExtra(EXTRAS_DO_NEXT, true);
 			reqCode = (int) System.currentTimeMillis();
-			pi = PendingIntent.getBroadcast(this, reqCode, intent, 0);
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 			LL.d("Pending reqCode(Thirsty): " + reqCode);
 			if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 				mgr.setExact(AlarmManager.RTC_WAKEUP, timeToAlarm, pi);
