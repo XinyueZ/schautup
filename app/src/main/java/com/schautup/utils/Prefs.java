@@ -16,7 +16,14 @@ public final class Prefs extends BasicPrefs {
 	 * Impl singleton pattern.
 	 */
 	private static Prefs sInstance;
-
+	/**
+	 * Sort direction ascending.
+	 */
+	public static final String ASCENDING = "ASC";
+	/**
+	 * Sort direction descending.
+	 */
+	public static final String DESCENDING = "DESC";
 	//----------------------------------------------------------
 	// Description: App's attributes
 	//----------------------------------------------------------
@@ -66,6 +73,10 @@ public final class Prefs extends BasicPrefs {
 	 * Storage. Whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
 	 */
 	public static final String KEY_SORTED_BY_EDIT = "key_sorted_by_edit";
+	/**
+	 * Storage. Sort direction: descending or ascending.
+	 */
+	public static final String KEY_SORTED_DIRECTION = "key_sorted_direction";
 	/**
 	 * Storage. Total and max for subitems on drawer, labels, filters define.
 	 */
@@ -187,15 +198,6 @@ public final class Prefs extends BasicPrefs {
 	}
 
 
-	/**
-	 * Set current schedule mode.
-	 *
-	 * @param modeValue
-	 * 		The mode value.
-	 */
-	public void setScheduleMode(String modeValue) {
-		setString(KEY_SCHEDULE_MODE, modeValue);
-	}
 
 	/**
 	 * Get current schedule mode, default is "1" the "thirsty" mode.
@@ -226,24 +228,7 @@ public final class Prefs extends BasicPrefs {
 		setBoolean(KEY_PAUSE_RESUME, pause);
 	}
 
-	/**
-	 * {@coee true}. Receiver for boot is available.
-	 *
-	 * @return {@code true}. Receiver for boot is available.
-	 */
-	public boolean isRunBoot() {
-		return getBoolean(KEY_RUN_BOOT, true);
-	}
 
-	/**
-	 * To allow receiver for boot to be available.
-	 *
-	 * @param runBoot
-	 * 		{@code true}. Receiver for boot is available.
-	 */
-	public void setRunBoot(Boolean runBoot) {
-
-	}
 
 	/**
 	 * Get url to the web-site of the app.
@@ -261,12 +246,6 @@ public final class Prefs extends BasicPrefs {
 		return getString(KEY_SORTED_BY_EDIT, "0");
 	}
 
-	/**
-	 * Set whether the list sort type is by last edit or not. {@code true} if sorted by last edit.
-	 */
-	public void setSortedByLastEdit(String sortedByEdit) {
-		setString(KEY_SORTED_BY_EDIT, sortedByEdit);
-	}
 
 	/**
 	 * Get total and max for subitems on drawer, labels, filters define.
@@ -283,5 +262,13 @@ public final class Prefs extends BasicPrefs {
 	 */
 	public String getApiAppList() {
 		return getString(KEY_APP_LIST, null);
+	}
+
+	/**
+	 * Get sort direction: descending or ascending.
+	 * @return 0 or 1 ({@link #DESCENDING}, {@link #ASCENDING}).
+	 */
+	public String getSortedDirection() {
+		return getString(KEY_SORTED_DIRECTION, "0" );
 	}
 }

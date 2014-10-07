@@ -150,6 +150,16 @@
     <string name="settings_run_boot_on">Yes</string>
     <string name="settings_run_boot_off">No</string>
     <string name="settings_current_os">[Currently]</string>
+    <string-array name="settings_sort_direction_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string  name="settings_sort_direction">Sort direction</string>
+    <string-array name="settings_sort_direction">
+        <item>Descending</item>
+        <item>Ascending</item>
+    </string-array>
+
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

@@ -114,6 +114,11 @@
     <string name="settings_run_boot_off">不</string>
     <string name="settings_current_os">[目前就是]</string>
     <string name="settings_sort_types">视图如何排序？</string>
+    <string  name="settings_sort_direction">排序方向</string>
+    <string-array name="settings_sort_direction">
+        <item>降序</item>
+        <item>升序</item>
+    </string-array>
 
     <!--Drawer-->
     <string name="drawer_item_settings">@string/menu_settings</string>

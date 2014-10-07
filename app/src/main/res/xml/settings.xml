@@ -14,6 +14,11 @@
             android:title="@string/settings_sort_types"
             android:entries="@array/settings_sort_types"
             android:entryValues="@array/settings_sort_types_values" />
+        <ListPreference
+            android:key="key_sorted_direction"
+            android:title="@string/settings_sort_direction"
+            android:entries="@array/settings_sort_direction"
+            android:entryValues="@array/settings_sort_direction_values" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_run_boot">
         <CheckBoxPreference

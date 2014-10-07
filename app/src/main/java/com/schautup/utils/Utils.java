@@ -296,10 +296,12 @@ public final class Utils {
 	 * @return The {@link java.util.List} of {@link com.schautup.data.ScheduleItem}.
 	 */
 	public static List<ScheduleItem> getAllSchedules(Application app) {
-		if (Prefs.getInstance(app).isSortedByLastEdit().equals("0")) {
-			return DB.getInstance(app).getAllSchedulesOrderByEditTime();
+		int sortLastEdit = Integer.valueOf(Prefs.getInstance(app).isSortedByLastEdit());
+		int direction = Integer.valueOf(Prefs.getInstance(app).getSortedDirection());
+		if (sortLastEdit == 0) {
+			return DB.getInstance(app).getAllSchedulesOrderByEditTime(direction == 0 ? Prefs.DESCENDING : Prefs.ASCENDING);
 		} else {
-			return DB.getInstance(app).getAllSchedulesOrderByScheduleTime();
+			return DB.getInstance(app).getAllSchedulesOrderByScheduleTime(direction == 0 ? Prefs.DESCENDING : Prefs.ASCENDING);
 		}
 	}
 

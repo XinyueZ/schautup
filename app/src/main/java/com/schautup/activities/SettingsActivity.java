@@ -61,6 +61,14 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 		sortByEdit.setValue(val);
 		onPreferenceChange(sortByEdit, val);
 
+
+		//Sort direction
+		ListPreference sortDirection = (ListPreference) findPreference(Prefs.KEY_SORTED_DIRECTION);
+		sortDirection.setOnPreferenceChangeListener(this);
+		val = Prefs.getInstance(getApplication()).getSortedDirection();
+		sortDirection.setValue(val);
+		onPreferenceChange(sortDirection, val);
+
 		//Run at boot or not.
 		CheckBoxPreference runBoot = (CheckBoxPreference) findPreference(Prefs.KEY_RUN_BOOT);
 		runBoot.setOnPreferenceChangeListener(this);
@@ -113,6 +121,10 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 				break;
 			}
 			preference.setTitle(title);
+		} else if (preference.getKey().equals(Prefs.KEY_SORTED_DIRECTION)) {
+			int pos = Integer.valueOf(newValue.toString());
+			String[] aa = getResources().getStringArray(R.array.settings_sort_direction);
+			preference.setTitle(  aa[pos] );
 		} else if (preference.getKey().equals(Prefs.KEY_RUN_BOOT)) {
 			//On or Off that begins doing schedules at the boot of device.
 			ComponentName receiver = new ComponentName(getApplication(), BootReceiver.class);

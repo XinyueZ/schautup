@@ -319,13 +319,14 @@ public final class DB {
 	/**
 	 * Returns all {@link com.schautup.data.ScheduleItem}s from DB order by the edited time.
 	 *
+	 * @param direction  "DESC" or "ASC".
 	 * @return All {@link com.schautup.data.ScheduleItem}s from DB order by the edited time.
 	 */
-	public synchronized List<ScheduleItem> getAllSchedulesOrderByEditTime() {
+	public synchronized List<ScheduleItem> getAllSchedulesOrderByEditTime(String direction) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, ScheduleTbl.EDIT_TIME + " DESC");
+		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null, ScheduleTbl.EDIT_TIME + " " + direction);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
@@ -353,14 +354,15 @@ public final class DB {
 	/**
 	 * Returns all {@link com.schautup.data.ScheduleItem}s from DB order by the time.
 	 *
+	 * @param direction  "DESC" or "ASC".
 	 * @return All {@link com.schautup.data.ScheduleItem}s from DB order by the time.
 	 */
-	public synchronized List<ScheduleItem> getAllSchedulesOrderByScheduleTime() {
+	public synchronized List<ScheduleItem> getAllSchedulesOrderByScheduleTime(String direction) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
 		Cursor c = mDB.query(ScheduleTbl.TABLE_NAME, null, null, null, null, null,
-				ScheduleTbl.HOUR + " DESC," + ScheduleTbl.MINUTE + " DESC");
+				ScheduleTbl.HOUR + " " + direction + "," + ScheduleTbl.MINUTE + " " + direction);
 		ScheduleItem item = null;
 		List<ScheduleItem> list = new LinkedList<ScheduleItem>();
 		try {
