@@ -121,7 +121,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * {@link android.support.v7.view.ActionMode} on the list-view then it is not null.
 	 */
 	private ActionMode mActionMode;
-
 	/**
 	 * All labels, for add schedules by a group.
 	 */
@@ -371,7 +370,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 
-
 	/**
 	 * Handler for {@link ShowFiltersDefineDialogEvent}.
 	 *
@@ -389,12 +387,12 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.FilterEvent}.
 	 */
 	public void onEvent(FilterEvent e) {
-		if(mFiltersAdapter != null && e.isFromDrawer()) {
+		if (mFiltersAdapter != null && e.isFromDrawer()) {
 			for (int i = 0, sz = mFiltersAdapter.getCount(); i < sz; i++) {
 				Object spinnterItem = mFiltersAdapter.getItem(i);
 				if (spinnterItem instanceof Filter) {
 					Filter filterInSpinner = (Filter) spinnterItem;
-					if(filterInSpinner.getId() == e.getFilter().getId()){
+					if (filterInSpinner.getId() == e.getFilter().getId()) {
 						mFromDrawer = true;
 						mFilterSpinner.setSelection(i);
 						break;
@@ -495,12 +493,12 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
-		MenuItem menuFilter  = menu.findItem( R.id.action_filter);
-		mFilterSpinner = (Spinner)MenuItemCompat.getActionView(menuFilter);
+		MenuItem menuFilter = menu.findItem(R.id.action_filter);
+		mFilterSpinner = (Spinner) MenuItemCompat.getActionView(menuFilter);
 		mNewSpinner = true;
 		makeFilterSpinner();
 
-		mViewMenuItem =  menu.findItem(R.id.action_view);
+		mViewMenuItem = menu.findItem(R.id.action_view);
 		return true;
 	}
 
@@ -510,9 +508,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			return true;
 		}
 		switch (item.getItemId()) {
-//		case R.id.action_add:
-//			EventBus.getDefault().post(new AddNewScheduleItemEvent());
-//			break;
+		//		case R.id.action_add:
+		//			EventBus.getDefault().post(new AddNewScheduleItemEvent());
+		//			break;
 		case R.id.action_view:
 			if (!mListViewCurrent) {
 				//Current is grid, then switch to list.
@@ -531,7 +529,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 
 	@Override
@@ -635,17 +632,14 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				}
 			};
 			mDrawerLayout.setDrawerListener(mDrawerToggle);
-
 			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight();
-
-
 		}
 	}
 
 
-
 	/**
-	 * Update {@link android.widget.Spinner} on {@link android.support.v7.app.ActionBar} for {@link com.schautup.data.Filter}s.
+	 * Update {@link android.widget.Spinner} on {@link android.support.v7.app.ActionBar} for {@link
+	 * com.schautup.data.Filter}s.
 	 */
 	private void makeFilterSpinner() {
 		new ParallelTask<Void, List<Filter>, List<Filter>>(false) {
@@ -658,19 +652,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			protected void onPostExecute(List<Filter> result) {
 				super.onPostExecute(result);
 				String first = getString(R.string.lbl_filter_selection);
-				if(mFiltersAdapter != null && !mNewSpinner ) {
+				if (mFiltersAdapter != null && !mNewSpinner) {
 					mFiltersAdapter.clear();
 					mFiltersAdapter.add(first);
-					for(Object o : result) {
+					for (Object o : result) {
 						mFiltersAdapter.add(o);
 					}
 				} else {
-					mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter, android.R.id.text1 );
+					mFiltersAdapter = new FiltersAdapter(getApplicationContext(), R.layout.spinner_filter,
+							android.R.id.text1);
 					mFiltersAdapter.add(first);
-					for(Object o : result) {
+					for (Object o : result) {
 						mFiltersAdapter.add(o);
 					}
-					mFilterSpinner.setAdapter( mFiltersAdapter );
+					mFilterSpinner.setAdapter(mFiltersAdapter);
 					mNewSpinner = false;
 				}
 				mFiltersAdapter.setDropDownViewResource(R.layout.spinner_filter_dropdown);
@@ -684,7 +679,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private boolean mInitSpinner;
 	/**
-	 * When drawer(filter list) fired a filter, the {@link android.widget.Spinner} must select the correct position to indicate what was selected from drawer.
+	 * When drawer(filter list) fired a filter, the {@link android.widget.Spinner} must select the correct position to
+	 * indicate what was selected from drawer.
 	 */
 	private boolean mFromDrawer;
 	/**
@@ -692,15 +688,16 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private FiltersAdapter mFiltersAdapter;
 	/**
-	 * We use this flag to distinguish,unnecessary creation of {@link android.widget.ArrayAdapter} for {@link android.widget.Spinner} of {@link com.schautup.data.Filter}s.
+	 * We use this flag to distinguish,unnecessary creation of {@link android.widget.ArrayAdapter} for {@link
+	 * android.widget.Spinner} of {@link com.schautup.data.Filter}s.
 	 */
 	private boolean mNewSpinner;
 
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {
-		if(mInitSpinner) {
-			if(!mFromDrawer) {
+		if (mInitSpinner) {
+			if (!mFromDrawer) {
 				mDrawerLayout.closeDrawers();
 				if (location > 0) {
 					Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
@@ -749,9 +746,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Show all external applications links.
 	 */
 	private void showAppList() {
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.app_list_fl, AppListFragment.newInstance(this)).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.app_list_fl, AppListFragment.newInstance(this))
+				.commit();
 	}
-
 }

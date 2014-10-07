@@ -24,6 +24,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.chopping.net.GsonRequestTask;
 import com.chopping.net.TaskHelper;
 import com.schautup.R;
+import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.ExternalAppChangedEvent;
 import com.schautup.bus.LinkToExternalAppEvent;
 import com.schautup.data.AppList;
@@ -182,6 +183,7 @@ public final class AppListFragment extends  BaseFragment{
 				appBtn.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						EventBus.getDefault().post(new CloseDrawerEvent());
 						EventBus.getDefault().post(new LinkToExternalAppEvent(item));
 					}
 				});
