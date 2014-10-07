@@ -117,43 +117,11 @@
 
             <!--Labels define.-->
 
-            <LinearLayout
-                android:id="@+id/labels_list_ll"
-                android:orientation="vertical"
+
+            <fragment
+                android:name="com.schautup.fragments.LabelsFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/drawer_item_labels_ll"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_drawer_item"
-                    android:orientation="horizontal"
-                    android:background="@drawable/selector_bg1_btn"
-                    android:weightSum="2.5">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_label_btn"
-                        android:layout_weight="0.5" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:text="@string/drawer_item_labels"
-                        style="@style/Drawer_Item_Text"
-                        android:layout_weight="1.5" />
-
-                    <Button
-                        android:id="@+id/drawer_item_add_label"
-                        android:text="@string/btn_add"
-                        style="@style/Small_Button_Drawer" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"

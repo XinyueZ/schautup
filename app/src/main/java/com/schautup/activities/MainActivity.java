@@ -19,7 +19,6 @@ import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -73,8 +72,6 @@ import com.schautup.fragments.ScheduleListFragment;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
-import com.schautup.views.AnimImageButton;
-import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -95,11 +92,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Main menu.
 	 */
 	private static final int MENU = R.menu.main;
-
-	/**
-	 * Layout for a label item.
-	 */
-	public static final int LAYOUT_LABEL = R.layout.inc_label;
 
 	/**
 	 * Menu for the Action-Mode.
@@ -130,10 +122,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private ActionMode mActionMode;
 
-	/**
-	 * List of all stored labels.
-	 */
-	private ViewGroup mLabelsVg;
 	/**
 	 * All labels, for add schedules by a group.
 	 */
@@ -682,24 +670,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				drawerItemHomePage.setVisibility(View.GONE);
 				drawerItemLogHistory.setVisibility(View.GONE);
 			}
-			mLabelsVg = (ViewGroup) findViewById(R.id.labels_list_ll);
-			View addNewLabel =  findViewById(R.id.drawer_item_add_label);
-			addNewLabel.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(  View v) {
-
-					View newLabelV = getLayoutInflater().inflate(LAYOUT_LABEL, mLabelsVg, false);
-					mLabelsVg.addView(newLabelV);
-					final AnimImageButton rmvV = (AnimImageButton)newLabelV.findViewById(R.id.label_remove_ibtn);
-					rmvV.setOnClickListener(new OnAnimImageButtonClickedListener() {
-						@Override
-						public void onClick() {
-							ViewGroup hostV  = (ViewGroup) rmvV.getParent();
-							mLabelsVg.removeView(hostV);
-						}
-					});
-				}
-			});
 		}
 	}
 

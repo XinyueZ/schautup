@@ -40,7 +40,7 @@ public final class FiltersFragment extends BaseFragment {
 	/**
 	 * Layout for a filter item.
 	 */
-	public static final int LAYOUT_FILTER = R.layout.inc_filter;
+	private static final int LAYOUT_FILTER = R.layout.inc_filter;
 
 	/**
 	 * All filters, for user easy to do filtering.

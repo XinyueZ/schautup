@@ -2,14 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@id/error_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.schautup.activities.HomePageWebViewActivity">
 
     <WebView
         android:id="@+id/home_wv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.schautup.activities.HomePageWebViewActivity">
+        android:layout_height="match_parent" />
 
-    </WebView>
 </FrameLayout>
