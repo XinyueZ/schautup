@@ -225,22 +225,26 @@
                     android:layout_weight="1.5" />
             </LinearLayout>
 
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/extapp_title"
-                style="@style/Drawer_Item_Text" />
+                style="@style/Drawer_Item_Text_Small" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@drawable/lv_divider" />
-            <LinearLayout
-                android:id="@+id/drawer_app_list_ll"
+
+            <FrameLayout
+                android:id="@+id/app_list_fl"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_drawer_item"
-                android:orientation="vertical" />
+                android:layout_height="match_parent"/>
+
         </LinearLayout>
     </com.schautup.views.OneDirectionScrollView>
 </android.support.v4.widget.DrawerLayout>

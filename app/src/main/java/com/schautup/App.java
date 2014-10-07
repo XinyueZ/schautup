@@ -885,7 +885,7 @@ public final class App extends Application {
 		case 1:
 			intent.putExtra(EXTRAS_DO_NEXT, true);
 			reqCode = (int) System.currentTimeMillis();
-			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, 0);
 			LL.d("Pending reqCode(Thirsty): " + reqCode);
 			if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 				mgr.setExact(AlarmManager.RTC_WAKEUP, timeToAlarm, pi);

@@ -1,16 +1,11 @@
 package com.schautup.activities;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
@@ -19,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.Menu;
@@ -33,14 +27,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.NetworkImageView;
-import com.chopping.net.GsonRequestTask;
-import com.chopping.net.TaskHelper;
 import com.crashlytics.android.Crashlytics;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
@@ -53,12 +42,11 @@ import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
+import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.DeletedConfirmEvent;
-import com.schautup.bus.ExternalAppChangedEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
-import com.schautup.bus.LinkToExternalAppEvent;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.ProgressbarEvent;
@@ -72,12 +60,11 @@ import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
 import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdatedItemEvent;
-import com.schautup.data.AppList;
-import com.schautup.data.AppListItem;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
+import com.schautup.fragments.AppListFragment;
 import com.schautup.fragments.FiltersDefineDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
@@ -110,10 +97,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Main menu.
 	 */
 	private static final int MENU = R.menu.main;
-	/**
-	 * Layout for an external application to download/install/open.
-	 */
-	private static final int LAYOUT_APP_ITEM = R.layout.inc_app;
+
 	/**
 	 * Layout for a label item.
 	 */
@@ -176,13 +160,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Navigation drawer.
 	 */
 	private DrawerLayout mDrawerLayout;
-	/**
-	 * {@link android.view.ViewGroup} for external applications.
-	 */
-	private ViewGroup mAppListVg;
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
+
+	/**
+	 * Handler for {@link com.schautup.bus.CloseDrawerEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.CloseDrawerEvent}.
+	 */
+	public void onEvent(CloseDrawerEvent e) {
+		mDrawerLayout.closeDrawers();
+	}
 
 	/**
 	 * Handler for {@link com.schautup.bus.ShowStickyEvent}.
@@ -445,56 +436,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 
-	/**
-	 * Event, show app-list when they have been loaded.
-	 *
-	 * @param e
-	 * 		{@link com.schautup.App}.
-	 */
-	public void onEvent(AppList e) {
-		showAppList(e.getItems());
-	}
-
-	/**
-	 * Event, open an external app that has been installed.
-	 *
-	 * @param e
-	 * 		{@link com.schautup.bus.LinkToExternalAppEvent}.
-	 */
-	public void onEvent(LinkToExternalAppEvent e) {
-		com.chopping.utils.Utils.linkToExternalApp(this, e.getAppListItem());
-		mDrawerLayout.closeDrawers();
-	}
-
-
-	/**
-	 * Event, update list of external apps.
-	 *
-	 * @param e
-	 * 		{@link com.schautup.bus.ExternalAppChangedEvent}.
-	 */
-	public void onEvent(ExternalAppChangedEvent e) {
-		updateForAppChanged(e);
-	}
-
-	/**
-	 * The application status has been changed and handling now.
-	 * @param e {@link ExternalAppChangedEvent}
-	 */
-	private void updateForAppChanged(ExternalAppChangedEvent e) {
-		Set<AppListItem> keys = mAppButtons.keySet();
-		for(AppListItem key : keys) {
-			if (TextUtils.equals(e.getPackageName(), key.getPackageName())) {
-				WeakReference<Button> appBtnRef = mAppButtons.get(e.getPackageName());
-				if(appBtnRef != null && appBtnRef.get() != null) {
-					Button appBtn = appBtnRef.get();
-					refreshExternalAppButtonStatus(appBtn, key);
-				}
-				break;
-			}
-		}
-	}
-
 
 	//------------------------------------------------
 
@@ -515,7 +456,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		setContentView(LAYOUT);
-		mAppListVg = (ViewGroup) findViewById(R.id.drawer_app_list_ll);
+
 		initDrawer();
 
 		//Sticky message box.
@@ -968,101 +909,20 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 
-	/**
-	 * True if a loading app-list request is under way.
-	 */
-	private boolean mReqInProcess = false;
-	/**
-	 * {@link android.widget.Button}s of all external applications.
-	 * </p>
-	 * It is a map of the key that item of application against value {@link android.widget.Button} .
-	 */
-	private ArrayMap<AppListItem, WeakReference<Button>> mAppButtons = new ArrayMap<AppListItem, WeakReference<Button>>();
-
-	/**
-	 * Load list of apps.
-	 */
-	private void loadAppList() {
-		final String urlAppList = Prefs.getInstance(getApplication()).getApiAppList();
-		if (!TextUtils.isEmpty(urlAppList) && !mReqInProcess) {
-			new GsonRequestTask<AppList>(getApplicationContext(), Request.Method.GET, urlAppList,
-					AppList.class).execute();
-			mReqInProcess = true;
-		}
-	}
-
 	@Override
 	protected void onAppConfigLoaded() {
 		super.onAppConfigLoaded();
-		loadAppList();
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.app_list_fl, AppListFragment.newInstance(this )).commit();
 	}
 
 	@Override
 	protected void onAppConfigIgnored() {
 		super.onAppConfigIgnored();
-		loadAppList();
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.app_list_fl, AppListFragment.newInstance(this )).commit();
 	}
 
-	/**
-	 * Update the status of buttons that can open store linking to the external _app or directly on the _app.
-	 *
-	 * @param appOpen
-	 * 		The button for the app, open, install, or buy.
-	 * @param app
-	 * 		The data-set represent an external app.
-	 */
-	private void refreshExternalAppButtonStatus(final Button appOpen, final AppListItem app) {
-		Resources res = getResources();
-		if (com.chopping.utils.Utils.isAppInstalled(app.getPackageName(), getPackageManager())) {
-			appOpen.setText(R.string.extapp_open);
-			appOpen.setTextColor(res.getColor(R.color.installed_text));
-			appOpen.setBackgroundResource(R.drawable.selector_intstalled_app_item_btn_color);
-		} else {
-			appOpen.setText(app.getFree() ? R.string.extapp_download : R.string.extapp_buy);
-			appOpen.setTextColor(res.getColor(R.color.not_installed_text));
-			appOpen.setBackgroundResource(R.drawable.selector_not_intstalled_app_item_btn_color);
-		}
-	}
-
-	/**
-	 * Show list of all external applications.
-	 *
-	 * @param apps
-	 * 		The array of all external applications.
-	 */
-	private void showAppList(AppListItem[] apps) {
-		/* It should filter itself. */
-		String packageName = getPackageName();
-		List<AppListItem> appsFiltered = new ArrayList<AppListItem>();
-		for (AppListItem app : apps) {
-			if (TextUtils.equals(packageName, app.getPackageName())) {
-				continue;
-			}
-			appsFiltered.add(app);
-		}
-		View itemV;
-		NetworkImageView logoIv;
-		TextView appNameTv;
-		Button appBtn;
-		mAppListVg.removeAllViews();
-		for (final AppListItem item : appsFiltered) {
-			itemV = getLayoutInflater().inflate(LAYOUT_APP_ITEM, mAppListVg, false);
-			logoIv = (NetworkImageView) itemV.findViewById(R.id.app_logo_iv);
-			appNameTv = (TextView) itemV.findViewById(R.id.app_name_tv);
-			appBtn = (Button) itemV.findViewById(R.id.start_app_btn);
-			logoIv.setDefaultImageResId(R.drawable.ic_action_logo);
-			logoIv.setImageUrl(item.getLogoUrl(), TaskHelper.getImageLoader());
-			appNameTv.setText(item.getName());
-			refreshExternalAppButtonStatus(appBtn, item);
-			appBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					EventBus.getDefault().post(new LinkToExternalAppEvent(item));
-				}
-			});
-			mAppButtons.put(item , new WeakReference<Button>(appBtn));
-			mAppListVg.addView(itemV);
-		}
-		mReqInProcess = false;
-	}
 }
