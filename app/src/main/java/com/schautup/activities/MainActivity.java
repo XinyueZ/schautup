@@ -619,7 +619,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Initialize the navigation drawer.
 	 */
 	private void initDrawer() {
-		boolean isStage = getResources().getBoolean(R.bool.flag_stage);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
@@ -639,37 +638,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight();
 
-			View drawerItemSettings = findViewById(R.id.drawer_item_settings_ll);
-			drawerItemSettings.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mDrawerLayout.closeDrawers();
-					SettingsActivity.showInstance(MainActivity.this);
-				}
-			});
 
-			View drawerItemHomePage = findViewById(R.id.drawer_item_home_page_ll);
-			View drawerItemLogHistory = findViewById(R.id.drawer_item_log_history_ll);
-			if(isStage) {
-				drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mDrawerLayout.closeDrawers();
-						HomePageWebViewActivity.showInstance(MainActivity.this);
-					}
-				});
-
-				drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mDrawerLayout.closeDrawers();
-						LogHistoryActivity.showInstance(MainActivity.this);
-					}
-				});
-			} else {
-				drawerItemHomePage.setVisibility(View.GONE);
-				drawerItemLogHistory.setVisibility(View.GONE);
-			}
 		}
 	}
 
@@ -732,6 +701,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public void onItemSelected(AdapterView<?> arg0, View arg1, final int location, long arg3) {
 		if(mInitSpinner) {
 			if(!mFromDrawer) {
+				mDrawerLayout.closeDrawers();
 				if (location > 0) {
 					Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
 					EventBus.getDefault().postSticky(new FilterEvent(filter, false));
