@@ -790,7 +790,6 @@ public final class App extends Application {
 	 * 		An item of schedule.
 	 */
 	private void add(ScheduleItem item) {
-		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		// Current time point.
 		long currentTime = System.currentTimeMillis();
 		Calendar calendar = Calendar.getInstance();
@@ -806,10 +805,30 @@ public final class App extends Application {
 		}
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
+		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent);
 		sPendingIntents.put(item.getId(), pendingIntent);
 	}
 
+	/**
+	 * Added a {@link com.schautup.data.ScheduleItem} to the pending list of {@link android.app.AlarmManager}.
+	 *
+	 * @param item
+	 * 		An item of schedule.
+	 */
+	private void update(ScheduleItem item) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, item.getHour());
+		calendar.set(Calendar.MINUTE, item.getMinute());
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		Intent intent = new Intent(this, AlarmReceiver.class);
+		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
+		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		PendingIntent pendingIntent = createAlarmPending(mgr, calendar.getTimeInMillis(), intent);
+		sPendingIntents.put(item.getId(), pendingIntent);
+	}
 
 	/**
 	 * To update a new pending when a pending was finished, that means the next round of schedule will be added and
@@ -836,9 +855,9 @@ public final class App extends Application {
 				if (item != null) {
 					// Removed old pending what has been finished and re-add.
 					// It should have been removed when the helper-service work off the schedule.
-					remove(  item.getId());
+					remove( item.getId());
 					// Add new to pending list.
-					add(item);
+					update(item);
 				}
 			}
 		}.executeParallel();
