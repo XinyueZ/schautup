@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filters_list_ll"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/drawer_item_filters_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_drawer_item"
+        android:orientation="horizontal"
+        android:background="@drawable/selector_bg1_btn"
+        android:weightSum="2.5">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_filter_btn"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/drawer_item_filter"
+            style="@style/Drawer_Item_Text"
+            android:layout_weight="1.5" />
+
+        <com.schautup.views.AnimImageTextView
+            android:id="@+id/drawer_item_add_filter"
+            android:text="@string/btn_add"
+            style="@style/Small_Button_Drawer" />
+    </LinearLayout>
+</LinearLayout>

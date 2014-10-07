@@ -101,4 +101,9 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+
+    <style name="Drawer_Item_Text_Small" parent="@style/Drawer_Item_Text">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
 </resources>

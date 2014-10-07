@@ -54,11 +54,11 @@ import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowActionModeEvent;
-import com.schautup.bus.ShowSetFilterEvent;
+import com.schautup.bus.ShowFiltersDefineDialogEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
+import com.schautup.bus.UpdateActionBarEvent;
 import com.schautup.bus.UpdateDBEvent;
-import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
@@ -75,8 +75,6 @@ import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
-import com.schautup.views.AnimImageTextView;
-import com.schautup.views.AnimImageTextView.OnAnimTextViewClickedListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -102,10 +100,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Layout for a label item.
 	 */
 	public static final int LAYOUT_LABEL = R.layout.inc_label;
-	/**
-	 * Layout for a filter item.
-	 */
-	public static final int LAYOUT_FILTER = R.layout.inc_filter;
+
 	/**
 	 * Menu for the Action-Mode.
 	 */
@@ -140,17 +135,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private ViewGroup mLabelsVg;
 	/**
-	 * List of all stored filters.
-	 */
-	private ViewGroup mFiltersVg;
-	/**
 	 * All labels, for add schedules by a group.
 	 */
 	private LongSparseArray<ViewGroup> mLabelsList;
-	/**
-	 * All filters, for user easy to do filtering.
-	 */
-	private LongSparseArray<Filter> mFiltersList = new LongSparseArray<Filter>();
 
 	/**
 	 * All defined {@link com.schautup.data.Filter}s to select.
@@ -160,6 +147,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Navigation drawer.
 	 */
 	private DrawerLayout mDrawerLayout;
+	/**
+	 * {@link android.view.MenuItem} to handle list or grid view.
+	 */
+	private MenuItem mViewMenuItem;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -391,51 +382,55 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		}
 	}
 
+
+
 	/**
-	 * Handler for {@link com.schautup.bus.UpdateFilterEvent}.
+	 * Handler for {@link ShowFiltersDefineDialogEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.UpdateFilterEvent}.
+	 * 		Event {@link ShowFiltersDefineDialogEvent}.
 	 */
-	public void onEvent(UpdateFilterEvent e) {
-		  Filter newFilter  = e.getFilter();
-		if(!e.isEdit()) {
-			new ParallelTask<Filter, Filter, Filter>(false) {
-				@Override
-				protected Filter doInBackground(Filter... params) {
-					DB.getInstance(getApplication()).addFilter(params[0]);
-					return params[0];
-				}
-				@Override
-				protected void onPostExecute(Filter filter) {
-					super.onPostExecute(filter);
-					addedNewFilter(filter);
-					makeFilterSpinner();
-				}
-			}.executeParallel(newFilter);
-		} else {
-			new ParallelTask<Filter, Filter, Filter>(false) {
-				@Override
-				protected Filter doInBackground(Filter... params) {
-					DB.getInstance(getApplication()).updateFilter(params[0]);
-					return params[0];
-				}
-				@Override
-				protected void onPostExecute(Filter filter) {
-					super.onPostExecute(filter);
-					mFiltersList.get(filter.getId()).clone(filter);
-					View hostOfFilterV =   mFiltersVg.findViewById((int) filter.getId());
-					if(hostOfFilterV != null) {
-						TextView nameTv = (TextView) hostOfFilterV.findViewById(R.id.filter_name_tv);
-						nameTv.setText(filter.getName());
+	public void onEvent(ShowFiltersDefineDialogEvent e) {
+		showDialogFragment(FiltersDefineDialogFragment.newInstance(this), null);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.FilterEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.FilterEvent}.
+	 */
+	public void onEvent(FilterEvent e) {
+		if(mFiltersAdapter != null && e.isFromDrawer()) {
+			for (int i = 0, sz = mFiltersAdapter.getCount(); i < sz; i++) {
+				Object spinnterItem = mFiltersAdapter.getItem(i);
+				if (spinnterItem instanceof Filter) {
+					Filter filterInSpinner = (Filter) spinnterItem;
+					if(filterInSpinner.getId() == e.getFilter().getId()){
+						mFromDrawer = true;
+						mFilterSpinner.setSelection(i);
+						break;
 					}
-					makeFilterSpinner();
 				}
-			}.executeParallel(newFilter);
+			}
 		}
 	}
 
-
+	/**
+	 * Handler for {@link com.schautup.bus.UpdateActionBarEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.UpdateActionBarEvent}.
+	 */
+	public void onEvent(UpdateActionBarEvent e) {
+		if (!mListViewCurrent) {
+			//Current is grid, then switch to list late.
+			mViewMenuItem.setIcon(R.drawable.ic_action_listview);
+		} else {
+			mViewMenuItem.setIcon(R.drawable.ic_action_gridview);
+		}
+		makeFilterSpinner();
+	}
 
 	//------------------------------------------------
 
@@ -516,6 +511,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		mFilterSpinner = (Spinner)MenuItemCompat.getActionView(menuFilter);
 		mNewSpinner = true;
 		makeFilterSpinner();
+
+		mViewMenuItem =  menu.findItem(R.id.action_view);
 		return true;
 	}
 
@@ -535,6 +532,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			} else {
 				showGridView();
 			}
+			EventBus.getDefault().post(new UpdateActionBarEvent());
 			break;
 		case R.id.action_about:
 			showDialogFragment(AboutDialogFragment.newInstance(this), null);
@@ -546,16 +544,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!mListViewCurrent) {
-			//Current is grid, then switch to list late.
-			menu.findItem(R.id.action_view).setIcon(R.drawable.ic_action_listview);
-		} else {
-			menu.findItem(R.id.action_view).setIcon(R.drawable.ic_action_gridview);
-		}
-		return super.onPrepareOptionsMenu(menu);
-	}
 
 
 	@Override
@@ -579,7 +567,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
 				ScheduleListFragment.newInstance(this), ScheduleListFragment.class.getName()).commit();
 		mListViewCurrent = true;
-		supportInvalidateOptionsMenu();
 	}
 
 	/**
@@ -590,7 +577,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_fl,
 				ScheduleGridFragment.newInstance(this), ScheduleGridFragment.class.getName()).commit();
 		mListViewCurrent = false;
-		supportInvalidateOptionsMenu();
 	}
 
 	@Override
@@ -714,109 +700,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					});
 				}
 			});
-
-			// Init the list of all filters.
-			mFiltersVg  = (ViewGroup) findViewById(R.id.filters_list_ll);
-			final AnimImageTextView addNewFilter = (AnimImageTextView)findViewById(R.id.drawer_item_add_filter);
-			addNewFilter.setOnClickListener(new OnAnimTextViewClickedListener() {
-				@Override
-				public void onClick() {
-					showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
-				}
-			});
-			new ParallelTask<Void, List<Filter>, List<Filter>>(false) {
-				@Override
-				protected List<Filter> doInBackground(Void... params) {
-					return DB.getInstance(getApplication()).getAllFilters();
-				}
-
-				@Override
-				protected void onPostExecute(List<Filter> result) {
-					super.onPostExecute(result);
-					if(result != null && result.size() > 0) {
-						for(Filter filter : result) {
-							addedNewFilter(filter);
-						}
-					}
-				}
-			}.executeParallel();
 		}
-	}
-
-	/**
-	 * Helper method to add a new {@link com.schautup.data.Filter}.
-	 * @param filter A {@link com.schautup.data.Filter} to show.
-	 */
-	private void addedNewFilter(final Filter filter) {
-		final ViewGroup filterV = (ViewGroup) getLayoutInflater().inflate(LAYOUT_FILTER, mFiltersVg, false);
-		filterV.setId((int) filter.getId());
-		TextView nameTv = (TextView) filterV.findViewById(R.id.filter_name_tv);
-		nameTv.setText(filter.getName());
-		final AnimImageButton rmvV = (AnimImageButton) filterV.findViewById(R.id.filter_remove_ibtn);
-		rmvV.setTag(filter);
-		rmvV.setOnClickListener(new OnAnimImageButtonClickedListener() {
-			@Override
-			public void onClick() {
-				removeFilter(rmvV);
-			}
-		});
-		AnimImageButton editV = (AnimImageButton) filterV.findViewById(R.id.filter_edit_ibtn);
-		editV.setTag(filter);
-		editV.setOnClickListener(new OnAnimImageButtonClickedListener() {
-			@Override
-			public void onClick() {
-				EventBus.getDefault().postSticky(new ShowSetFilterEvent(filter));
-				showDialogFragment(FiltersDefineDialogFragment.newInstance(MainActivity.this), null);
-			}
-		});
-		AnimImageButton doFilterV = (AnimImageButton) filterV.findViewById(R.id.filter_do_ibtn);
-		doFilterV.setOnClickListener(new OnAnimImageButtonClickedListener() {
-			@Override
-			public void onClick() {
-				mDrawerLayout.closeDrawers();
-				mFromDrawer = true;
-				EventBus.getDefault().post(new FilterEvent(filter));
-				if(mFiltersAdapter != null) {
-					for (int i = 0, sz = mFiltersAdapter.getCount(); i < sz; i++) {
-						Object spinnterItem = mFiltersAdapter.getItem(i);
-						if (spinnterItem instanceof Filter) {
-							Filter filterInSpinner = (Filter) spinnterItem;
-							if(filterInSpinner.getId() == filter.getId()){
-								mFilterSpinner.setSelection(i);
-								break;
-							}
-						}
-					}
-				}
-			}
-		});
-		mFiltersList.put(filter.getId(), filter);
-		mFiltersVg.addView(filterV);
-	}
-
-
-	/**
-	 * Helper method to remove a {@link com.schautup.data.Filter}.
-	 * @param v The remove button view.
-	 */
-	private void removeFilter(View v) {
-		final Filter oldFilter = (Filter) v.getTag();
-		ViewGroup hostV = (ViewGroup) v.getParent();
-		mFiltersVg.removeView(hostV);
-		mFiltersList.remove(oldFilter.getId());
-		new ParallelTask<Void, Void, Void>(false) {
-			@Override
-			protected Void doInBackground(Void... params) {
-				DB.getInstance(getApplication()).removeFilter(oldFilter);
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void _result) {
-				super.onPostExecute(_result);
-				makeFilterSpinner();
-			}
-		}.executeParallel();
 	}
 
 
@@ -880,7 +764,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			if(!mFromDrawer) {
 				if (location > 0) {
 					Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
-					EventBus.getDefault().postSticky(new FilterEvent(filter));
+					EventBus.getDefault().postSticky(new FilterEvent(filter, false));
 				} else {
 					new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
 						@Override
@@ -912,17 +796,22 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	@Override
 	protected void onAppConfigLoaded() {
 		super.onAppConfigLoaded();
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.app_list_fl, AppListFragment.newInstance(this )).commit();
+		showAppList();
 	}
 
 	@Override
 	protected void onAppConfigIgnored() {
 		super.onAppConfigIgnored();
+		showAppList();
+	}
+
+	/**
+	 * Show all external applications links.
+	 */
+	private void showAppList() {
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.app_list_fl, AppListFragment.newInstance(this )).commit();
+				.replace(R.id.app_list_fl, AppListFragment.newInstance(this)).commit();
 	}
 
 }

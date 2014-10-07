@@ -41,7 +41,7 @@ public final class AppListFragment extends  BaseFragment{
 	/**
 	 * Main layout for this component.
 	 */
-	private static final int LAYOUT = R.layout.fragment_applist;
+	private static final int LAYOUT = R.layout.fragment_app_list;
 	/**
 	 * Layout for an external application to download/install/open.
 	 */
