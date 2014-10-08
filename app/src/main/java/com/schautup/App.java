@@ -733,16 +733,16 @@ public final class App extends Application {
 	/**
 	 * Cache of all intents that are under way to do the tasks scheduled by {@link android.app.AlarmManager}.
 	 */
-	private static volatile LongSparseArray<PendingIntent> sPendingIntents = new LongSparseArray<PendingIntent>();
+	private LongSparseArray<PendingIntent> mPendingIntents = new LongSparseArray<PendingIntent>();
 
 
 	/**
 	 * Removed all scheduled tasks and cancel them.
 	 */
-	private void removeAll() {
+	private  void removeAll() {
 		long id;
-		for (int i = 0; i < sPendingIntents.size(); i++) {
-			id = sPendingIntents.keyAt(i);
+		for (int i = 0; mPendingIntents != null && i < mPendingIntents.size(); i++) {
+			id = mPendingIntents.keyAt(i);
 			remove(  id);
 		}
 	}
@@ -756,11 +756,11 @@ public final class App extends Application {
 	 * @return {@code true} if find the pending with {@code id} and has been removed. {@code false} if the pending with
 	 * {@code id} can't be found.
 	 */
-	public  synchronized boolean remove(  long id) {
+	private  synchronized boolean remove(  long id) {
 		AlarmManager mgr = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = sPendingIntents.get(id);
+		PendingIntent pi = mPendingIntents.get(id);
 		if (pi != null) {
-			sPendingIntents.remove(id);
+			mPendingIntents.remove(id);
 			mgr.cancel(pi);
 			return true;
 		}
@@ -804,8 +804,8 @@ public final class App extends Application {
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent);
-		sPendingIntents.put(item.getId(), pendingIntent);
+		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent, (int)item.getId());
+		mPendingIntents.put(item.getId(), pendingIntent);
 	}
 
 	/**
@@ -824,8 +824,8 @@ public final class App extends Application {
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pendingIntent = createAlarmPending(mgr, calendar.getTimeInMillis(), intent);
-		sPendingIntents.put(item.getId(), pendingIntent);
+		PendingIntent pendingIntent = createAlarmPending(mgr, calendar.getTimeInMillis(), intent,  (int)item.getId());
+		mPendingIntents.put(item.getId(), pendingIntent);
 	}
 
 	/**
@@ -851,9 +851,6 @@ public final class App extends Application {
 				ScheduleItem item = items.get(0);
 				//Plane next schedule
 				if (item != null) {
-					// Removed old pending what has been finished and re-add.
-					// It should have been removed when the helper-service work off the schedule.
-					remove( item.getId());
 					// Add new to pending list.
 					update(item);
 				}
@@ -872,18 +869,16 @@ public final class App extends Application {
 	 * @param intent
 	 * 		The pending that will be fired when task will be done by {@link android.app.AlarmManager} future.
 	 */
-	private PendingIntent createAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent) {
+	private PendingIntent createAlarmPending(AlarmManager mgr, long timeToAlarm, Intent intent, int reqCode) {
 		String mod = Prefs.getInstance(this).getScheduleMode();
 		int mode = Integer.valueOf(mod.toString());
-		int reqCode;
 		PendingIntent pi;
 		switch (mode) {
 		// Usage of repeating on the alarmmanger for android >= 4.4 .
 		// The Thirsty mode.
 		case 1:
 			intent.putExtra(EXTRAS_DO_NEXT, true);
-			reqCode = (int) System.currentTimeMillis();
-			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			LL.d("Pending reqCode(Thirsty): " + reqCode);
 			if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 				mgr.setExact(AlarmManager.RTC_WAKEUP, timeToAlarm, pi);
@@ -896,9 +891,8 @@ public final class App extends Application {
 		//Neutral mode, for repeating on the alarmmanger below android 4.4 .
 		case 2:
 			intent.putExtra(EXTRAS_DO_NEXT, false);
-			reqCode = (int) System.currentTimeMillis();
 			//http://stackoverflow.com/questions/4700058/android-repeating-alarm-not-working
-			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			pi = PendingIntent.getBroadcast(this, reqCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 			LL.d("Pending reqCode(Neutral): " + reqCode);
 			//http://stackoverflow.com/questions/16308783/timeunit-seconds-tomillis
 			//http://stackoverflow.com/questions/6980376/convert-from-days-to-milliseconds

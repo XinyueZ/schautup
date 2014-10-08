@@ -472,7 +472,7 @@ public final class DB {
 
 
 	/**
-	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by  hour , minute , type and recurrence.
+	 * Returns {@link com.schautup.data.ScheduleItem}s from DB by  hour , minute , type and recurrence which have been filtered.
 	 *
 	 * @param hour
 	 * 		Hour.
@@ -485,8 +485,8 @@ public final class DB {
 	 *
 	 * @return {@link com.schautup.data.ScheduleItem}s from DB by hour , minute , type and recurrence.
 	 */
-	public synchronized List<ScheduleItem> getSchedules(int hour, int minute, SparseArrayCompat<ScheduleType> types,
-			EventRecurrence eventRecurrence) {
+	public synchronized List<ScheduleItem> getFilteredSchedules(int hour, int minute,
+			SparseArrayCompat<ScheduleType> types, EventRecurrence eventRecurrence) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -500,8 +500,8 @@ public final class DB {
 			for (int i = 0; i < types.size(); i++) {
 				key = types.keyAt(i);
 				type = types.get(key);
-				c = mDB.query(ScheduleTbl.TABLE_NAME, null, ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
-								"? AND " + ScheduleTbl.RECURRENCE + " = ? AND " + ScheduleTbl.TYPE + " = ?", new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null,
+				c = mDB.query(ScheduleTbl.TABLE_NAME, null, "("+ ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
+								"? OR " + ScheduleTbl.RECURRENCE + " = ?) AND " + ScheduleTbl.TYPE + " = ?", new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null,
 						null, null, null);
 				list = new LinkedList<ScheduleItem>();
 				EventRecurrence er;
@@ -610,7 +610,8 @@ public final class DB {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
-		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, null, null, null, null, FilterTbl.EDIT_TIME + " DESC");
+		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, FilterTbl.IS_LABEL_ONLY + " = ?",
+				new String[]{"0"}, null, null, FilterTbl.EDIT_TIME + " DESC");
 		Filter item = null;
 		List<Filter> list = new LinkedList<Filter>();
 		try {
