@@ -15,7 +15,7 @@ import com.schautup.activities.QuickSettingsActivity;
  *
  * @author Xinyue Zhao
  */
-public class ScheduleManager extends Service {
+public final class ScheduleManager extends Service {
 	/**
 	 * Provide an ongoing {@link android.app.Notification} that keeps the application running long time in background.
 	 */
