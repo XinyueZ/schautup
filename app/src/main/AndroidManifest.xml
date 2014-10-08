@@ -15,7 +15,7 @@
     <!-- Turn on/off Wifi etc. -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- Download for new update version -->
+    <!-- Download for new update version, configuration of application needs etc. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- This application needs setting system settings. -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />

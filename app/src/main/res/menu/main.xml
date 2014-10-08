@@ -52,4 +52,10 @@
         android:id="@+id/action_about"
         android:title="@string/menu_about"
         app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_dump_sqlite"
+        android:title="Dump Sqlite"
+        app:showAsAction="never" />
 </menu>

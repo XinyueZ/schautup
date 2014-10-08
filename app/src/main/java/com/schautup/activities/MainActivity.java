@@ -63,6 +63,7 @@ import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
+import com.schautup.db.DatabaseHelper;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.AppListFragment;
 import com.schautup.fragments.FilterDefineDialogFragment;
@@ -512,6 +513,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		makeFilterSpinner();
 
 		mViewMenuItem = menu.findItem(R.id.action_view);
+
+		boolean isStage = getResources().getBoolean(R.bool.flag_stage);
+		menu.findItem(R.id.action_dump_sqlite).setVisible(isStage);
 		return true;
 	}
 
@@ -538,6 +542,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			break;
 		case R.id.action_settings:
 			SettingsActivity.showInstance(MainActivity.this);
+			break;
+		case R.id.action_dump_sqlite:
+			com.chopping.utils.Utils.dumpSqlite(getApplication(), DatabaseHelper.DATABASE_NAME);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
