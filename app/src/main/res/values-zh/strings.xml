@@ -48,6 +48,7 @@
     <string name="lbl_play_service">本应用需要谷歌服务，必须先安装然后使用。</string>
     <string name="lbl_filter_name">过滤器名…</string>
     <string name="lbl_filter_selection">无过滤</string>
+    <string name="lbl_label_name">标签名…</string>
 
     <!--Menu-->
     <string name="menu_add">添加</string>
@@ -96,6 +97,7 @@
     <string name="msg_reject_incoming_duration_hours">小时</string>
     <string name="msg_reject_incoming_duration_hours_minutes">%1$s时%2$s分</string>
     <string name="msg_filter_name_must_given">过滤器名必须填。</string>
+    <string name="msg_label_name_must_given">标签名必须填。</string>
 
     <!--Settings-->
     <string name="settings_hungry_mode">模式1</string>

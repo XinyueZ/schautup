@@ -602,16 +602,29 @@ public final class DB {
 	}
 
 	/**
-	 * Returns all {@link com.schautup.data.Filter}s from DB order by edited time.
+	 * Returns all {@link com.schautup.data.Filter}s whose {@link com.schautup.data.Filter#isLabel()}{@code = 0} from DB order by edited time.
 	 *
 	 * @return All {@link com.schautup.data.Filter}s from DB order by edited time.
 	 */
 	public synchronized List<Filter> getAllFilters() {
+		return getAllFilters("0");
+	}
+
+	/**
+	 * Returns all {@link com.schautup.data.Filter}s from DB order by edited time.
+	 * <p/>
+	 * Use {@code filterOrLabel=0 and filterOrLabel=1} to determine whether filters or labels.
+	 *
+	 * @param filterOrLabel {@code "0"} if filters, {@code "1!} if all labels.
+	 *
+	 * @return All {@link com.schautup.data.Filter}s from DB order by edited time.
+	 */
+	public synchronized List<Filter> getAllFilters(String filterOrLabel) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
 		Cursor c = mDB.query(FilterTbl.TABLE_NAME, null, FilterTbl.IS_LABEL_ONLY + " = ?",
-				new String[]{"0"}, null, null, FilterTbl.EDIT_TIME + " DESC");
+				new String[]{filterOrLabel}, null, null, FilterTbl.EDIT_TIME + " DESC");
 		Filter item = null;
 		List<Filter> list = new LinkedList<Filter>();
 		try {
@@ -634,6 +647,7 @@ public final class DB {
 						}
 					}
 				}
+				item.setLabel(c.getInt(c.getColumnIndex(FilterTbl.IS_LABEL_ONLY)) == 1);
 				list.add(item);
 			}
 		} finally {
@@ -643,6 +657,15 @@ public final class DB {
 			close();
 			return list;
 		}
+	}
+
+	/**
+	 * Returns all {@link com.schautup.data.Filter}s whose {@link com.schautup.data.Filter#isLabel()}{@code = 1} from DB order by edited time.
+	 *
+	 * @return All {@link com.schautup.data.Filter}s from DB order by edited time.
+	 */
+	public synchronized List<Filter> getAllLabels() {
+		return getAllFilters("1");
 	}
 
 	/**
@@ -669,6 +692,7 @@ public final class DB {
 			v.put(FilterTbl.MINUTE, item.getMinute());
 			v.put(FilterTbl.RECURRENCE, item.getEventRecurrence().toString());
 			v.put(FilterTbl.TYPES, stringBuilder.toString());
+			v.put(FilterTbl.IS_LABEL_ONLY, item.isLabel() ? 1 : 0);
 			v.put(FilterTbl.EDIT_TIME, System.currentTimeMillis());
 			rowId = mDB.insert(FilterTbl.TABLE_NAME, null, v);
 			item.setId(rowId);
@@ -704,6 +728,8 @@ public final class DB {
 			v.put(FilterTbl.MINUTE, item.getMinute());
 			v.put(FilterTbl.RECURRENCE, item.getEventRecurrence().toString());
 			v.put(FilterTbl.TYPES, stringBuilder.toString());
+			v.put(FilterTbl.IS_LABEL_ONLY, item.isLabel() ? 1 : 0);
+			v.put(FilterTbl.EDIT_TIME, System.currentTimeMillis());
 			String[] args = new String[] { item.getId() + "" };
 			rowId = mDB.update(FilterTbl.TABLE_NAME, v, FilterTbl.ID + " = ?", args);
 			success = rowId != -1;

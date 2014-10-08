@@ -167,7 +167,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				int hour = filter.getHour();
 				int minute = filter.getMinute();
 				EventRecurrence er = filter.getEventRecurrence();
-				List<ScheduleItem> items =  DB.getInstance(getActivity().getApplication()).getSchedules(hour, minute, filter.getSelectedTypes(), er);
+				List<ScheduleItem> items =  DB.getInstance(getActivity().getApplication()).getFilteredSchedules(hour,
+						minute, filter.getSelectedTypes(), er);
 				return items;
 			}
 

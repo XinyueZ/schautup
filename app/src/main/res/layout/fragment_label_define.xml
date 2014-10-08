@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_option_dialog"
+    android:layout_width="@dimen/size_option_dialog"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.schautup.fragments.LabelDefineDialogFragment">
+
+    <LinearLayout
+        android:id="@+id/filters_define_date_time_ll"
+        android:layout_width="@dimen/size_option_dialog"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/label_name_et"
+            android:maxLength="100"
+            android:lines="1"
+            android:maxLines="1"
+            android:minLines="1"
+            android:inputType="textNoSuggestions"
+            android:layout_width="@dimen/size_option_dialog"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_common_black"
+            android:hint="@string/lbl_label_name"
+            android:textCursorDrawable="@null"/>
+        <LinearLayout
+
+            android:weightSum="5"
+            android:layout_width="@dimen/size_option_dialog"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content">
+
+            <com.schautup.views.AnimImageTextView
+                android:id="@+id/sel_hour_tv"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/size_hour_minute"
+                android:textColor="@color/text_common_black"
+                android:gravity="center"
+                android:textSize="@dimen/size_text_hour_minute"
+                android:background="@color/bg_hour_minute"
+                android:text="23" />
+
+            <com.schautup.views.AnimImageTextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:textSize="@dimen/size_text_hour_minute"
+                android:textColor="@color/text_common_black"
+                android:text="@string/hour_minute_divider" />
+
+            <TextView
+                android:id="@+id/sel_minute_tv"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:textColor="@color/text_common_black"
+                android:layout_height="@dimen/size_hour_minute"
+                android:textSize="@dimen/size_text_hour_minute"
+                android:background="@color/bg_hour_minute"
+                android:text="23" />
+
+            <com.schautup.views.AnimImageButton
+                android:id="@+id/open_timepicker_btn"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_timepicker_btn"
+                android:background="@android:color/transparent" />
+
+            <FrameLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical">
+
+                <com.schautup.views.AnimImageButton
+                    android:id="@+id/open_recurrence_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_repeat_btn"
+                    android:background="@drawable/selector_warning" />
+
+                <com.schautup.views.BadgeView
+                    android:id="@+id/recurrence_bgv"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_above="@+id/filters_define_buttons_ll"
+        android:layout_below="@+id/filters_define_date_time_ll"
+        android:layout_width="@dimen/size_option_dialog"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/setting_types_ll"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/selector_warning"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_mute_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_mute" />
+
+                <TextView
+                    android:text="@string/option_mute"
+                    style="@style/Filters_Define_TextView" />
+
+                <CheckBox
+                    android:id="@+id/filter_mute_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_vibrate_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_vibrate" />
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/option_vibrate" />
+
+                <CheckBox
+                    android:id="@+id/filter_vibrate_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_sound_ll"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_sound" />
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/option_sound" />
+
+                <CheckBox
+                    android:id="@+id/filter_sound_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_wifi_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_wifi_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/option_wifi" />
+
+                <CheckBox
+                    android:id="@+id/filter_wifi_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_mobile_data_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_mobile_data_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/type_mobile_data_nb" />
+
+                <CheckBox
+                    android:id="@+id/filter_mobile_data_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_bluetooth_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_bluetooth_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/option_bluetooth" />
+
+                <CheckBox
+                    android:id="@+id/filter_bluetooth_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_call_abort_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_dail_abort_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/type_call_abort_nb" />
+
+                <CheckBox
+                    android:id="@+id/filter_call_abort_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_start_app_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_app_list_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/type_app_start_nb" />
+
+                <CheckBox
+                    android:id="@+id/filter_start_app_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/selector_bg3_btn"
+                android:id="@+id/set_brightness_ll"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/size_hour_minute"
+                    android:layout_height="@dimen/size_hour_minute"
+                    android:background="@drawable/ic_brightness_btn" />
+
+
+                <TextView
+                    style="@style/Filters_Define_TextView"
+                    android:text="@string/option_brightness" />
+
+                <CheckBox
+                    android:id="@+id/filter_brightness_cb"
+                    style="@style/Filter_Define_CheckBox" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/filters_define_buttons_ll"
+        android:layout_alignParentBottom="true"
+        android:layout_width="@dimen/size_option_dialog"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/close_cancel_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_common_black"
+            android:layout_height="45dp"
+            android:text="@string/btn_cancel"
+            android:background="@drawable/selector_bg4_btn" />
+
+        <Button
+            android:id="@+id/close_confirm_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_common_black"
+            android:layout_height="45dp"
+            android:text="@string/btn_confirm"
+            android:background="@drawable/selector_bg2_btn" />
+
+    </LinearLayout>
+</RelativeLayout>

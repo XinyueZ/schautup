@@ -42,11 +42,11 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class FiltersDefineDialogFragment extends DialogFragment implements OnClickListener {
+public final class FilterDefineDialogFragment extends DialogFragment implements OnClickListener {
 	/**
 	 * Main layout for this component.
 	 */
-	private static final int LAYOUT = R.layout.fragment_filters_define;
+	private static final int LAYOUT = R.layout.fragment_filter_define;
 	/**
 	 * The id of item if the item was inserted into DB before.
 	 */
@@ -223,15 +223,15 @@ public final class FiltersDefineDialogFragment extends DialogFragment implements
 	//------------------------------------------------
 
 	/**
-	 * Initialize an {@link com.schautup.fragments.FiltersDefineDialogFragment}.
+	 * Initialize an {@link FilterDefineDialogFragment}.
 	 *
 	 * @param context
 	 * 		A {@link android.content.Context} object.
 	 *
-	 * @return An instance of {@link com.schautup.fragments.FiltersDefineDialogFragment}.
+	 * @return An instance of {@link FilterDefineDialogFragment}.
 	 */
 	public static DialogFragment newInstance(Context context) {
-		return (DialogFragment) Fragment.instantiate(context, FiltersDefineDialogFragment.class.getName());
+		return (DialogFragment) Fragment.instantiate(context, FilterDefineDialogFragment.class.getName());
 	}
 
 	@Override

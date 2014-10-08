@@ -30,13 +30,21 @@ public final class Filter {
 	 * The recurrence defined in filter.
 	 */
 	private EventRecurrence mEventRecurrence;
-
-
 	/**
 	 * Selected types.
 	 */
 	private SparseArrayCompat<ScheduleType> mSelectedTypes = new SparseArrayCompat<ScheduleType>();
 
+
+	/**
+	 * Labels are special filters that have not been fired to change to a schedule.
+	 * <p/>
+	 * {@code true} if the filter has not been a real "filter". A label has been created, that means the label has not
+	 * been fired and added as a schedule.
+	 * <p/>
+	 * {@code false} default that a filter has been created directly.
+	 */
+	private boolean mLabel = false;
 	/**
 	 * Edited time.
 	 */
@@ -190,5 +198,32 @@ public final class Filter {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+
+	/**
+	 * Labels are special filters that have not been fired to change to a schedule.
+	 * <p/>
+	 * {@code true} if the filter has not been a real "filter". A label has been created, that means the label has not
+	 * been fired and added as a schedule.
+	 * <p/>
+	 * {@code false} default that a filter has been created directly.
+	 *
+	 * @return {@code true}: a label not a filter.
+	 */
+	public boolean isLabel() {
+		return mLabel;
+	}
+
+	/**
+	 * Set {@code true} if the filter has not been a real "filter". A label has been created, that means the label has not
+	 * been fired and added as a schedule.
+	 * <p/>
+	 * {@code false} default that a filter has been created directly.
+	 *
+	 * @param label  {@code true}: a label not a filter.
+	 */
+	public void setLabel(boolean label) {
+		mLabel = label;
 	}
 }

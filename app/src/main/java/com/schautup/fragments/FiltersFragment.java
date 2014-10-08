@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.schautup.R;
 import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.FilterEvent;
-import com.schautup.bus.ShowFiltersDefineDialogEvent;
+import com.schautup.bus.ShowFilterDefineDialogEvent;
 import com.schautup.bus.ShowSetFilterEvent;
 import com.schautup.bus.UpdateActionBarEvent;
 import com.schautup.bus.UpdateFilterEvent;
@@ -79,7 +79,7 @@ public final class FiltersFragment extends BaseFragment {
 				protected void onPostExecute(Filter filter) {
 					super.onPostExecute(filter);
 					if (filter != null) {
-						addedNewFilter(filter);
+						addNewFilter(filter);
 						EventBus.getDefault().post(new UpdateActionBarEvent());
 					}
 				}
@@ -128,7 +128,7 @@ public final class FiltersFragment extends BaseFragment {
 		addNewFilter.setOnClickListener(new OnAnimTextViewClickedListener() {
 			@Override
 			public void onClick() {
-				EventBus.getDefault().post(new ShowFiltersDefineDialogEvent());
+				EventBus.getDefault().post(new ShowFilterDefineDialogEvent());
 			}
 		});
 		new ParallelTask<Void, List<Filter>, List<Filter>>(false) {
@@ -146,7 +146,7 @@ public final class FiltersFragment extends BaseFragment {
 				super.onPostExecute(result);
 				if (result != null && result.size() > 0) {
 					for (Filter filter : result) {
-						addedNewFilter(filter);
+						addNewFilter(filter);
 					}
 				}
 			}
@@ -160,7 +160,7 @@ public final class FiltersFragment extends BaseFragment {
 	 * @param filter
 	 * 		A {@link com.schautup.data.Filter} to show.
 	 */
-	private void addedNewFilter(final Filter filter) {
+	private void addNewFilter(final Filter filter) {
 		final ViewGroup filterV = (ViewGroup) getActivity().getLayoutInflater().inflate(LAYOUT_FILTER, mFiltersVg,
 				false);
 		filterV.setId((int) filter.getId());
@@ -180,7 +180,7 @@ public final class FiltersFragment extends BaseFragment {
 			@Override
 			public void onClick() {
 				EventBus.getDefault().postSticky(new ShowSetFilterEvent(filter));
-				EventBus.getDefault().post(new ShowFiltersDefineDialogEvent());
+				EventBus.getDefault().post(new ShowFilterDefineDialogEvent());
 			}
 		});
 		AnimImageButton doFilterV = (AnimImageButton) filterV.findViewById(R.id.filter_do_ibtn);

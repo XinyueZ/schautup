@@ -49,6 +49,7 @@
     <string name="lbl_play_service">This application needs Google Play Service, you must install it first.</string>
     <string name="lbl_filter_name">Filter name…</string>
     <string name="lbl_filter_selection">No filter</string>
+    <string name="lbl_label_name">Label name…</string>
 
     <!--Menu-->
     <string name="menu_add">Add New</string>
@@ -113,6 +114,7 @@
     <string name="msg_reject_incoming_duration_hours">hour(s)</string>
     <string name="msg_reject_incoming_duration_hours_minutes">%1$sh%2$sm</string>
     <string name="msg_filter_name_must_given">Filter\'s name must be given.</string>
+    <string name="msg_label_name_must_given">Label\'s name must be given.</string>
 
     <!--Settings-->
     <string name="settings_category_schedule_mode">Schedule mode</string>

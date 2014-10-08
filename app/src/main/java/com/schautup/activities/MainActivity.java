@@ -53,7 +53,8 @@ import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowActionModeEvent;
-import com.schautup.bus.ShowFiltersDefineDialogEvent;
+import com.schautup.bus.ShowFilterDefineDialogEvent;
+import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateActionBarEvent;
@@ -64,7 +65,8 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.AppListFragment;
-import com.schautup.fragments.FiltersDefineDialogFragment;
+import com.schautup.fragments.FilterDefineDialogFragment;
+import com.schautup.fragments.LabelDefineDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
@@ -371,13 +373,24 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 
 	/**
-	 * Handler for {@link ShowFiltersDefineDialogEvent}.
+	 * Handler for {@link com.schautup.bus.ShowFilterDefineDialogEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link ShowFiltersDefineDialogEvent}.
+	 * 		Event {@link com.schautup.bus.ShowFilterDefineDialogEvent}.
 	 */
-	public void onEvent(ShowFiltersDefineDialogEvent e) {
-		showDialogFragment(FiltersDefineDialogFragment.newInstance(this), null);
+	public void onEvent(ShowFilterDefineDialogEvent e) {
+		showDialogFragment(FilterDefineDialogFragment.newInstance(this), null);
+	}
+
+
+	/**
+	 * Handler for {@link com.schautup.bus.ShowLabelDefineDialogEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.ShowLabelDefineDialogEvent}.
+	 */
+	public void onEvent(ShowLabelDefineDialogEvent e) {
+		showDialogFragment(LabelDefineDialogFragment.newInstance(this), null);
 	}
 
 	/**
