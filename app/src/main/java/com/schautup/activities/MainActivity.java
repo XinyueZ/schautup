@@ -503,7 +503,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		android.support.v7.widget.ShareActionProvider provider =
 				(android.support.v7.widget.ShareActionProvider) MenuItemCompat.getActionProvider(menuShare);
 		//Setting a share intent.
-		String subject = getString(R.string.lbl_share_app_title, getString(R.string.app_name));
+		String subject = getString(R.string.lbl_share_app_title, getString(R.string.application_name));
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
@@ -641,7 +641,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.application_name,
 					R.string.app_name) {
 				@Override
 				public void onDrawerSlide(View drawerView, float slideOffset) {

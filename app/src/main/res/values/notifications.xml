@@ -3,7 +3,7 @@
     <string name="notify_can_not_set">Some problems!</string>
     <!--Foreground-->
     <string name="notify_foreground_simple_content">Hi! Here is %1$s.</string>
-    <string name="notify_foreground_headline">@string/app_name</string>
+    <string name="notify_foreground_headline">@string/application_name</string>
     <string name="notify_foreground_content">Schedule your device with different status(sound,
         vibrate, mute).</string>
     <!--mute-->

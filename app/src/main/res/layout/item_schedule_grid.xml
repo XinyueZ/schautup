@@ -27,7 +27,7 @@
                 android:layout_width="@dimen/size_list_grid_item_img"
                 android:layout_height="@dimen/size_list_grid_item_img"
                 android:layout_gravity="center"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/application_name"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_launcher" />
 

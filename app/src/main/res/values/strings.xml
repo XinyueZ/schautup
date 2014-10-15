@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Schedule Helper</string>
+    <string name="app_name">Automatic Tasks</string>
+    <string name="application_name">Automatic Tasks</string>
     <string name="hour_minute_divider">:</string>
     <string name="btn_confirm">Confirm</string>
     <string name="btn_cancel">Cancel</string>

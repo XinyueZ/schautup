@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Aufgaben Helfer</string>
-
+    <string name="app_name">Automatische Aufgaben</string>
+    <string name="application_name">Automatische Aufgaben</string>
 
     <string-array name="settings_sort_direction">
         <item>Absteigend</item>

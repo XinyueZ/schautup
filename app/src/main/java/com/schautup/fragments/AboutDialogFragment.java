@@ -67,7 +67,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		PackageManager pm = getActivity().getPackageManager();
 		String packageName = getActivity().getPackageName();
 		String versionName;
-		String appName = getString(R.string.app_name);
+		String appName = getString(R.string.application_name);
 		try {
 			PackageInfo info = pm.getPackageInfo(packageName, 0);
 			versionName = info.versionName;
