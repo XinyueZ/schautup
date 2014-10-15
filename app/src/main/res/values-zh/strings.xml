@@ -91,11 +91,6 @@
     <string name="msg_mobile_on_off">是否打开或关闭移动网络连接？\n\n注意！\n如果你在无线网络环境，本次“断开”将会被忽略。</string>
     <string name="msg_brightness">如何设置屏幕亮度？\n\n注意！\n某些第三方屏幕亮度控制软件，将会让你的设置失效并忽略。</string>
     <string name="msg_bluetooth_on_off">是否打开或关闭蓝牙信号接受？</string>
-    <string name="msg_reject_incoming_on_off">拒绝所有来电？</string>
-    <string name="msg_reject_incoming_duration">多久：</string>
-    <string name="msg_reject_incoming_duration_minutes">分钟</string>
-    <string name="msg_reject_incoming_duration_hours">小时</string>
-    <string name="msg_reject_incoming_duration_hours_minutes">%1$s时%2$s分</string>
     <string name="msg_filter_name_must_given">过滤器名必须填。</string>
     <string name="msg_label_name_must_given">标签名必须填。</string>
 

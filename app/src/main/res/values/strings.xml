@@ -108,11 +108,6 @@
     <string name="msg_mobile_on_off">Do you want to turn off or on mobile network?\n\nNote!\nIf you\'re in a WIFI environment, your current setting would be ignored.</string>
     <string name="msg_brightness">How to set your display brightness?\n\nNote!\nSome applications that can control screen brightness could interrupt your setting and your setting would be ignored.</string>
     <string name="msg_bluetooth_on_off">Do you want to turn off or on your Bluetooth?</string>
-    <string name="msg_reject_incoming_on_off">Do you want to reject all incoming calls?</string>
-    <string name="msg_reject_incoming_duration">Duration:</string>
-    <string name="msg_reject_incoming_duration_minutes">minute(s)</string>
-    <string name="msg_reject_incoming_duration_hours">hour(s)</string>
-    <string name="msg_reject_incoming_duration_hours_minutes">%1$sh%2$sm</string>
     <string name="msg_filter_name_must_given">Filter\'s name must be given.</string>
     <string name="msg_label_name_must_given">Label\'s name must be given.</string>
 
