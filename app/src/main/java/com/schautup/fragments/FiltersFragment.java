@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
-import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.ShowFilterDefineDialogEvent;
 import com.schautup.bus.ShowSetFilterEvent;

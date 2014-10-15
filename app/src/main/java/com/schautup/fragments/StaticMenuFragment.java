@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
 import com.schautup.activities.HomePageWebViewActivity;
 import com.schautup.activities.LogHistoryActivity;
 import com.schautup.activities.SettingsActivity;
-import com.schautup.bus.CloseDrawerEvent;
 
 import de.greenrobot.event.EventBus;
 

@@ -108,16 +108,16 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 	/**
 	 * Show  {@link android.support.v4.app.DialogFragment}.
 	 *
-	 * @param _dlgFrg
+	 * @param dlgFrg
 	 * 		An instance of {@link android.support.v4.app.DialogFragment}.
-	 * @param _tagName
+	 * @param tagName
 	 * 		Tag name for dialog, default is "dlg". To grantee that only one instance of {@link
 	 * 		android.support.v4.app.DialogFragment} can been seen.
 	 */
-	protected void showDialogFragment(DialogFragment _dlgFrg, String _tagName) {
+	protected void showDialogFragment(DialogFragment dlgFrg, String tagName) {
 		try {
-			if (_dlgFrg != null) {
-				DialogFragment dialogFragment = _dlgFrg;
+			if (dlgFrg != null) {
+				DialogFragment dialogFragment = dlgFrg;
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				// Ensure that there's only one dialog to the user.
 				Fragment prev = getSupportFragmentManager().findFragmentByTag("dlg");
@@ -125,10 +125,10 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 					ft.remove(prev);
 				}
 				try {
-					if (TextUtils.isEmpty(_tagName)) {
+					if (TextUtils.isEmpty(tagName)) {
 						dialogFragment.show(ft, "dlg");
 					} else {
-						dialogFragment.show(ft, _tagName);
+						dialogFragment.show(ft, tagName);
 					}
 				} catch (Exception _e) {
 				}

@@ -11,8 +11,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
-import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateLabelEvent;

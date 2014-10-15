@@ -92,11 +92,5 @@
     <color name="warning_green_10">#E5FFE5</color>
     <color name="warning_green_11">#FFFFFF</color>
 
-    <!--External app-list-->
-    <color name="installed_highlighted">#0c5984</color>
-    <color name="installed_default">#67c46f</color>
-    <color name="installed_text">#052d41</color>
-    <color name="not_installed_highlighted">#0c5984</color>
-    <color name="not_installed_default">#0f6ea5</color>
-    <color name="not_installed_text">#80ffffff</color>
+
 </resources>

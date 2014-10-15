@@ -191,10 +191,6 @@
 
     <string name="play_service_url">market://details?id=com.google.android.gms</string>
 
-    <!-- External Apps -->
-    <string name="extapp_title">More Apps:</string>
-    <string name="extapp_download">Inst.</string>
-    <string name="extapp_buy">Buy</string>
-    <string name="extapp_open">Start</string>
+
 
 </resources>

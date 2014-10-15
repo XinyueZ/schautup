@@ -81,10 +81,6 @@ public final class Prefs extends BasicPrefs {
 	 * Storage. Total and max for subitems on drawer, labels, filters define.
 	 */
 	private static final String KEY_MAX_SUBITEMS = "key_max_subitems";
-	/**
-	 * API. Get list of all external applications.
-	 */
-	private static final String KEY_APP_LIST = "app_list";
 	//----------------------------------------------------------
 
 
@@ -256,13 +252,7 @@ public final class Prefs extends BasicPrefs {
 		return getInt(KEY_MAX_SUBITEMS, 5);
 	}
 
-	/**
-	 * Get API for all external applications.
-	 * @return API.
-	 */
-	public String getApiAppList() {
-		return getString(KEY_APP_LIST, null);
-	}
+
 
 	/**
 	 * Get sort direction: descending or ascending.

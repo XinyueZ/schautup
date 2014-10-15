@@ -29,6 +29,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.chopping.bus.CloseDrawerEvent;
 import com.crashlytics.android.Crashlytics;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
@@ -41,7 +42,6 @@ import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
-import com.schautup.bus.CloseDrawerEvent;
 import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
@@ -65,7 +65,7 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.db.DatabaseHelper;
 import com.schautup.fragments.AboutDialogFragment;
-import com.schautup.fragments.AppListFragment;
+import com.schautup.fragments.AppListImplFragment;
 import com.schautup.fragments.FilterDefineDialogFragment;
 import com.schautup.fragments.LabelDefineDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
@@ -766,7 +766,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Show all external applications links.
 	 */
 	private void showAppList() {
-		getSupportFragmentManager().beginTransaction().replace(R.id.app_list_fl, AppListFragment.newInstance(this))
+		getSupportFragmentManager().beginTransaction().replace(R.id.app_list_fl, AppListImplFragment.newInstance(this))
 				.commit();
 	}
 }

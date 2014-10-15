@@ -26,7 +26,7 @@
         android:id="@+id/action_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_action_settings"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 
     <!--<group android:checkableBehavior="single">-->
