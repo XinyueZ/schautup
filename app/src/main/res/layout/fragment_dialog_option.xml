@@ -324,11 +324,6 @@
                                 android:layout_height="@dimen/size_hour_minute"
                                 android:background="@drawable/ic_dail_abort_btn" />
 
-                            <com.schautup.views.BadgeView
-                                android:id="@+id/info_call_abort_bgv"
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
 
                         </FrameLayout>
 

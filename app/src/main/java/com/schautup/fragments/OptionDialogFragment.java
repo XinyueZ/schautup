@@ -143,10 +143,6 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	private BadgeView mBrightnessInfoBgb;
 	/**
-	 * Information about setting reject incoming.
-	 */
-	private BadgeView mRejectIncomingInfoBgb;
-	/**
 	 * Information about selected recurrence.
 	 */
 	private BadgeView mRecurrenceBgv;
@@ -211,6 +207,9 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			break;
 		case SOUND:
 			mSelSoundV.setSelected(true);
+			break;
+		case CALLABORT:
+			mSelRejectIncomingV.setSelected(true);
 			break;
 		case WIFI:
 			mSelWifiV.setSelected(true);
@@ -339,8 +338,6 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mMobileInfoBgb.setVisibility(View.GONE);
 		mBrightnessInfoBgb = (BadgeView) view.findViewById(R.id.info_brightness_bgv);
 		mBrightnessInfoBgb.setVisibility(View.GONE);
-		mRejectIncomingInfoBgb = (BadgeView) view.findViewById(R.id.info_call_abort_bgv);
-		mRejectIncomingInfoBgb.setVisibility(View.GONE);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
@@ -388,6 +385,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
 			mBluetoothInfoBgb.setVisibility(View.GONE);
@@ -403,6 +401,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
 			mBluetoothInfoBgb.setVisibility(View.GONE);
@@ -418,6 +417,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
 			mBluetoothInfoBgb.setVisibility(View.GONE);
@@ -427,6 +427,22 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mBrightnessInfoBgb.setVisibility(View.GONE);
 
 			mSelectedType = ScheduleType.SOUND;
+			break;
+		case R.id.set_call_abort_ll:
+			mSelRejectIncomingV.setSelected(true);
+			mSelSoundV.setSelected(false);
+			mSelMuteV.setSelected(false);
+			mSelVibrateV.setSelected(false);
+			mSelWifiV.setSelected(false);
+			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelBluetoothV.setSelected(false);
+			mBluetoothInfoBgb.setVisibility(View.GONE);
+			mSelMobileV.setSelected(false);
+			mMobileInfoBgb.setVisibility(View.GONE);
+			mSelBrightnessV.setSelected(false);
+			mBrightnessInfoBgb.setVisibility(View.GONE);
+
+			mSelectedType = ScheduleType.CALLABORT;
 			break;
 		case R.id.set_wifi_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
@@ -442,6 +458,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
 					mSelBluetoothV.setSelected(false);
@@ -461,6 +478,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
 					mSelBluetoothV.setSelected(false);
@@ -491,6 +509,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -510,6 +529,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -542,6 +562,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -562,6 +583,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -594,6 +616,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 							mSelVibrateV.setSelected(false);
 							mSelMuteV.setSelected(false);
+							mSelRejectIncomingV.setSelected(false);
 							mSelSoundV.setSelected(false);
 							mSelWifiV.setSelected(false);
 							mWifiInfoBgb.setVisibility(View.GONE);
@@ -613,6 +636,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -632,6 +656,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
@@ -652,6 +677,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSelVibrateV.setSelected(false);
 				mSelSoundV.setSelected(false);
 				mSelWifiV.setSelected(false);
+				mSelRejectIncomingV.setSelected(false);
 				mSelBluetoothV.setSelected(false);
 				mSelMobileV.setSelected(false);
 				mSelBrightnessV.setSelected(false);

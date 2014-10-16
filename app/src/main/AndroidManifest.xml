@@ -157,7 +157,7 @@
         <!--Event handler for reject incoming calls.-->
         <receiver
             android:name="com.chopping.utils.IncomingCallReceiver"
-            android:exported="false"
+            android:exported="true"
             android:enabled="false">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PHONE_STATE" />

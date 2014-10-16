@@ -527,7 +527,11 @@ public final class App extends Application {
 			com.chopping.utils.Utils.showLongToast(this, "Coming soon...");
 			break;
 		case CALLABORT:
-			com.chopping.utils.Utils.showLongToast(this, "Coming soon...");
+			Prefs.getInstance(this).setRejectIncomingCall(true);
+			sendNotification(this, new Result(getString(R.string.notify_reject_call_simple_content), getString(
+						R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
+						R.drawable.ic_dail_abort_notify));
+
 			break;
 		}
 		DB db = DB.getInstance(this);
