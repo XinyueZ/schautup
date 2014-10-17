@@ -11,6 +11,7 @@
     <string name="btn_agree">I agree.</string>
     <string name="btn_not_agree">I do not agree.</string>
     <string name="btn_add">Add</string>
+    <string name="btn_turn_off">Turn off</string>
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">Top of data</string>

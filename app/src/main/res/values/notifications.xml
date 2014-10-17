@@ -37,7 +37,8 @@
     <string name="notify_bluetooth_headline">Caution!</string>
     <string name="notify_bluetooth_content">I\'ve turned %s your Bluetooth.</string>
     <!--Reject incoming calls-->
-    <string name="notify_reject_call_simple_content">Reject calls turns ON!</string>
+    <string name="notify_reject_call_simple_content">Turns ON! Reject all incoming calls.</string>
     <string name="notify_reject_call_headline">Caution!</string>
     <string name="notify_reject_call_content">I\'ve turned ON to reject all incoming calls.</string>
+    <string name="notify_reject_status">All your incoming calls will be rejected automatically.\nDo you want to turn off?</string>
 </resources>

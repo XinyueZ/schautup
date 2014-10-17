@@ -528,9 +528,11 @@ public final class App extends Application {
 			break;
 		case CALLABORT:
 			Prefs.getInstance(this).setRejectIncomingCall(true);
+			stopService(new Intent(this, ScheduleManager.class));
+			startService(new Intent(this, ScheduleManager.class));
 			sendNotification(this, new Result(getString(R.string.notify_reject_call_simple_content), getString(
-						R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
-						R.drawable.ic_dail_abort_notify));
+					R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
+					R.drawable.ic_dail_abort_notify));
 
 			break;
 		}

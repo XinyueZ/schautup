@@ -1,6 +1,5 @@
 package com.schautup.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Build.VERSION_CODES;
 
@@ -97,14 +96,14 @@ public final class Prefs extends BasicPrefs {
 	/**
 	 * Get instance of  {@link com.schautup.utils.Prefs} singleton.
 	 *
-	 * @param _context
-	 * 		{@link android.app.Application}.
+	 * @param context
+	 * 		{@link android.content.Context}.
 	 *
 	 * @return The {@link com.schautup.utils.Prefs} singleton.
 	 */
-	public static Prefs getInstance(Application _context) {
+	public static Prefs getInstance(Context context) {
 		if (sInstance == null) {
-			sInstance = new Prefs(_context);
+			sInstance = new Prefs(context);
 		}
 		return sInstance;
 	}

@@ -10,7 +10,7 @@
     <string name="btn_agree">同意</string>
     <string name="btn_not_agree">拒绝</string>
     <string name="btn_add">添加</string>
-
+    <string name="btn_turn_off">撤消</string>
 
     <!--Titles, labels etc.-->
     <string name="lbl_listview_top">数据顶端</string>

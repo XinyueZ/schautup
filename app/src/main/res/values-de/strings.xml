@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Automatische Aufgaben</string>
     <string name="application_name">Automatische Aufgaben</string>
+    <string name="btn_turn_off">ausschalten</string>
 
     <string-array name="settings_sort_direction">
         <item>Absteigend</item>

@@ -2,6 +2,7 @@ package com.schautup.activities;
 
 import java.util.List;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
 import com.schautup.fragments.ScheduleGridFragment;
 import com.schautup.fragments.ScheduleListFragment;
+import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
@@ -147,10 +149,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.CloseDrawerEvent}.
+	 * Handler for {@link CloseDrawerEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.CloseDrawerEvent}.
+	 * 		Event {@link CloseDrawerEvent}.
 	 */
 	public void onEvent(CloseDrawerEvent e) {
 		mDrawerLayout.closeDrawers();
@@ -470,6 +472,24 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		}
 		// Move the progress-indicator firstly under the ActionBar.
 		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
+
+		handleStopAbortIncomings(getIntent());
+	}
+
+	private void handleStopAbortIncomings(Intent intent) {
+		Application application = getApplication();
+		if (intent.getBooleanExtra(ScheduleManager.EXTRAS_STOPPED_CALL_ABORT, false)) {
+			Prefs.getInstance(application).setRejectIncomingCall(false);
+			stopService(new Intent(application, ScheduleManager.class));
+			startService(new Intent(application, ScheduleManager.class));
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		handleStopAbortIncomings(intent);
 	}
 
 	@Override

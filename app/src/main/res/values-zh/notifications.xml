@@ -33,4 +33,10 @@
     <string name="notify_bluetooth_simple_content">%s了蓝牙</string>
     <string name="notify_bluetooth_headline">提示</string>
     <string name="notify_bluetooth_content">我已经%1$s了蓝牙通讯。</string>
+
+    <!--Reject incoming calls-->
+    <string name="notify_reject_call_simple_content">现在开始拒绝所有来电！</string>
+    <string name="notify_reject_call_headline">提示</string>
+    <string name="notify_reject_call_content">开始拒绝所有的来电。</string>
+    <string name="notify_reject_status">所有来电将会被自动挂断，\n是否撤消这一功能？</string>
 </resources>
