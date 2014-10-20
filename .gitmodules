@@ -1,3 +1,6 @@
 [submodule "submodules/ChoppingBootstrap"]
 	path = submodules/ChoppingBootstrap
 	url = git@github.com:XinyueZ/Chopping.git
+[submodule "submodules/android-betterpickers"]
+	path = submodules/android-betterpickers
+	url = git@github.com:XinyueZ/android-betterpickers.git

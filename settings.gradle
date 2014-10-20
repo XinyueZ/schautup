@@ -1,3 +1,4 @@
-include ':app', ':ChoppingBootstrap', ':volley_cz'
+include ':app', ':ChoppingBootstrap', ':volley_cz', ':android-betterpickers'
 project(':ChoppingBootstrap').projectDir = new File('submodules/ChoppingBootstrap')
 project(':volley_cz').projectDir = new File('submodules/ChoppingBootstrap/submodules/volley_cz')
+project(':android-betterpickers').projectDir = new File('submodules/android-betterpickers/library')

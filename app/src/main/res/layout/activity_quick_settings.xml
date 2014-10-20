@@ -1,24 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_app"
     android:layout_width="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp"
+    android:padding="16dp"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.schautup.activities.QuickSettingsActivity">
 
-    <include layout="@layout/inc_pause_resume"   />
+    <RelativeLayout
+        android:id="@+id/quick_settings_pause_resume_ll"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/text_common_white"
+            android:text="@string/settings_pause_resume"
+            android:layout_gravity="center_vertical"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/pause_resume_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:thumb="@drawable/switch_thumb"
+            android:textOff="@string/settings_pause"
+            android:textOn="@string/settings_resume"
+            android:enabled="true"
+            android:layout_alignParentRight="true"
+            custom:track="@drawable/switch_track_holo_light"
+            custom:switchTextAppearance="@style/TextAppearance.Holo.Light.Widget.Switch"
+            custom:thumbTextPadding="20dip"
+            custom:switchMinWidth="100dip"
+            custom:switchPadding="20dip" />
+
+
+    </RelativeLayout>
+
 
     <ImageButton
-        android:layout_width="match_parent"
+        android:layout_below="@+id/quick_settings_pause_resume_ll"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:gravity="center" android:src="@drawable/ic_open_app_btn"
+        android:src="@drawable/ic_open_app_btn"
         android:background="@drawable/selector_bg5_btn"
-        android:layout_gravity="center"
+        android:layout_alignParentRight="true"
         android:onClick="openApp" />
-</LinearLayout>
+</RelativeLayout>

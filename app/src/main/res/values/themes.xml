@@ -4,18 +4,12 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/AbStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:dropDownListViewStyle">@style/OverflowDropDown</item>
-        <item name="android:actionOverflowButtonStyle">@style/OverflowMenu</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyle</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="popupMenuStyle">@style/PopupMenuStyle</item>
         <item name="dropDownListViewStyle">@style/OverflowDropDown</item>
-        <item name="actionOverflowButtonStyle">@style/OverflowMenu</item>
-        <!--There's a bug. The ShareActionProvider doesn't run when Theme.Base.AppCompat.Light. -->
-        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_holo_light</item>
     </style>
 
     <style name="NoTitleTextOverlayTheme" parent="@AppTheme">
@@ -28,7 +22,7 @@
     <style name="NoOverlayTheme" parent="@AppTheme">
         <item name="android:actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="android:windowActionBarOverlay">false</item>
-        <item name="android:textColorPrimary">@color/text_common_black</item>
+        <item name="android:textColorPrimary">@color/text_common_white</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyleHomeUp</item>
         <item name="windowActionBarOverlay">false</item>
@@ -36,58 +30,28 @@
 
     <style name="OverlayTheme" parent="@AppTheme">
         <item name="android:actionBarStyle">@style/AbStyleHomeUp</item>
-        <item name="android:textColorPrimary">@color/text_common_black</item>
+        <item name="android:textColorPrimary">@color/text_common_white</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AbStyleHomeUp</item>
     </style>
 
-    <!--SettingsActivity, a PreferenceActivity.-->
-
-    <style name="PrefsTheme" parent="NoOverlayTheme">
-    <item name="android:textColor">@color/text_common_black</item>
-    <item name="android:listViewStyle">@style/PrefsListStyle</item>
-    <item name="android:listSeparatorTextViewStyle">@style/PrefsListHeader</item>
-    <item name="android:logo">@drawable/ic_settings</item>
-    <!-- Support library compatibility -->
-    <item name="logo">@drawable/ic_settings</item>
-</style>
-
-    <style name="PrefsListHeader" parent="@android:style/Widget.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/text_common_black</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="PrefsListStyle" parent="@android:style/Widget.ListView">
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:divider">@drawable/lv_divider</item>
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:headerDividersEnabled">true</item>
-        <item name="android:textColor">@color/text_common_black</item>
-    </style>
-
     <!--Support ActionBar-->
 
-    <style name="AbStyle" parent="@style/Widget.AppCompat.Base.ActionBar">
+    <style name="AbStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:background">@color/bg_actionbar</item>
-        <item name="android:icon">@drawable/ic_action_logo</item>
+        <item name="android:icon">@null</item>
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
         <!-- Support library compatibility -->
-        <item name="icon">@drawable/ic_action_logo</item>
+        <item name="icon">@null</item>
         <item name="background">@color/bg_actionbar</item>
         <item name="titleTextStyle">@style/TitleTextStyle</item>
 
     </style>
 
     <style name="AbStyleNoTitleText" parent="@style/AbStyle">
-        <item name="android:displayOptions">showHome|useLogo</item>
+        <item name="android:displayOptions">showHome</item>
         <!-- Support library compatibility -->
-        <item name="displayOptions">showHome|useLogo</item>
+        <item name="displayOptions">showHome</item>
     </style>
 
     <style name="AbStyleHomeUp" parent="@style/AbStyle">
@@ -96,29 +60,22 @@
         <item name="displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
 
-    <!--Actionbar background of popover-->
-    <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@color/bg_overflow</item>
-        <item name="android:dropDownSelector">@color/bg_actionbar</item>
-    </style>
 
     <!--Actionbar overflow menu divider-->
     <style name="OverflowDropDown" parent="@style/Widget.AppCompat.ListView.DropDown">
         <item name="android:divider">@color/menu_divider</item>
         <item name="android:dividerHeight">1dp</item>
+        <item name="android:background">@color/bg_overflow</item>
     </style>
 
-    <!--Actionbar 3 dot menu icon-->
-    <style name="OverflowMenu" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_action_overflow</item>
-    </style>
+
 
     <!--Actionbar title text-->
     <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/text_common_white</item>
     </style>
 
-    <style name="ActivityDialog" parent="@android:style/Theme.Dialog">
+    <style name="ActivityDialog" parent="@style/Theme.AppCompat.Dialog">
 
         <!--http://stackoverflow.com/questions/6181797/dialog-activity-to-wrap-content-->
         <!--<item name="android:windowFrame">@null</item>-->

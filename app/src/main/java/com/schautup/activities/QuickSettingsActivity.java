@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -40,7 +41,8 @@ public final class QuickSettingsActivity extends Activity implements OnCheckedCh
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
-		CompoundButton cb = (CompoundButton) findViewById(R.id.pause_resume_cb);
+		SwitchCompat cb = (SwitchCompat) findViewById(R.id.pause_resume_cb);
+		cb.setShowText(true);
 		cb.setChecked(!Prefs.getInstance(getApplication()).isPause());
 		cb.setOnCheckedChangeListener(this);
 	}

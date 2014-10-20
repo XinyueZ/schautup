@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.support.v7.app.ActionBarPreferenceActivity;
+import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.schautup.App;
@@ -20,7 +20,7 @@ import com.schautup.utils.Prefs;
 /**
  * Setting .
  */
-public final class SettingsActivity extends ActionBarPreferenceActivity implements
+public final class SettingsActivity extends PreferenceActivity implements
 		Preference.OnPreferenceChangeListener {
 	/**
 	 * Tricky to avoid first call.
@@ -43,7 +43,6 @@ public final class SettingsActivity extends ActionBarPreferenceActivity implemen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setIcon(R.drawable.ic_action_settings);
 		addPreferencesFromResource(R.xml.settings);
 
 		String val;

@@ -109,8 +109,7 @@
         <activity
             android:name="com.schautup.activities.SettingsActivity"
             android:label="@string/menu_settings"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoOverlayTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.schautup.activities.HomePageWebViewActivity"
             android:label="@string/drawer_item_home_page"
@@ -125,6 +124,8 @@
             android:name="com.schautup.activities.QuickSettingsActivity"
             android:label="@string/settings_quick_title"
             android:noHistory="true"
+            android:taskAffinity="com.schautup.QUICK_SETTING"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityDialog" />
 

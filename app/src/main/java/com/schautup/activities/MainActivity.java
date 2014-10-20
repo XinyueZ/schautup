@@ -6,13 +6,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
 import android.text.format.DateFormat;
@@ -32,7 +32,6 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.crashlytics.android.Crashlytics;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
@@ -184,7 +183,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowActionBarEvent }.
 	 */
 	public void onEvent(ShowActionBarEvent e) {
-		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRefreshLayout.getLayoutParams();
 		if (e.isShow()) {
 			getSupportActionBar().show();
 			ViewCompat.setY(mRefreshLayout, getActionBarHeight());
@@ -444,7 +442,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	public static void showInstance(Context cxt) {
 		Intent intent = new Intent(cxt, MainActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		cxt.startActivity(intent);
 	}
 
@@ -571,10 +569,18 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 
+	/**
+	 * @param dialog
+	 * @param hourOfDay
+	 * 		The hour that was set.
+	 * @param minute
+	 * 		The minute that was set.
+	 */
 	@Override
-	public void onTimeSet(RadialPickerLayout dialog, int hourOfDay, int minute) {
+	public void onTimeSet(RadialTimePickerDialog dialog, int hourOfDay, int minute) {
 		EventBus.getDefault().post(new SetTimeEvent(hourOfDay, minute));
 	}
+
 
 	@Override
 	public void onRecurrenceSet(String rrule) {
@@ -661,7 +667,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.application_name,
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.application_name,
 					R.string.app_name) {
 				@Override
 				public void onDrawerSlide(View drawerView, float slideOffset) {

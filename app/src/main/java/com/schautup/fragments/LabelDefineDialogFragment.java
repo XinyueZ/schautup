@@ -237,7 +237,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCancelable(true);
-		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_Base_AppCompat_Dialog_FixedSize);
+		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
 	}
 
 	@Override
