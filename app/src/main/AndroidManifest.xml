@@ -29,6 +29,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.PROCESS_INCOMING_CALLS" />
+    <!--For a information toast when the all incoming calls abort.-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <supports-screens android:xlargeScreens="true" />
 

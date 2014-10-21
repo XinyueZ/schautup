@@ -22,10 +22,6 @@ import com.schautup.utils.Prefs;
  * @author Xinyue Zhao
  */
 public final class ScheduleManager extends Service {
-	/**
-	 * Extras and flag to indicate that the
-	 */
-	public static final String EXTRAS_STOPPED_CALL_ABORT = "com.schautup.scheduler.Stop.CallAbort";
 
 	/**
 	 * Provide an ongoing {@link android.app.Notification} that keeps the application running long time in background.
@@ -104,7 +100,7 @@ public final class ScheduleManager extends Service {
 	 */
 	private static PendingIntent buildViewClickIntent(Context context) {
 		Intent intent = new Intent(context, MainActivity.class);
-		intent.putExtra(EXTRAS_STOPPED_CALL_ABORT , true);
+		intent.putExtra(MainActivity.EXTRAS_STOPPED_CALL_ABORT , true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}

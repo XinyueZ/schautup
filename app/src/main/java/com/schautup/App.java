@@ -45,14 +45,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
 
 import com.chopping.application.LL;
 import com.chopping.exceptions.OperationFailException;
@@ -133,7 +139,7 @@ public final class App extends Application {
 			long id;
 			for (int i = 0; i < items.size(); i++) {
 				id = items.keyAt(i);
-				remove( id);
+				remove(id);
 			}
 		}
 	}
@@ -146,7 +152,7 @@ public final class App extends Application {
 	 */
 	public void onEvent(UpdatedItemEvent e) {
 		ScheduleItem item = e.getItem();
-		remove( item.getId());
+		remove(item.getId());
 		add(item);
 	}
 
@@ -160,6 +166,7 @@ public final class App extends Application {
 	// Define methods how to start, stop, schedules, change current
 	// schedule mode.
 	//----------------------------------------------------------
+
 	/**
 	 * Start doing, waiting, finishing all scheduled items.
 	 */
@@ -205,7 +212,9 @@ public final class App extends Application {
 
 	/**
 	 * Change current schedule mode in system.
-	 * @param newMode New id of mode. 0-hungry, 1-thirsty, 2-Neutral.
+	 *
+	 * @param newMode
+	 * 		New id of mode. 0-hungry, 1-thirsty, 2-Neutral.
 	 */
 	public void changeMode(int newMode) {
 		String mod = Prefs.getInstance(this).getScheduleMode();
@@ -219,14 +228,14 @@ public final class App extends Application {
 			break;
 		case 1:
 		case 2:
-			if(oldMode == 0) {
+			if (oldMode == 0) {
 				try {
 					unregisterReceiver(mReceiver);
 					LL.i("SchautUp paused Hungry.");
 				} catch (IllegalArgumentException e) {
 					//Ignore if not registered before.
 				}
-			} else if(oldMode == 1 || oldMode == 2) {
+			} else if (oldMode == 1 || oldMode == 2) {
 				removeAll();
 				LL.i(String.format("SchautUp paused %s.", oldMode == 1 ? "Thirsty" : "Neutral"));
 			}
@@ -304,7 +313,7 @@ public final class App extends Application {
 			@Override
 			protected void onPostExecute(List<ScheduleItem> items) {
 				super.onPostExecute(items);
-				if(items != null && items.size() > 0) {
+				if (items != null && items.size() > 0) {
 					for (ScheduleItem item : items) {
 						doScheduleTask(item);
 					}
@@ -324,18 +333,18 @@ public final class App extends Application {
 	 * @param doNext
 	 * 		{@code true} if called by alarm of Thirsty mode. {@code false} if it is from neutral mode.
 	 */
-	public synchronized  void doSchedules(final long id, final boolean doNext) {
+	public synchronized void doSchedules(final long id, final boolean doNext) {
 		new ParallelTask<Void, List<ScheduleItem>, List<ScheduleItem>>(false) {
 			@Override
 			protected List<ScheduleItem> doInBackground(Void... params) {
 				DateTime now = DateTime.now();
-				return DB.getInstance(App.this).getSchedules(id,
-						Utils.dateTimeDay2String(now.getDayOfWeek()));
+				return DB.getInstance(App.this).getSchedules(id, Utils.dateTimeDay2String(now.getDayOfWeek()));
 
 			}
+
 			@Override
 			protected void onPostExecute(List<ScheduleItem> items) {
-				if(items != null && items.size() > 0) {
+				if (items != null && items.size() > 0) {
 					for (ScheduleItem item : items) {
 						doScheduleTask(item);
 					}
@@ -421,8 +430,10 @@ public final class App extends Application {
 					} else {
 						actionContent = String.format(getString(R.string.notify_wifi_content), getString(
 								R.string.lbl_off));
-						comment = new StringBuilder().append(getString(R.string.lbl_wifi_in_sleep)).append('\n').append(getString(R.string.lbl_function_is_running, getString(R.string.option_wifi),
-								getString(R.string.lbl_off_small))).append('\n').append(getString(R.string.lbl_left_from_wifi)).toString();
+						comment = new StringBuilder().append(getString(R.string.lbl_wifi_in_sleep)).append('\n').append(
+								getString(R.string.lbl_function_is_running, getString(R.string.option_wifi), getString(
+										R.string.lbl_off_small))).append('\n').append(getString(
+								R.string.lbl_left_from_wifi)).toString();
 					}
 				}
 			} catch (OperationFailException e) {
@@ -533,7 +544,7 @@ public final class App extends Application {
 			sendNotification(this, new Result(getString(R.string.notify_reject_call_simple_content), getString(
 					R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
 					R.drawable.ic_dail_abort_notify));
-
+			showWarningsAbortCall();
 			break;
 		}
 		DB db = DB.getInstance(this);
@@ -545,6 +556,55 @@ public final class App extends Application {
 					R.string.lbl_avoid_change), actionContent, R.drawable.ic_some_warnings_notify), comment);
 		}
 		EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
+	}
+
+
+	/**
+	 * Main layout for this component.
+	 */
+	private static final int LAYOUT = R.layout.inc_turn_off_reject_incoming;
+	/**
+	 * A fake "toast" for warning incoming calls to abort.
+	 */
+	private View mToastV;
+
+	/**
+	 * Show a "toast" when all incoming calls abort.
+	 */
+	private void showWarningsAbortCall() {
+		if (mToastV == null) {
+			WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+					PixelFormat.TRANSLUCENT);
+			params.gravity = Gravity.BOTTOM;
+			WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+			mToastV = View.inflate(this, LAYOUT, null);
+			mToastV.findViewById(R.id.status_off_btn).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(v.getContext(), MainActivity.class);
+					intent.putExtra(MainActivity.EXTRAS_STOPPED_CALL_ABORT, true);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+				}
+			});
+
+			mToastV.setBackgroundResource(R.color.text_common_black);
+			wm.addView(mToastV, params);
+		}
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if (Prefs.getInstance(App.this).isRejectIncomingCall()) {
+					showWarningsAbortCall();
+				} else {
+					WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+					wm.removeView(mToastV);
+				}
+			}
+		}, TimeUnit.SECONDS.toMillis(3));
 	}
 
 	//----------------------------------------------------------
@@ -745,11 +805,11 @@ public final class App extends Application {
 	/**
 	 * Removed all scheduled tasks and cancel them.
 	 */
-	private  void removeAll() {
+	private void removeAll() {
 		long id;
 		for (int i = 0; mPendingIntents != null && i < mPendingIntents.size(); i++) {
 			id = mPendingIntents.keyAt(i);
-			remove(  id);
+			remove(id);
 		}
 	}
 
@@ -762,8 +822,8 @@ public final class App extends Application {
 	 * @return {@code true} if find the pending with {@code id} and has been removed. {@code false} if the pending with
 	 * {@code id} can't be found.
 	 */
-	private  synchronized boolean remove(  long id) {
-		AlarmManager mgr = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
+	private synchronized boolean remove(long id) {
+		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = mPendingIntents.get(id);
 		if (pi != null) {
 			mPendingIntents.remove(id);
@@ -799,7 +859,7 @@ public final class App extends Application {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(currentTime);
 		calendar.set(Calendar.HOUR_OF_DAY, item.getHour());
-		calendar.set(Calendar.MINUTE,  item.getMinute());
+		calendar.set(Calendar.MINUTE, item.getMinute());
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		long setTime = calendar.getTimeInMillis();
@@ -810,7 +870,7 @@ public final class App extends Application {
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent, (int)item.getId());
+		PendingIntent pendingIntent = createAlarmPending(mgr, setTime, intent, (int) item.getId());
 		mPendingIntents.put(item.getId(), pendingIntent);
 	}
 
@@ -830,7 +890,7 @@ public final class App extends Application {
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(EXTRAS_ITEM_ID, item.getId());
 		AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pendingIntent = createAlarmPending(mgr, calendar.getTimeInMillis(), intent,  (int)item.getId());
+		PendingIntent pendingIntent = createAlarmPending(mgr, calendar.getTimeInMillis(), intent, (int) item.getId());
 		mPendingIntents.put(item.getId(), pendingIntent);
 	}
 

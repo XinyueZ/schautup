@@ -476,7 +476,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	private void handleStopAbortIncomings(Intent intent) {
 		Application application = getApplication();
-		if (intent.getBooleanExtra(ScheduleManager.EXTRAS_STOPPED_CALL_ABORT, false)) {
+		if (intent.getBooleanExtra(EXTRAS_STOPPED_CALL_ABORT, false)) {
 			Prefs.getInstance(application).setRejectIncomingCall(false);
 			stopService(new Intent(application, ScheduleManager.class));
 			startService(new Intent(application, ScheduleManager.class));
@@ -795,4 +795,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		getSupportFragmentManager().beginTransaction().replace(R.id.app_list_fl, AppListImplFragment.newInstance(this))
 				.commit();
 	}
+
+	/**
+	 * Extras and flag to indicate that the
+	 */
+	public static final String EXTRAS_STOPPED_CALL_ABORT = "com.schautup.scheduler.Stop.CallAbort";
 }
