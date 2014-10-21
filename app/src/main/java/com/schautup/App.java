@@ -541,9 +541,9 @@ public final class App extends Application {
 			Prefs.getInstance(this).setRejectIncomingCall(true);
 			stopService(new Intent(this, ScheduleManager.class));
 			startService(new Intent(this, ScheduleManager.class));
-			sendNotification(this, new Result(getString(R.string.notify_reject_call_simple_content), getString(
-					R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
-					R.drawable.ic_dail_abort_notify));
+//			sendNotification(this, new Result(getString(R.string.notify_reject_call_simple_content), getString(
+//					R.string.notify_reject_call_headline), getString(R.string.notify_reject_call_content),
+//					R.drawable.ic_dail_abort_notify));
 			showWarningsAbortCall();
 			break;
 		}
@@ -567,6 +567,25 @@ public final class App extends Application {
 	 * A fake "toast" for warning incoming calls to abort.
 	 */
 	private View mToastV;
+	/**
+	 *  Timer the "toast" when warns aborting incoming calls.
+	 */
+	private Handler mH = new Handler();
+	/**
+	 * Logical to simulate timer  when warns aborting incoming calls.
+	 */
+	private Runnable mR = new Runnable() {
+		@Override
+		public void run() {
+			if (Prefs.getInstance(App.this).isRejectIncomingCall()) {
+				showWarningsAbortCall();
+			} else {
+				WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+				wm.removeView(mToastV);
+				mToastV = null;
+			}
+		}
+	};
 
 	/**
 	 * Show a "toast" when all incoming calls abort.
@@ -594,17 +613,7 @@ public final class App extends Application {
 			wm.addView(mToastV, params);
 		}
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (Prefs.getInstance(App.this).isRejectIncomingCall()) {
-					showWarningsAbortCall();
-				} else {
-					WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-					wm.removeView(mToastV);
-				}
-			}
-		}, TimeUnit.SECONDS.toMillis(3));
+		mH.postDelayed(mR, TimeUnit.SECONDS.toMillis(3));
 	}
 
 	//----------------------------------------------------------
