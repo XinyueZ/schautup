@@ -170,8 +170,8 @@
         <!--Event handler for changing system packages.-->
         <receiver
             android:name="com.chopping.application.InstalledAppReceiver"
-            android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />

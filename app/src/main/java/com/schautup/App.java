@@ -43,6 +43,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -535,7 +537,19 @@ public final class App extends Application {
 			}
 			break;
 		case STARTAPP:
-			com.chopping.utils.Utils.showLongToast(this, "Coming soon...");
+			PackageManager pm = getPackageManager();
+			try {
+				String startPackageName = item.getReserveLeft();
+				PackageInfo app = pm.getPackageInfo(startPackageName, PackageManager.GET_ACTIVITIES);
+				String label = app.applicationInfo.loadLabel(pm).toString();
+				sendNotification(this, new Result(String.format(getString(R.string.notify_start_app_content), label),
+						getString(R.string.notify_start_app_headline), String.format(getString(
+						R.string.notify_start_app_content), label), R.drawable.ic_app_list_notify));
+				Intent LaunchIntent = pm.getLaunchIntentForPackage(startPackageName);
+				LaunchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(LaunchIntent);
+			} catch (PackageManager.NameNotFoundException e) {
+			}
 			break;
 		case CALLABORT:
 			Prefs.getInstance(this).setRejectIncomingCall(true);

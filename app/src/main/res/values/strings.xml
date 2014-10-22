@@ -176,11 +176,11 @@
     <string name="type_brightness">Brightness</string>
     <string name="type_call_abort">Abort\nincoming</string>
     <string name="type_bluetooth">Bluetooth</string>
-    <string name="type_app_start">Start\nApps</string>
+    <string name="type_app_start">Start\nApp</string>
 
     <string name="type_mobile_data_nb">Mobile</string>
     <string name="type_call_abort_nb">Abort incoming</string>
-    <string name="type_app_start_nb">Start Apps</string>
+    <string name="type_app_start_nb">Start App</string>
 
     <!--debug:-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>

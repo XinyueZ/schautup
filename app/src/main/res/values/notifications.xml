@@ -41,4 +41,8 @@
     <string name="notify_reject_call_headline">Caution!</string>
     <string name="notify_reject_call_content">I\'ve turned ON to reject all incoming calls.</string>
     <string name="notify_reject_status">All your incoming calls will be rejected automatically.\nDo you want to turn off?</string>
+    <!--Start application.-->
+    <string name="notify_start_app_simple_content">Launch %s</string>
+    <string name="notify_start_app_headline">Caution!</string>
+    <string name="notify_start_app_content">Launch application %s</string>
 </resources>

@@ -1,9 +1,13 @@
 package com.schautup.fragments;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -20,8 +24,10 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
+import com.schautup.bus.SelectedInstalledApplicationEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowInstalledApplicationsListEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
 import com.schautup.bus.UpdateDBEvent;
@@ -78,6 +84,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * {@link android.view.View} represent setting on brightness.
 	 */
 	private View mSelBrightnessV;
+	/**
+	 * {@link android.view.View} represent button to start apps.
+	 */
+	private View mSelStartAppV;
 	/**
 	 * {@link android.view.View} represent setting on reject incoming.
 	 */
@@ -211,6 +221,18 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case CALLABORT:
 			mSelRejectIncomingV.setSelected(true);
 			break;
+		case STARTAPP:
+			mSelStartAppV.setSelected(true);
+			final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+			mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+			final List<ResolveInfo> pkgAppsList = getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
+			for(ResolveInfo app : pkgAppsList) {
+				if(TextUtils.equals(app.activityInfo.packageName, item.getReserveLeft())) {
+					mSelStartAppV.setTag(app);
+					break;
+				}
+			}
+			break;
 		case WIFI:
 			mSelWifiV.setSelected(true);
 			mSelWifiV.setTag(item.getReserveLeft());
@@ -240,6 +262,15 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		EventBus.getDefault().removeStickyEvent(ShowSetOptionEvent.class);
 	}
 
+	/**
+	 * Handler for {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
+	 */
+	public void onEvent(SelectedInstalledApplicationEvent e) {
+		mSelStartAppV.setTag(e.getResolveInfo());
+	}
 	//------------------------------------------------
 
 	/**
@@ -258,7 +289,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCancelable(true);
-		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Dialog);
+		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog);
 	}
 
 	@Override
@@ -330,6 +361,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mSelMobileV.setOnClickListener(this);
 		mSelBrightnessV = view.findViewById(R.id.set_brightness_ll);
 		mSelBrightnessV.setOnClickListener(this);
+		mSelStartAppV = view.findViewById(R.id.set_start_app_ll);
+		mSelStartAppV.setOnClickListener(this);
 		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wifi_bgv);
 		mWifiInfoBgb.setVisibility(View.GONE);
 		mBluetoothInfoBgb = (BadgeView) view.findViewById(R.id.info_bluetooth_bgv);
@@ -385,6 +418,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelVibrateV.setSelected(false);
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelStartAppV.setSelected(false);
 			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
@@ -401,6 +435,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelSoundV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelStartAppV.setSelected(false);
 			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
@@ -417,6 +452,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelStartAppV.setSelected(false);
 			mSelRejectIncomingV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
@@ -434,6 +470,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mSelMuteV.setSelected(false);
 			mSelVibrateV.setSelected(false);
 			mSelWifiV.setSelected(false);
+			mSelStartAppV.setSelected(false);
 			mWifiInfoBgb.setVisibility(View.GONE);
 			mSelBluetoothV.setSelected(false);
 			mBluetoothInfoBgb.setVisibility(View.GONE);
@@ -443,6 +480,25 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			mBrightnessInfoBgb.setVisibility(View.GONE);
 
 			mSelectedType = ScheduleType.CALLABORT;
+			break;
+		case R.id.set_start_app_ll:
+			mSelStartAppV.setSelected(true);
+			ResolveInfo app = (ResolveInfo) mSelStartAppV.getTag();
+			EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
+			mSelRejectIncomingV.setSelected(false);
+			mSelSoundV.setSelected(false);
+			mSelMuteV.setSelected(false);
+			mSelVibrateV.setSelected(false);
+			mSelWifiV.setSelected(false);
+			mWifiInfoBgb.setVisibility(View.GONE);
+			mSelBluetoothV.setSelected(false);
+			mBluetoothInfoBgb.setVisibility(View.GONE);
+			mSelMobileV.setSelected(false);
+			mMobileInfoBgb.setVisibility(View.GONE);
+			mSelBrightnessV.setSelected(false);
+			mBrightnessInfoBgb.setVisibility(View.GONE);
+
+			mSelectedType = ScheduleType.STARTAPP;
 			break;
 		case R.id.set_wifi_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
@@ -458,6 +514,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
@@ -478,6 +535,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
@@ -509,6 +567,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
@@ -532,6 +591,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
 					mSelMobileV.setSelected(false);
 					mMobileInfoBgb.setVisibility(View.GONE);
@@ -562,6 +622,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
@@ -585,6 +646,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelMuteV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
 					mSelBluetoothV.setSelected(false);
@@ -618,6 +680,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 							mSelMuteV.setSelected(false);
 							mSelRejectIncomingV.setSelected(false);
 							mSelSoundV.setSelected(false);
+							mSelStartAppV.setSelected(false);
 							mSelWifiV.setSelected(false);
 							mWifiInfoBgb.setVisibility(View.GONE);
 							mSelBluetoothV.setSelected(false);
@@ -638,6 +701,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					mSelMuteV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelWifiV.setSelected(false);
 					mWifiInfoBgb.setVisibility(View.GONE);
 					mSelBluetoothV.setSelected(false);
@@ -656,6 +720,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 
 					mSelVibrateV.setSelected(false);
 					mSelMuteV.setSelected(false);
+					mSelStartAppV.setSelected(false);
 					mSelRejectIncomingV.setSelected(false);
 					mSelSoundV.setSelected(false);
 					mSelWifiV.setSelected(false);
@@ -675,6 +740,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 				mSettingTypesLl.setSelected(true);
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
+				mSelStartAppV.setSelected(false);
 				mSelSoundV.setSelected(false);
 				mSelWifiV.setSelected(false);
 				mSelRejectIncomingV.setSelected(false);
@@ -717,6 +783,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						case BRIGHTNESS:
 							Level l = Level.fromInt(Integer.valueOf(mPreScheduleItem.getReserveLeft()));
 							if (l == mSelBrightnessV.getTag()) {
+								dismiss();
+							}
+							break;
+						case STARTAPP:
+							ResolveInfo info = (ResolveInfo) mSelStartAppV.getTag();
+							String packageName = info.resolvePackageName;
+							if(TextUtils.equals(packageName, mPreScheduleItem.getReserveLeft())) {
 								dismiss();
 							}
 							break;
@@ -773,6 +846,14 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					Level level = (Level) mSelBrightnessV.getTag();
 					scheduleItem.setReserveLeft(level.toCode() + "");
 					scheduleItem.setReserveRight("int");
+					break;
+				case STARTAPP:
+					ResolveInfo info = (ResolveInfo) mSelStartAppV.getTag();
+					if(info != null) {
+						String packageName = info.activityInfo.packageName;
+						scheduleItem.setReserveLeft(packageName);
+						scheduleItem.setReserveRight("string");
+					}
 					break;
 				}
 				EventBus.getDefault().post(new UpdateDBEvent(scheduleItem, mEditMode));

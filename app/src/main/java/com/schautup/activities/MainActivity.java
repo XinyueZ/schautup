@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
@@ -54,6 +55,7 @@ import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowActionBarEvent;
 import com.schautup.bus.ShowActionModeEvent;
 import com.schautup.bus.ShowFilterDefineDialogEvent;
+import com.schautup.bus.ShowInstalledApplicationsListEvent;
 import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.bus.ShowStickyEvent;
@@ -67,6 +69,7 @@ import com.schautup.db.DatabaseHelper;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.fragments.AppListImplFragment;
 import com.schautup.fragments.FilterDefineDialogFragment;
+import com.schautup.fragments.InstalledApplicationsListDialogFragment;
 import com.schautup.fragments.LabelDefineDialogFragment;
 import com.schautup.fragments.MyRecurrencePickerDialog;
 import com.schautup.fragments.OptionDialogFragment;
@@ -430,6 +433,17 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			mViewMenuItem.setIcon(R.drawable.ic_action_gridview);
 		}
 		makeFilterSpinner();
+	}
+
+	/**
+	 * Handler for {@link ShowInstalledApplicationsListEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link ShowInstalledApplicationsListEvent}.
+	 */
+	public void onEvent(ShowInstalledApplicationsListEvent e) {
+		ResolveInfo app  = e.getResolveInfo();
+		InstalledApplicationsListDialogFragment.newInstance(this, app).show(getSupportFragmentManager(), null);
 	}
 
 	//------------------------------------------------

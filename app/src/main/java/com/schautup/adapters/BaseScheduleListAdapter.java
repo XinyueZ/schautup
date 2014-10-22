@@ -98,7 +98,8 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 		} else {
 			convertView.setBackgroundResource(R.drawable.selector_item_bg);
 		}
-		if(!TextUtils.isEmpty(item.getReserveLeft()) && !TextUtils.isEmpty(item.getReserveRight())) {
+		if(!TextUtils.isEmpty(item.getReserveLeft()) &&
+				!TextUtils.isEmpty(item.getReserveRight())) {
 			if(TextUtils.equals("boolean", item.getReserveRight())) {
 				boolean bool = Boolean.valueOf(item.getReserveLeft());
 				Utils.showBadgeView(parent.getContext(),
@@ -108,6 +109,8 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 				Level l = Level.fromInt(code);
 				Utils.showBadgeView(parent.getContext(),
 						vh.mInfoBgv, parent.getContext().getString(l.getLevelShortResId()) );
+			} else if(TextUtils.equals("string", item.getReserveRight())) {
+				vh.mInfoBgv.setVisibility(View.GONE);
 			}
 		} else {
 			vh.mInfoBgv.setVisibility(View.GONE);

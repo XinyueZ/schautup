@@ -59,6 +59,7 @@ public final class AboutDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCancelable(true);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
 	}
 
 	@Override
@@ -144,6 +145,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setCancelable(false);
+			setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
 		}
 
 		@Override
@@ -183,7 +185,11 @@ public final class AboutDialogFragment extends DialogFragment {
 	 * @author Xinyue Zhao
 	 */
 	public static class EulaDialog extends DialogFragment {
-
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
+		}
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			int padding = getResources().getDimensionPixelSize(R.dimen.padding_eula);
@@ -226,6 +232,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setCancelable(false);
+			setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
 		}
 
 		@Override
