@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,22 +27,15 @@ public final class InstalledApplicationsListAdapter extends BaseAdapter {
 	 * {@link java.util.List} of all installed applications.
 	 */
 	private List<ResolveInfo> mInsApps;
-	/**
-	 * When there's a pre-selected application. When no pre-selection, it is {@code null}.
-	 */
-	private ResolveInfo mApp;
 
 	/**
 	 * Constructor of {@link com.schautup.adapters.InstalledApplicationsListAdapter}.
 	 *
 	 * @param insApps
 	 * 		{@link java.util.List} of all installed applications.
-	 * @param app
-	 * 		When there's a pre-selected application. When no pre-selection, it is {@code null}.
 	 */
-	public InstalledApplicationsListAdapter(List<ResolveInfo> insApps, ResolveInfo app) {
+	public InstalledApplicationsListAdapter(List<ResolveInfo> insApps ) {
 		mInsApps = insApps;
-		mApp = app;
 	}
 
 	/**
@@ -115,11 +107,7 @@ public final class InstalledApplicationsListAdapter extends BaseAdapter {
 		viewHolder.mIconIv.setImageDrawable(a.loadIcon(pmg));
 		viewHolder.mNameTv.setText(a.loadLabel(pmg));
 		viewHolder.mResolveInfo = a;
-		if(mApp !=null) {
-			convertView.setSelected(TextUtils.equals(mApp.activityInfo.packageName, a.activityInfo.packageName));
-		} else {
-			convertView.setSelected(false);
-		}
+
 		return convertView;
 	}
 

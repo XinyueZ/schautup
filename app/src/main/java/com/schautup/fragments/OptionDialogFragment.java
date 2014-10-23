@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +19,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
@@ -156,6 +160,10 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * Information about selected recurrence.
 	 */
 	private BadgeView mRecurrenceBgv;
+	/**
+	 * An icon of an application that has been selected.
+	 */
+	private ImageView mSelectedAppIv;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -226,9 +234,20 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 			mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 			final List<ResolveInfo> pkgAppsList = getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
+			PackageManager pm = getActivity().getPackageManager();
 			for(ResolveInfo app : pkgAppsList) {
 				if(TextUtils.equals(app.activityInfo.packageName, item.getReserveLeft())) {
 					mSelStartAppV.setTag(app);
+
+					try {
+						String startPackageName = item.getReserveLeft();
+						PackageInfo info = pm.getPackageInfo(startPackageName, PackageManager.GET_ACTIVITIES);
+						Drawable logo = info.applicationInfo.loadIcon(pm);
+						if(logo != null) {
+							mSelectedAppIv.setImageDrawable(logo);
+						}
+					} catch (PackageManager.NameNotFoundException ex) {
+					}
 					break;
 				}
 			}
@@ -269,8 +288,15 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 * 		Event {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
 	 */
 	public void onEvent(SelectedInstalledApplicationEvent e) {
-		mSelStartAppV.setTag(e.getResolveInfo());
+		ResolveInfo info = e.getResolveInfo();
+		mSelStartAppV.setTag(info);
+		PackageManager pm = getActivity().getPackageManager();
+		Drawable logo = info.loadIcon(pm);
+		if(logo != null) {
+			mSelectedAppIv.setImageDrawable(logo);
+		}
 	}
+
 	//------------------------------------------------
 
 	/**
@@ -371,6 +397,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		mMobileInfoBgb.setVisibility(View.GONE);
 		mBrightnessInfoBgb = (BadgeView) view.findViewById(R.id.info_brightness_bgv);
 		mBrightnessInfoBgb.setVisibility(View.GONE);
+		mSelectedAppIv = (ImageView) view.findViewById(R.id.info_start_app_iv);
 		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
 		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(

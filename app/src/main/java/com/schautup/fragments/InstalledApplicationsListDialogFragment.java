@@ -13,10 +13,11 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Spinner;
 
 import com.schautup.R;
 import com.schautup.adapters.InstalledApplicationsListAdapter;
@@ -26,11 +27,12 @@ import com.schautup.bus.SelectedInstalledApplicationEvent;
 import de.greenrobot.event.EventBus;
 
 /**
- * Show all installed applications.
+ * Show all installed applications and user can select one.
  *
  * @author Xinyue Zhao
  */
-public final class InstalledApplicationsListDialogFragment extends DialogFragment implements OnItemClickListener {
+public final class InstalledApplicationsListDialogFragment extends DialogFragment implements OnItemSelectedListener,
+		OnClickListener {
 	/**
 	 * Main layout for this component.
 	 */
@@ -40,9 +42,13 @@ public final class InstalledApplicationsListDialogFragment extends DialogFragmen
 	 */
 	private static final String EXTRAS_PRE_SELECTED_APP = "extras.pre-selected.app";
 	/**
-	 * All installed application loaded in this {@link android.widget.ListView}.
+	 * All installed application loaded in this {@link android.widget.Spinner}.
 	 */
-	private ListView mLv;
+	private Spinner mSp;
+	/**
+	 * The selected application.
+	 */
+	private ResolveInfo mSelectedInfo;
 
 	/**
 	 * Initialize an {@link com.schautup.fragments.InstalledApplicationsListDialogFragment}.
@@ -66,7 +72,7 @@ public final class InstalledApplicationsListDialogFragment extends DialogFragmen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCancelable(true);
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Dialog);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
 	}
 
 	@Override
@@ -77,30 +83,31 @@ public final class InstalledApplicationsListDialogFragment extends DialogFragmen
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mLv = (ListView) view.findViewById(R.id.installed_applications_lv);
-		mLv.setOnItemClickListener(this);
+		mSp = (Spinner) view.findViewById(R.id.installed_application_sp);
+		mSp.setOnItemSelectedListener(this);
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> pkgAppsList = getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
 		ResolveInfo app = getExtrasPreSelectedApp();
-		if(app != null) {
-			ArrayList<ResolveInfo> newList = new ArrayList<ResolveInfo>();
-			for(ResolveInfo a : pkgAppsList) {
-				if(TextUtils.equals(a.activityInfo.packageName, app.activityInfo.packageName)) {
-					newList.add(app);
-					break;
+		ArrayList<ResolveInfo> newList = new ArrayList<ResolveInfo>();
+		//Remove SchautUp and remember the one that might have been selected before.
+		int posRemember = -1;
+		int i = 0;
+		for(ResolveInfo a : pkgAppsList) {
+			if(!TextUtils.equals(a.activityInfo.packageName, getActivity().getPackageName())) {
+				newList.add(a);
+				if(app != null && TextUtils.equals(app.activityInfo.packageName, a.activityInfo.packageName)) {
+					posRemember = i;
 				}
+				i++;
 			}
-			for(ResolveInfo a : pkgAppsList) {
-				if(!TextUtils.equals(a.activityInfo.packageName, app.activityInfo.packageName) &&
-						!TextUtils.equals(a.activityInfo.packageName, getActivity().getPackageName())) {
-					newList.add(a);
-				}
-			}
-			mLv.setAdapter(new InstalledApplicationsListAdapter(newList, app));
-		} else {
-			mLv.setAdapter(new InstalledApplicationsListAdapter(pkgAppsList, app));
 		}
+		mSp.setAdapter(new InstalledApplicationsListAdapter(newList));
+		if(posRemember >= 0) {
+			mSp.setSelection(posRemember);
+		}
+		view.findViewById(R.id.close_cancel_btn).setOnClickListener(this);
+		view.findViewById(R.id.close_confirm_btn).setOnClickListener(this);
 	}
 
 	/**
@@ -112,24 +119,56 @@ public final class InstalledApplicationsListDialogFragment extends DialogFragmen
 	}
 
 	/**
-	 * Callback method to be invoked when an item in this AdapterView has been clicked.
+	 * <p>Callback method to be invoked when an item in this view has been selected. This callback is invoked only when
+	 * the newly selected position is different from the previously selected position or if there was no selected
+	 * item.</p>
 	 * <p/>
-	 * Implementers can call getItemAtPosition(position) if they need to access the data associated with the selected
+	 * Impelmenters can call getItemAtPosition(position) if they need to access the data associated with the selected
 	 * item.
 	 *
 	 * @param parent
-	 * 		The AdapterView where the click happened.
+	 * 		The AdapterView where the selection happened
 	 * @param view
-	 * 		The view within the AdapterView that was clicked (this will be a view provided by the adapter)
+	 * 		The view within the AdapterView that was clicked
 	 * @param position
-	 * 		The position of the view in the adapter.
+	 * 		The position of the view in the adapter
 	 * @param id
-	 * 		The row id of the item that was clicked.
+	 * 		The row id of the item that is selected
 	 */
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		ViewHolder vh = (ViewHolder) view.getTag();
-		EventBus.getDefault().post(new SelectedInstalledApplicationEvent(vh.mResolveInfo));
-		dismiss();
+		mSelectedInfo = vh.mResolveInfo;
+	}
+
+	/**
+	 * Callback method to be invoked when the selection disappears from this view. The selection can disappear for
+	 * instance when touch is activated or when the adapter becomes empty.
+	 *
+	 * @param parent
+	 * 		The AdapterView that now contains no selected item.
+	 */
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+
+	}
+
+	/**
+	 * Called when a view has been clicked.
+	 *
+	 * @param v
+	 * 		The view that was clicked.
+	 */
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.close_confirm_btn:
+			EventBus.getDefault().post(new SelectedInstalledApplicationEvent(mSelectedInfo));
+			dismiss();
+			break;
+		case R.id.close_cancel_btn:
+			dismiss();
+			break;
+		}
 	}
 }

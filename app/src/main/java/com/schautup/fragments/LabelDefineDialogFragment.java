@@ -45,7 +45,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	/**
 	 * Main layout for this component.
 	 */
-	private static final int LAYOUT = R.layout.fragment_label_define;
+	private static final int LAYOUT = R.layout.fragment_label_define_dialog;
 	/**
 	 * The id of item if the item was inserted into DB before.
 	 */

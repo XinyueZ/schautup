@@ -356,11 +356,10 @@
                                 android:layout_height="@dimen/size_hour_minute"
                                 android:background="@drawable/ic_app_list_btn" />
 
-                            <!--<com.schautup.views.BadgeView-->
-                                <!--android:id="@+id/info_start_app_bgv"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:visibility="gone"-->
-                                <!--android:layout_height="wrap_content" />-->
+                            <ImageView
+                                android:id="@+id/info_start_app_iv"
+                                android:layout_width="20dp" android:layout_gravity="bottom|right"
+                                android:layout_height="20dp" />
 
                         </FrameLayout>
 
