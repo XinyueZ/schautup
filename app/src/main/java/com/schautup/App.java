@@ -69,6 +69,7 @@ import com.chopping.utils.DeviceUtils;
 import com.chopping.utils.DeviceUtils.Brightness;
 import com.schautup.activities.MainActivity;
 import com.schautup.bus.AddedHistoryEvent;
+import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.RemovedScheduledStartAppsEvent;
 import com.schautup.bus.UpdatedItemEvent;
@@ -170,6 +171,19 @@ public final class App extends Application {
 		for(String id: ids) {
 			remove(Long.valueOf(id));
 		}
+
+		new ParallelTask<Void, Void, List<ScheduleItem>>(false) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return Utils.getAllSchedules(App.this);
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> items) {
+				super.onPostExecute(items);
+				EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
+			}
+		}.executeParallel();
 	}
 	//------------------------------------------------
 

@@ -3,6 +3,8 @@ package com.schautup.adapters;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -104,16 +106,31 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 				boolean bool = Boolean.valueOf(item.getReserveLeft());
 				Utils.showBadgeView(parent.getContext(),
 						vh.mInfoBgv, Utils.convertBooleanToOnOff(parent.getContext(), bool));
+				vh.mInfoIv.setVisibility(View.GONE);
 			} else if(TextUtils.equals("int", item.getReserveRight())) {
 				int code = Integer.valueOf(item.getReserveLeft());
 				Level l = Level.fromInt(code);
 				Utils.showBadgeView(parent.getContext(),
 						vh.mInfoBgv, parent.getContext().getString(l.getLevelShortResId()) );
-			} else if(TextUtils.equals("string", item.getReserveRight())) {
+				vh.mInfoIv.setVisibility(View.GONE);
+			} else if(TextUtils.equals("pkg", item.getReserveRight())) {
+
+				PackageManager pm = parent.getContext().getPackageManager();
+				try {
+					String startPackageName = item.getReserveLeft();
+					PackageInfo app = pm.getPackageInfo(startPackageName, PackageManager.GET_ACTIVITIES);
+					Drawable icon = app.applicationInfo.loadIcon(pm);
+					vh.mInfoIv.setImageDrawable(icon);
+				} catch (PackageManager.NameNotFoundException e) {
+				}
+
+
 				vh.mInfoBgv.setVisibility(View.GONE);
+				vh.mInfoIv.setVisibility(View.VISIBLE);
 			}
 		} else {
 			vh.mInfoBgv.setVisibility(View.GONE);
+			vh.mInfoIv.setVisibility(View.GONE);
 		}
 
 		vh.mSuTv.setSelected(false);vh.mSuTv.setTypeface(null, Typeface.NORMAL);
@@ -334,6 +351,7 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 	protected static class ViewHolder extends ViewHolderActionMode{
 		private View mStatusLevelV;
 		private BadgeView mInfoBgv;
+		private ImageView mInfoIv;
 		private ImageView mStatusIv;
 		private TextView mStatusTv;
 
@@ -350,6 +368,7 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 			mStatusLevelV = convertView.findViewById(R.id.status_level_v);
 			mStatusIv = (ImageView) convertView.findViewById(R.id.status_iv);
 			mInfoBgv = (BadgeView) convertView.findViewById(R.id.info_bgv);
+			mInfoIv = (ImageView) convertView.findViewById(R.id.info_start_app_iv);
 			mStatusTv = (TextView) convertView.findViewById(R.id.status_tv);
 
 			mSuTv = (TextView) convertView.findViewById(R.id.su_tv);

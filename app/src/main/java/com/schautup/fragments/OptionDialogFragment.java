@@ -879,7 +879,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					if(info != null) {
 						String packageName = info.activityInfo.packageName;
 						scheduleItem.setReserveLeft(packageName);
-						scheduleItem.setReserveRight("string");
+						scheduleItem.setReserveRight("pkg");
 					}
 					break;
 				}
