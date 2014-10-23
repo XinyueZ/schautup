@@ -42,4 +42,5 @@
     <string name="notify_start_app_simple_content">启动 %s</string>
     <string name="notify_start_app_headline">提示</string>
     <string name="notify_start_app_content">启动应用 %s</string>
+    <string name="notify_removed_app">应用被移除，相关的定时启动将同时失效，并从列表中移除。</string>
 </resources>

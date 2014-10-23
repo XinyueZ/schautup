@@ -167,9 +167,22 @@
             </intent-filter>
         </receiver>
 
-        <!--Event handler for changing system packages.-->
+        <!--Event handler for changing system packages, for external links-->
         <receiver
             android:name="com.chopping.application.InstalledAppReceiver"
+            android:exported="false"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!--Event handler for changing system packages, for start application option-->
+        <receiver
+            android:name=".InstalledAppReceiver"
             android:exported="false"
             android:enabled="true">
             <intent-filter>

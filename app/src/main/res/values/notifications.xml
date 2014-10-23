@@ -45,4 +45,5 @@
     <string name="notify_start_app_simple_content">Launch %s</string>
     <string name="notify_start_app_headline">Caution!</string>
     <string name="notify_start_app_content">Launch application %s</string>
+    <string name="notify_removed_app">App has been uninstalled and associated scheduled item will be removed as well.</string>
 </resources>

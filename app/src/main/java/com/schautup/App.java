@@ -70,6 +70,7 @@ import com.chopping.utils.DeviceUtils.Brightness;
 import com.schautup.activities.MainActivity;
 import com.schautup.bus.AddedHistoryEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
+import com.schautup.bus.RemovedScheduledStartAppsEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.Level;
@@ -158,7 +159,18 @@ public final class App extends Application {
 		add(item);
 	}
 
-
+	/**
+	 * Handler for {@link com.schautup.bus.RemovedScheduledStartAppsEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.RemovedScheduledStartAppsEvent}.
+	 */
+	public void onEvent(RemovedScheduledStartAppsEvent e) {
+		List<String> ids = e.getIds();
+		for(String id: ids) {
+			remove(Long.valueOf(id));
+		}
+	}
 	//------------------------------------------------
 
 

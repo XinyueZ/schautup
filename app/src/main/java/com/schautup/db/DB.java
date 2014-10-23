@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -62,14 +61,13 @@ public final class DB {
 	/**
 	 * Get instance of  {@link com.schautup.db.DB} singleton.
 	 *
-	 * @param _context
-	 * 		{@link android.app.Application}.
+	 * @param cxt {@link android.content.Context}.
 	 *
 	 * @return The {@link com.schautup.db.DB} singleton.
 	 */
-	public static DB getInstance(Application _context) {
+	public static DB getInstance(Context cxt) {
 		if (sInstance == null) {
-			sInstance = new DB(_context);
+			sInstance = new DB(cxt);
 		}
 		return sInstance;
 	}
@@ -599,6 +597,44 @@ public final class DB {
 			close();
 		}
 		return rowsRemain;
+	}
+
+	/**
+	 * Remove one schedule item that will start an application. For reason that the application has been removed and uninstalled.
+	 *
+	 * @param packageName Application's package-name.
+	 *
+	 * @return The removed items' ids. When some errors occur, it return {@code null}.
+	 */
+	public synchronized List<String> removeScheduleForStartApplication(String packageName) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		Cursor c = null;
+		boolean success;
+		List<String> res = new ArrayList<String>();
+		try {
+			String whereClause = ScheduleTbl.RESERVE_LEFT + "=? AND " + ScheduleTbl.TYPE + "=?";
+			String[] whereArgs = new String[] { packageName, ScheduleType.STARTAPP.getCode() + "" };
+			c = mDB.query(ScheduleTbl.TABLE_NAME, new String[] { ScheduleTbl.ID }, whereClause, whereArgs, null, null,
+					null);
+			while (c.moveToNext()) {
+				res.add(c.getLong(c.getColumnIndex(ScheduleTbl.ID)) + "");
+			}
+			long rowId;
+			rowId = mDB.delete(ScheduleTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+			if(!success) {
+				res.clear();
+				res = null;
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+		}
+		return res;
 	}
 
 	/**
