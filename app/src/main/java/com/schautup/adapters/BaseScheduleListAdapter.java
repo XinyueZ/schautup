@@ -146,31 +146,24 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 			switch (i) {
 			case EventRecurrence.SU:
 				vh.mSuTv.setSelected(true);
-				vh.mSuTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.MO:
 				vh.mMoTv.setSelected(true);
-				vh.mMoTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.TU:
 				vh.mTuTv.setSelected(true);
-				vh.mTuTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.WE:
 				vh.mWeTv.setSelected(true);
-				vh.mWeTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.TH:
 				vh.mThTv.setSelected(true);
-				vh.mThTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.FR:
 				vh.mFrTv.setSelected(true);
-				vh.mFrTv.setTypeface(null, Typeface.BOLD);
 				break;
 			case EventRecurrence.SA:
 				vh.mSaTv.setSelected(true);
-				vh.mSaTv.setTypeface(null, Typeface.BOLD);
 				break;
 			}
 		}
