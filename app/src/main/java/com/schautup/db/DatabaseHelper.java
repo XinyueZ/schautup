@@ -17,9 +17,15 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 	/**
 	 * New version of DB.
 	 * <p/>
+	 * Added new table {@link com.schautup.db.LabelTbl}.
+	 */
+	private static final int DATABASE_VERSION = 5;
+	/**
+	 * New version of DB.
+	 * <p/>
 	 * Added column {@link com.schautup.db.FilterTbl#IS_LABEL_ONLY} on {@link com.schautup.db.FilterTbl}.
 	 */
-	private static final int DATABASE_VERSION = 4;
+//	private static final int DATABASE_VERSION = 4;
 	/**
 	 * New version of DB.
 	 * <p/>
@@ -53,13 +59,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(ScheduleTbl.SQL_CREATE);
 		db.execSQL(LogHistoryTbl.SQL_CREATE);
 		db.execSQL(FilterTbl.SQL_CREATE);
+		db.execSQL(LabelTbl.SQL_CREATE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion == 3 && newVersion == 4) {
-			db.execSQL(FilterTbl.SQL_ALTER_ADD_IS_LABEL_ONLY);
-		}
+//		if (oldVersion == 3 && newVersion == 4) {
+//			db.execSQL(FilterTbl.SQL_ALTER_ADD_IS_LABEL_ONLY);
+//		}
 //
 // else if (oldVersion == 2 && newVersion == 3) {
 //			db.execSQL(FilterTbl.SQL_CREATE);

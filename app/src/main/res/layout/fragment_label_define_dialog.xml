@@ -11,6 +11,7 @@
         android:layout_width="@dimen/size_option_dialog"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/label_name_et"
             android:maxLength="100"
@@ -22,7 +23,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_common_black"
             android:hint="@string/lbl_label_name"
-            android:textCursorDrawable="@null"/>
+            android:textCursorDrawable="@null" />
+
         <LinearLayout
 
             android:weightSum="5"
@@ -193,11 +195,24 @@
                 android:layout_height="wrap_content">
 
 
-                <ImageView
+                <FrameLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_wifi_btn" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_wifi_btn" />
+
+                    <com.schautup.views.BadgeView
+                        android:id="@+id/info_wifi_bgv"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
 
 
                 <TextView
@@ -217,12 +232,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <ImageView
+                <FrameLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_mobile_data_btn" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_mobile_data_btn" />
+
+                    <com.schautup.views.BadgeView
+                        android:id="@+id/info_mobile_data_bgv"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
 
 
                 <TextView
@@ -242,13 +269,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <ImageView
+                <FrameLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_bluetooth_btn" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_bluetooth_btn" />
+
+                    <com.schautup.views.BadgeView
+                        android:id="@+id/info_bluetooth_bgv"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
 
                 <TextView
                     style="@style/Filters_Define_TextView"
@@ -292,13 +330,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <ImageView
+                <FrameLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_app_list_btn" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_app_list_btn" />
+
+
+                    <ImageView
+                        android:id="@+id/info_start_app_iv"
+                        android:layout_width="20dp"
+                        android:layout_gravity="bottom|right"
+                        android:layout_height="20dp" />
+
+                </FrameLayout>
 
                 <TextView
                     style="@style/Filters_Define_TextView"
@@ -317,13 +367,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <ImageView
+                <FrameLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_brightness_btn" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_brightness_btn" />
+
+                    <com.schautup.views.BadgeView
+                        android:id="@+id/info_brightness_bgv"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
 
                 <TextView
                     style="@style/Filters_Define_TextView"

@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.Filter;
 import com.schautup.data.HistoryItem;
+import com.schautup.data.Label;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
 
@@ -499,7 +500,7 @@ public final class DB {
 				key = types.keyAt(i);
 				type = types.get(key);
 				c = mDB.query(ScheduleTbl.TABLE_NAME, null, "("+ ScheduleTbl.HOUR + " = ? AND " + ScheduleTbl.MINUTE + " = " +
-								"? OR " + ScheduleTbl.RECURRENCE + " = ?) AND " + ScheduleTbl.TYPE + " = ?", new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null,
+								"? AND " + ScheduleTbl.RECURRENCE + " = ?) AND " + ScheduleTbl.TYPE + " = ?", new String[] { hour + "", minute + "", eventRecurrence.toString(), type.getCode() + "" }, null,
 						null, null, null);
 				list = new LinkedList<ScheduleItem>();
 				EventRecurrence er;
@@ -832,4 +833,97 @@ public final class DB {
 		}
 		return stringBuilder;
 	}
+
+
+	/**
+	 * Add a label into DB.
+	 *
+	 * @param item A {@link com.schautup.data.Label} to insert.
+	 *
+	 * @return {@code true} if insert is success.
+	 */
+	public synchronized boolean addLabel(Label item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId = -1;
+			ContentValues v = new ContentValues();
+			v.put(LabelTbl.FILTER_ID, item.getIdFilter());
+			v.put(LabelTbl.TYPE, item.getType().toCode());
+			v.put(LabelTbl.RESERVE_LEFT, item.getReserveLeft());
+			v.put(LabelTbl.RESERVE_RIGHT, item.getReserveRight());
+			rowId = mDB.insert(LabelTbl.TABLE_NAME, null, v);
+			item.setId(rowId);
+			success = rowId != -1;
+		} finally {
+			close();
+		}
+		return success;
+	}
+
+
+	/**
+	 * Remove one label item from DB.
+	 *
+	 * @param item
+	 * 		The {@link com.schautup.data.Label}  to remove.
+	 *
+	 * @return The count of rows remain in DB after removed item.
+	 * <p/>
+	 * Return -1 if there's error when removed data.
+	 */
+	public synchronized int removeLabel(Label item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		int rowsRemain = -1;
+		boolean success;
+		try {
+			long rowId;
+			String whereClause = LabelTbl.ID + "=?";
+			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
+			rowId = mDB.delete(LabelTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+			if (success) {
+				Cursor c = mDB.query(LabelTbl.TABLE_NAME, new String[] { LabelTbl.ID }, null, null, null, null,
+						null);
+				rowsRemain = c.getCount();
+			} else {
+				rowsRemain = -1;
+			}
+		} finally {
+			close();
+		}
+		return rowsRemain;
+	}
+
+	/**
+	 * Update a label in DB.
+	 *
+	 * @param item {@link com.schautup.data.Label}  to insert.
+	 *
+	 * @return {@code true} if insert is success.
+	 */
+	public synchronized boolean updateLabel(ScheduleItem item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId = -1;
+			ContentValues v = new ContentValues();
+			v.put(LabelTbl.TYPE, item.getType().toCode());
+			v.put(LabelTbl.RESERVE_LEFT, item.getReserveLeft());
+			v.put(LabelTbl.RESERVE_RIGHT, item.getReserveRight());
+			String[] args = new String[] { item.getId() + "" };
+			rowId = mDB.update(LabelTbl.TABLE_NAME, v, LabelTbl.ID + " = ?", args);
+			success = rowId != -1;
+		} finally {
+			close();
+		}
+		return success;
+	}
+
 }

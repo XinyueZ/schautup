@@ -1,6 +1,11 @@
 package com.schautup.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -21,11 +26,14 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.bus.OpenRecurrencePickerEvent;
 import com.schautup.bus.OpenTimePickerEvent;
+import com.schautup.bus.SelectedInstalledApplicationEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateLabelEvent;
 import com.schautup.data.Filter;
+import com.schautup.data.Label;
+import com.schautup.data.Level;
 import com.schautup.data.ScheduleType;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
@@ -219,6 +227,23 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 		EventBus.getDefault().removeStickyEvent(ShowSetLabelEvent.class);
 	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
+	 */
+	public void onEvent(SelectedInstalledApplicationEvent e) {
+//		ResolveInfo info = e.getResolveInfo();
+//		mSelStartAppV.setTag(info);
+//		PackageManager pm = getActivity().getPackageManager();
+//		Drawable logo = info.loadIcon(pm);
+//		if(logo != null) {
+//			mSelectedAppIv.setImageDrawable(logo);
+//		}
+	}
+
 	//------------------------------------------------
 
 	/**
@@ -390,5 +415,122 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		} else {
 			mLabel.getSelectedTypes().put(type.getCode(), type);
 		}
+
+
+		switch (v.getId()) {
+		case R.id.set_mute_ll:
+			break;
+		case R.id.set_vibrate_ll:
+			break;
+		case R.id.set_sound_ll:
+			break;
+		case R.id.set_call_abort_ll:
+			break;
+		case R.id.set_start_app_ll:
+//			EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
+			break;
+		case R.id.set_wifi_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+
+				}
+			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
+
+				}
+			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			}).create().show();
+			break;
+		case R.id.set_bluetooth_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(R.string.msg_bluetooth_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+
+				}
+			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
+
+				}
+			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			}).create().show();
+			break;
+		case R.id.set_mobile_data_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
+					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+//							true));
+
+				}
+			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+//							false));
+
+				}
+			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			}).create().show();
+			break;
+		case R.id.set_brightness_ll:
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_brightness).setMessage(
+					R.string.msg_brightness).setCancelable(true).setPositiveButton(Level.MAX.getLevelResId(),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+//							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MAX.getLevelShortResId()));
+
+						}
+					}).setNegativeButton(Level.MIN.getLevelResId(), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MIN.getLevelShortResId()));
+
+				}
+			}).setNeutralButton(Level.MEDIUM.getLevelResId(), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MEDIUM.getLevelShortResId()));
+
+				}
+			}).create().show();
+			break;
+		}
 	}
+
+	/**
+	 * The set {@link com.schautup.data.Label}s.
+	 */
+	private List<Label> mLabels = new ArrayList<Label>();
 }
