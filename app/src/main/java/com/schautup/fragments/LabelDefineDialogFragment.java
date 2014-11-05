@@ -85,39 +85,39 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	/**
 	 * Select mute in label.
 	 */
-	private View mSetMuteV;
+	private ViewGroup mSetMuteV;
 	/**
 	 * Select vibrate in label.
 	 */
-	private View mSetVibrateV;
+	private ViewGroup mSetVibrateV;
 	/**
 	 * Select sound in label.
 	 */
-	private View mSetSoundV;
+	private ViewGroup mSetSoundV;
 	/**
 	 * Select wifi in label.
 	 */
-	private View mSetWifiV;
+	private ViewGroup mSetWifiV;
 	/**
 	 * Select mobile data in label.
 	 */
-	private View mSetMobileDataV;
+	private ViewGroup mSetMobileDataV;
 	/**
 	 * Select bluetooth in label.
 	 */
-	private View mSetBluetoothV;
+	private ViewGroup mSetBluetoothV;
 	/**
 	 * Select call abort(reject incoming) in label.
 	 */
-	private View mSetCallAbortV;
+	private ViewGroup mSetCallAbortV;
 	/**
 	 * Select start app in label.
 	 */
-	private View mSetStartAppV;
+	private ViewGroup mSetStartAppV;
 	/**
 	 * Select brightness in label.
 	 */
-	private View mSetBrightnessV;
+	private ViewGroup mSetBrightnessV;
 	/**
 	 * The recurrence settings.
 	 */
@@ -318,33 +318,33 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		});
 		mMinuteTv.setText(Utils.convertValue(mMinute));
 
-		mSetMuteV = view.findViewById(R.id.set_mute_ll);
+		mSetMuteV = (ViewGroup) view.findViewById(R.id.set_mute_ll);
 		mSetMuteV.setOnClickListener(this);
 		mSetMuteV.setTag(ScheduleType.MUTE);
-		mSetVibrateV= view.findViewById(R.id.set_vibrate_ll);
+		mSetVibrateV= (ViewGroup) view.findViewById(R.id.set_vibrate_ll);
 		mSetVibrateV.setOnClickListener(this);
 		mSetVibrateV.setTag(ScheduleType.VIBRATE);
-		mSetSoundV= view.findViewById(R.id.set_sound_ll);
+		mSetSoundV= (ViewGroup) view.findViewById(R.id.set_sound_ll);
 		mSetSoundV.setOnClickListener(this);
 		mSetSoundV.setTag(ScheduleType.SOUND);
 
-		mSetWifiV= view.findViewById(R.id.set_wifi_ll);
+		mSetWifiV= (ViewGroup) view.findViewById(R.id.set_wifi_ll);
 		mSetWifiV.setOnClickListener(this);
 		mSetWifiV.setTag(ScheduleType.WIFI);
-		mSetMobileDataV= view.findViewById(R.id.set_mobile_data_ll);
+		mSetMobileDataV= (ViewGroup) view.findViewById(R.id.set_mobile_data_ll);
 		mSetMobileDataV.setOnClickListener(this);
 		mSetMobileDataV.setTag(ScheduleType.MOBILE);
-		mSetBluetoothV= view.findViewById(R.id.set_bluetooth_ll);
+		mSetBluetoothV= (ViewGroup) view.findViewById(R.id.set_bluetooth_ll);
 		mSetBluetoothV.setOnClickListener(this);
 		mSetBluetoothV.setTag(ScheduleType.BLUETOOTH);
 
-		mSetCallAbortV= view.findViewById(R.id.set_call_abort_ll);
+		mSetCallAbortV= (ViewGroup) view.findViewById(R.id.set_call_abort_ll);
 		mSetCallAbortV.setOnClickListener(this);
 		mSetCallAbortV.setTag(ScheduleType.CALLABORT);
-		mSetStartAppV= view.findViewById(R.id.set_start_app_ll);
+		mSetStartAppV= (ViewGroup) view.findViewById(R.id.set_start_app_ll);
 		mSetStartAppV.setOnClickListener(this);
 		mSetStartAppV.setTag(ScheduleType.STARTAPP);
-		mSetBrightnessV= view.findViewById(R.id.set_brightness_ll);
+		mSetBrightnessV= (ViewGroup) view.findViewById(R.id.set_brightness_ll);
 		mSetBrightnessV.setOnClickListener(this);
 		mSetBrightnessV.setTag(ScheduleType.BRIGHTNESS);
 
@@ -419,10 +419,22 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
+			cb = (CheckBox) mSetSoundV.getChildAt(2);
+			cb.setChecked(false);
+			cb = (CheckBox) mSetVibrateV.getChildAt(2);
+			cb.setChecked(false);
 			break;
 		case R.id.set_vibrate_ll:
+			cb = (CheckBox) mSetSoundV.getChildAt(2);
+			cb.setChecked(false);
+			cb = (CheckBox) mSetMuteV.getChildAt(2);
+			cb.setChecked(false);
 			break;
 		case R.id.set_sound_ll:
+			cb = (CheckBox) mSetVibrateV.getChildAt(2);
+			cb.setChecked(false);
+			cb = (CheckBox) mSetMuteV.getChildAt(2);
+			cb.setChecked(false);
 			break;
 		case R.id.set_call_abort_ll:
 			break;
