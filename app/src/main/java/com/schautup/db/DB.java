@@ -900,13 +900,48 @@ public final class DB {
 	}
 
 	/**
+	 * Remove {@link com.schautup.data.Label}s item from DB.
+	 *
+	 * @param item
+	 * 		The {@link com.schautup.data.Filter}.
+	 *
+	 * @return The count of rows remain in DB after removed item.
+	 * <p/>
+	 * Return -1 if there's error when removed data.
+	 */
+	public synchronized int removeLabels(Filter item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		int rowsRemain = -1;
+		boolean success;
+		try {
+			long rowId;
+			String whereClause = LabelTbl.FILTER_ID + "=?";
+			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
+			rowId = mDB.delete(LabelTbl.TABLE_NAME, whereClause, whereArgs);
+			success = rowId > 0;
+			if (success) {
+				Cursor c = mDB.query(LabelTbl.TABLE_NAME, new String[] { LabelTbl.ID }, null, null, null, null,
+						null);
+				rowsRemain = c.getCount();
+			} else {
+				rowsRemain = -1;
+			}
+		} finally {
+			close();
+		}
+		return rowsRemain;
+	}
+
+	/**
 	 * Update a label in DB.
 	 *
 	 * @param item {@link com.schautup.data.Label}  to insert.
 	 *
 	 * @return {@code true} if insert is success.
 	 */
-	public synchronized boolean updateLabel(ScheduleItem item) {
+	public synchronized boolean updateLabel(Label item) {
 		if (mDB == null || !mDB.isOpen()) {
 			open();
 		}
@@ -926,4 +961,37 @@ public final class DB {
 		return success;
 	}
 
+	/**
+	 * Returns all {@link com.schautup.data.Label}s from DB.
+	 *
+	 * @return All {@link com.schautup.data.Label}s from DB.
+	 */
+	public synchronized List<Label> getAllLabels(Filter filter) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		String whereClause = LabelTbl.FILTER_ID + "=?";
+		String[] whereArgs = new String[] { String.valueOf(filter.getId()) };
+		Cursor c = mDB.query(LabelTbl.TABLE_NAME, null, whereClause, whereArgs, null, null, null);
+		Label item = null;
+		List<Label> list = new ArrayList<Label>();
+		try {
+			while (c.moveToNext()) {
+				item = new Label(
+						c.getLong(c.getColumnIndex(LabelTbl.ID)),
+						c.getLong(c.getColumnIndex(LabelTbl.FILTER_ID)),
+						ScheduleType.fromCode(c.getInt( c.getColumnIndex(ScheduleTbl.TYPE))),
+						c.getString(c.getColumnIndex(LabelTbl.RESERVE_LEFT)),
+						c.getString(c.getColumnIndex(LabelTbl.RESERVE_RIGHT)) );
+
+				list.add(item);
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			close();
+			return list;
+		}
+	}
 }

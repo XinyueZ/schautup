@@ -3,6 +3,7 @@ package com.schautup.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +36,8 @@ import com.schautup.data.Filter;
 import com.schautup.data.Label;
 import com.schautup.data.Level;
 import com.schautup.data.ScheduleType;
+import com.schautup.db.DB;
+import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
 import com.schautup.views.AnimImageTextView;
@@ -226,6 +229,17 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mEventRecurrence = item.getEventRecurrence();
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 		EventBus.getDefault().removeStickyEvent(ShowSetLabelEvent.class);
+
+		new ParallelTask<Filter, Void, Void>(false) {
+			@Override
+			protected Void doInBackground(Filter... params) {
+				Activity activity = getActivity();
+				if (activity != null) {
+					mLabels = DB.getInstance(activity.getApplication()).getAllLabels(params[0]);
+				}
+				return null;
+			}
+		}.executeParallel(item);
 	}
 
 	/**
@@ -368,7 +382,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					mLabel.setMinute(mMinute);
 					mLabel.setEventRecurrence(mEventRecurrence);
 					mLabel.setLabel(true);
-					EventBus.getDefault().post(new UpdateLabelEvent(mLabel, mIsEdit));
+					EventBus.getDefault().post(new UpdateLabelEvent(mLabel, mIsEdit, mLabels));
 					dismiss();
 				}
 			}
@@ -421,20 +435,110 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		case R.id.set_mute_ll:
 			cb = (CheckBox) mSetSoundV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetSoundV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
 			cb = (CheckBox) mSetVibrateV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetVibrateV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
+			type = (ScheduleType) v.getTag();
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+			//Then re-add.
+			mLabels.add(new Label(type, "", ""));
 			break;
 		case R.id.set_vibrate_ll:
 			cb = (CheckBox) mSetSoundV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetSoundV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
 			cb = (CheckBox) mSetMuteV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetMuteV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
+			type = (ScheduleType) v.getTag();
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+			//Then re-add.
+			mLabels.add(new Label(type, "", ""));
 			break;
 		case R.id.set_sound_ll:
 			cb = (CheckBox) mSetVibrateV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetVibrateV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
 			cb = (CheckBox) mSetMuteV.getChildAt(2);
 			cb.setChecked(false);
+			type = (ScheduleType) mSetMuteV.getTag();
+			mLabel.getSelectedTypes().delete(type.getCode());
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+
+			type = (ScheduleType) v.getTag();
+			//Remove in labels collections.
+			for(Label label : mLabels) {
+				if(label.getType() == type) {
+					mLabels.remove(label);
+					break;
+				}
+			}
+			//Then re-add.
+			mLabels.add(new Label(type, "", ""));
 			break;
 		case R.id.set_call_abort_ll:
 			break;

@@ -17,6 +17,7 @@ import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateLabelEvent;
 import com.schautup.data.Filter;
+import com.schautup.data.Label;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
 import com.schautup.views.AnimImageButton;
@@ -52,21 +53,27 @@ public final class LabelsFragment extends BaseFragment{
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link com.schautup.bus.UpdateFilterEvent}.
+	 * Handler for {@link com.schautup.bus.UpdateLabelEvent}.
 	 *
 	 * @param e
-	 * 		Event {@link com.schautup.bus.UpdateFilterEvent}.
+	 * 		Event {@link com.schautup.bus.UpdateLabelEvent}.
 	 */
 	public void onEvent(UpdateLabelEvent e) {
-		Filter newFilter = e.getLabel();
 		if (!e.isEdit()) {
-			new ParallelTask<Filter, Filter, Filter>(false) {
+			new ParallelTask<UpdateLabelEvent, Filter, Filter>(false) {
 				@Override
-				protected Filter doInBackground(Filter... params) {
+				protected Filter doInBackground(UpdateLabelEvent... params) {
 					Activity activity = getActivity();
+					Filter newFilter = params[0].getLabel();
+					List<Label> labels = params[0].getLabels();
 					if (activity != null) {
-						DB.getInstance(activity.getApplication()).addFilter(params[0]);
-						return params[0];
+						DB db = DB.getInstance(activity.getApplication());
+						db.addFilter(newFilter);
+						for(Label label : labels) {
+							label.setIdFilter(newFilter.getId());
+							db.addLabel(label);
+						}
+						return newFilter;
 					}
 					return null;
 				}
@@ -78,15 +85,22 @@ public final class LabelsFragment extends BaseFragment{
 						addNewLabel(filter);
 					}
 				}
-			}.executeParallel(newFilter);
+			}.executeParallel(e);
 		} else {
-			new ParallelTask<Filter, Filter, Filter>(false) {
+			new ParallelTask<UpdateLabelEvent, Filter, Filter>(false) {
 				@Override
-				protected Filter doInBackground(Filter... params) {
+				protected Filter doInBackground(UpdateLabelEvent... params) {
 					Activity activity = getActivity();
+					Filter newFilter = params[0].getLabel();
+					List<Label> labels = params[0].getLabels();
 					if (activity != null) {
-						DB.getInstance(activity.getApplication()).updateFilter(params[0]);
-						return params[0];
+						DB db = DB.getInstance(activity.getApplication());
+						db.removeLabels(newFilter);
+						for(Label label : labels) {
+							label.setIdFilter(newFilter.getId());
+							db.addLabel(label);
+						}
+						return newFilter;
 					}
 					return null;
 				}
@@ -103,7 +117,7 @@ public final class LabelsFragment extends BaseFragment{
 						}
 					}
 				}
-			}.executeParallel(newFilter);
+			}.executeParallel(e);
 		}
 	}
 
