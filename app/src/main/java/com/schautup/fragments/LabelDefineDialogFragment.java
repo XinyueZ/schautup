@@ -418,6 +418,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		super.onPause();
 	}
 
+
 	@Override
 	public void onClick(View v) {
 		ViewGroup vp = (ViewGroup) v;
@@ -430,115 +431,21 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			mLabel.getSelectedTypes().put(type.getCode(), type);
 		}
 
-
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
-			cb = (CheckBox) mSetSoundV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetSoundV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			cb = (CheckBox) mSetVibrateV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetVibrateV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			type = (ScheduleType) v.getTag();
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-			//Then re-add.
-			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+			discardAgainst(mSetSoundV);
+			discardAgainst(mSetVibrateV);
+			selectSMV(v);
 			break;
 		case R.id.set_vibrate_ll:
-			cb = (CheckBox) mSetSoundV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetSoundV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			cb = (CheckBox) mSetMuteV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetMuteV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			type = (ScheduleType) v.getTag();
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-			//Then re-add.
-			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+			discardAgainst(mSetSoundV);
+			discardAgainst(mSetMuteV);
+			selectSMV(v);
 			break;
 		case R.id.set_sound_ll:
-			cb = (CheckBox) mSetVibrateV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetVibrateV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			cb = (CheckBox) mSetMuteV.getChildAt(2);
-			cb.setChecked(false);
-			type = (ScheduleType) mSetMuteV.getTag();
-			mLabel.getSelectedTypes().delete(type.getCode());
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-
-			type = (ScheduleType) v.getTag();
-			//Remove in labels collections.
-			for(Label label : mLabels) {
-				if(label.getType() == type) {
-					mLabels.remove(label);
-					break;
-				}
-			}
-			//Then re-add.
-			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+			discardAgainst(mSetVibrateV);
+			discardAgainst(mSetMuteV);
+			selectSMV(v);
 			break;
 		case R.id.set_call_abort_ll:
 			break;
@@ -649,4 +556,40 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 * The set {@link com.schautup.data.Label}s.
 	 */
 	private List<Label> mLabels = new ArrayList<Label>();
+
+
+	/**
+	 * Deselect the {@code againstV} when SMV(one of sound, mute, vibrate) is selected.
+	 * @param againstV Other {@link android.view.View} that is not selected.
+	 */
+	private void discardAgainst(ViewGroup againstV) {
+		CheckBox cb = (CheckBox) againstV.getChildAt(2);
+		cb.setChecked(false);
+		ScheduleType type = (ScheduleType) mSetSoundV.getTag();
+		mLabel.getSelectedTypes().delete(type.getCode());
+		//Remove in labels collections.
+		for(Label label : mLabels) {
+			if(label.getType() == type) {
+				mLabels.remove(label);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Select a SMV(one of sound, mute, vibrate).
+	 * @param v {@link android.view.View} for SMV.
+	 */
+	private void selectSMV(View v) {
+		ScheduleType type = (ScheduleType) v.getTag();
+		//Remove in labels collections.
+		for(Label label : mLabels) {
+			if(label.getType() == type) {
+				mLabels.remove(label);
+				break;
+			}
+		}
+		//Then re-add.
+		mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+	}
 }
