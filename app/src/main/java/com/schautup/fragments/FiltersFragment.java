@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
+import com.schautup.bus.AppendNewFilterFromLabelEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.ShowFilterDefineDialogEvent;
 import com.schautup.bus.ShowSetFilterEvent;
@@ -113,6 +114,16 @@ public final class FiltersFragment extends BaseFragment {
 		}
 	}
 
+
+	/**
+	 * Handler for {@link AppendNewFilterFromLabelEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link AppendNewFilterFromLabelEvent}.
+	 */
+	public void onEvent(AppendNewFilterFromLabelEvent e) {
+		addNewFilter(e.getFilter());
+	}
 	//------------------------------------------------
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

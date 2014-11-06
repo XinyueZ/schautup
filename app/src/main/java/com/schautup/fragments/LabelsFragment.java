@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
+import com.schautup.bus.AppendNewFilterFromLabelEvent;
 import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateLabelEvent;
@@ -121,6 +122,9 @@ public final class LabelsFragment extends BaseFragment{
 		}
 	}
 
+
+
+
 	//------------------------------------------------
 
 
@@ -195,8 +199,21 @@ public final class LabelsFragment extends BaseFragment{
 		doLabelV.setOnClickListener(new OnAnimImageButtonClickedListener() {
 			@Override
 			public void onClick() {
-				EventBus.getDefault().post(new CloseDrawerEvent());
+				mLabelsVg.removeView(labelV);
+				new ParallelTask<Filter, Filter, Filter>(false) {
+					@Override
+					protected Filter doInBackground(Filter... params) {
+						DB.getInstance(getActivity().getApplication()).updateLabelToFilter(params[0]);
+						return params[0];
+					}
 
+					@Override
+					protected void onPostExecute(Filter filter) {
+						super.onPostExecute(filter);
+						EventBus.getDefault().post(new AppendNewFilterFromLabelEvent(filter));
+						EventBus.getDefault().post(new CloseDrawerEvent());
+					}
+				}.executeParallel(filter);
 			}
 		});
 		mLabelsList.put(filter.getId(), filter);

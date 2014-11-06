@@ -777,6 +777,35 @@ public final class DB {
 	}
 
 	/**
+	 * Update a schedule in DB.
+	 *
+	 * @param item
+	 * 		{@link com.schautup.data.Filter} to insert.
+	 *
+	 * @return {@code true} if insert is success.
+	 */
+	public synchronized boolean updateLabelToFilter(Filter item) {
+		if (mDB == null || !mDB.isOpen()) {
+			open();
+		}
+		boolean success = false;
+		try {
+			long rowId;
+			//Do "update" command.
+			ContentValues v = new ContentValues();
+			v.put(FilterTbl.IS_LABEL_ONLY, 0);
+			v.put(FilterTbl.EDIT_TIME, System.currentTimeMillis());
+			String[] args = new String[] { item.getId() + "" };
+			rowId = mDB.update(FilterTbl.TABLE_NAME, v, FilterTbl.ID + " = ?", args);
+			item.setLabel(false);
+			success = rowId != -1;
+		} finally {
+			close();
+		}
+		return success;
+	}
+
+	/**
 	 * Remove one {@link com.schautup.data.Filter} from DB.
 	 *
 	 * @param item
@@ -864,40 +893,7 @@ public final class DB {
 	}
 
 
-	/**
-	 * Remove one label item from DB.
-	 *
-	 * @param item
-	 * 		The {@link com.schautup.data.Label}  to remove.
-	 *
-	 * @return The count of rows remain in DB after removed item.
-	 * <p/>
-	 * Return -1 if there's error when removed data.
-	 */
-	public synchronized int removeLabel(Label item) {
-		if (mDB == null || !mDB.isOpen()) {
-			open();
-		}
-		int rowsRemain = -1;
-		boolean success;
-		try {
-			long rowId;
-			String whereClause = LabelTbl.ID + "=?";
-			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
-			rowId = mDB.delete(LabelTbl.TABLE_NAME, whereClause, whereArgs);
-			success = rowId > 0;
-			if (success) {
-				Cursor c = mDB.query(LabelTbl.TABLE_NAME, new String[] { LabelTbl.ID }, null, null, null, null,
-						null);
-				rowsRemain = c.getCount();
-			} else {
-				rowsRemain = -1;
-			}
-		} finally {
-			close();
-		}
-		return rowsRemain;
-	}
+
 
 	/**
 	 * Remove {@link com.schautup.data.Label}s item from DB.
@@ -934,32 +930,8 @@ public final class DB {
 		return rowsRemain;
 	}
 
-	/**
-	 * Update a label in DB.
-	 *
-	 * @param item {@link com.schautup.data.Label}  to insert.
-	 *
-	 * @return {@code true} if insert is success.
-	 */
-	public synchronized boolean updateLabel(Label item) {
-		if (mDB == null || !mDB.isOpen()) {
-			open();
-		}
-		boolean success = false;
-		try {
-			long rowId = -1;
-			ContentValues v = new ContentValues();
-			v.put(LabelTbl.TYPE, item.getType().toCode());
-			v.put(LabelTbl.RESERVE_LEFT, item.getReserveLeft());
-			v.put(LabelTbl.RESERVE_RIGHT, item.getReserveRight());
-			String[] args = new String[] { item.getId() + "" };
-			rowId = mDB.update(LabelTbl.TABLE_NAME, v, LabelTbl.ID + " = ?", args);
-			success = rowId != -1;
-		} finally {
-			close();
-		}
-		return success;
-	}
+
+
 
 	/**
 	 * Returns all {@link com.schautup.data.Label}s from DB.
