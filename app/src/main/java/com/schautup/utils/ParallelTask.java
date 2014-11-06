@@ -35,10 +35,10 @@ public abstract class ParallelTask<T, Z, U> extends AsyncTask<T, Z, U> {
 	}
 
 	@Override
-	protected void onPostExecute(U _result) {
+	protected void onPostExecute(U result) {
 		if (mShowIndicator) {
 			EventBus.getDefault().post(new ProgressbarEvent(false));
 		}
-		super.onPostExecute(_result);
+		super.onPostExecute(result);
 	}
 }

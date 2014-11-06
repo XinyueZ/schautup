@@ -7,6 +7,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -31,6 +36,7 @@ import com.schautup.bus.OpenTimePickerEvent;
 import com.schautup.bus.SelectedInstalledApplicationEvent;
 import com.schautup.bus.SetRecurrenceEvent;
 import com.schautup.bus.SetTimeEvent;
+import com.schautup.bus.ShowInstalledApplicationsListEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateLabelEvent;
 import com.schautup.data.Filter;
@@ -49,7 +55,8 @@ import org.joda.time.DateTime;
 import de.greenrobot.event.EventBus;
 
 /**
- * By this {@link android.support.v4.app.Fragment} we can define different labels which are filters but before they are fired, they are labels.
+ * By this {@link android.support.v4.app.Fragment} we can define different labels which are filters but before they are
+ * fired, they are labels.
  *
  * @author Xinyue Zhao
  */
@@ -211,64 +218,105 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mNameEt.setText(mName);
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
-		SparseArrayCompat<ScheduleType> types= item.getSelectedTypes();
-		int key;
-		ScheduleType type;
-		CheckBox cb;
-		for(int i = 0; i < types.size(); i++) {
-			key = types.keyAt(i);
-			type = types.get(key);
-			switch (type) {
-			case MUTE:
-				cb = (CheckBox) mSetMuteV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case VIBRATE:
-				cb = (CheckBox) mSetVibrateV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case SOUND:
-				cb = (CheckBox) mSetSoundV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case WIFI:
-				cb = (CheckBox) mSetWifiV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case MOBILE:
-				cb = (CheckBox) mSetMobileDataV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case BRIGHTNESS:
-				cb = (CheckBox) mSetBrightnessV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case BLUETOOTH:
-				cb = (CheckBox) mSetBluetoothV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case STARTAPP:
-				cb = (CheckBox) mSetStartAppV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			case CALLABORT:
-				cb = (CheckBox) mSetCallAbortV.getChildAt(2);
-				cb.setChecked(!cb.isChecked());
-				break;
-			}
-		}
+
 		mEventRecurrence = item.getEventRecurrence();
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 		EventBus.getDefault().removeStickyEvent(ShowSetLabelEvent.class);
 
-		new ParallelTask<Filter, Void, Void>(false) {
+		new ParallelTask<Filter, Filter, Filter>(false) {
 			@Override
-			protected Void doInBackground(Filter... params) {
+			protected Filter doInBackground(Filter... params) {
 				Activity activity = getActivity();
 				if (activity != null) {
 					mLabels = DB.getInstance(activity.getApplication()).getAllLabels(params[0]);
 				}
-				return null;
+				return params[0];
+			}
+
+			@Override
+			protected void onPostExecute(Filter item) {
+				super.onPostExecute(item);
+
+				SparseArrayCompat<ScheduleType> types = item.getSelectedTypes();
+				int key;
+				ScheduleType type;
+				CheckBox cb;
+				for (int i = 0; i < types.size(); i++) {
+					key = types.keyAt(i);
+					type = types.get(key);
+					switch (type) {
+					case MUTE:
+						cb = (CheckBox) mSetMuteV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case VIBRATE:
+						cb = (CheckBox) mSetVibrateV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case SOUND:
+						cb = (CheckBox) mSetSoundV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case WIFI:
+						cb = (CheckBox) mSetWifiV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case MOBILE:
+						cb = (CheckBox) mSetMobileDataV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case BRIGHTNESS:
+						cb = (CheckBox) mSetBrightnessV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case BLUETOOTH:
+						cb = (CheckBox) mSetBluetoothV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					case STARTAPP:
+						cb = (CheckBox) mSetStartAppV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+
+						Label l = null;
+						if (cb.isChecked()) {
+							for (Label label : mLabels) {
+								if (label.getType() == ScheduleType.STARTAPP) {
+									l = label;
+									break;
+								}
+							}
+						}
+						if (l != null) {
+							final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+							mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+							final List<ResolveInfo> pkgAppsList =
+									getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
+							PackageManager pm = getActivity().getPackageManager();
+							for (ResolveInfo app : pkgAppsList) {
+								if (TextUtils.equals(app.activityInfo.packageName, l.getReserveLeft())) {
+									cb.setTag(app);
+
+									try {
+										String startPackageName = l.getReserveLeft();
+										PackageInfo info = pm.getPackageInfo(startPackageName,
+												PackageManager.GET_ACTIVITIES);
+										Drawable logo = info.applicationInfo.loadIcon(pm);
+										if (logo != null) {
+											mSelectedAppIv.setImageDrawable(logo);
+										}
+									} catch (PackageManager.NameNotFoundException ex) {
+									}
+									break;
+								}
+							}
+						}
+						break;
+					case CALLABORT:
+						cb = (CheckBox) mSetCallAbortV.getChildAt(2);
+						cb.setChecked(!cb.isChecked());
+						break;
+					}
+				}
 			}
 		}.executeParallel(item);
 	}
@@ -280,13 +328,19 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 * 		Event {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
 	 */
 	public void onEvent(SelectedInstalledApplicationEvent e) {
-//		ResolveInfo info = e.getResolveInfo();
-//		mSelStartAppV.setTag(info);
-//		PackageManager pm = getActivity().getPackageManager();
-//		Drawable logo = info.loadIcon(pm);
-//		if(logo != null) {
-//			mSelectedAppIv.setImageDrawable(logo);
-//		}
+		ResolveInfo info = e.getResolveInfo();
+		mSetStartAppV.setTag(info);
+		PackageManager pm = getActivity().getPackageManager();
+		Drawable logo = info.loadIcon(pm);
+		if (logo != null) {
+			mSelectedAppIv.setImageDrawable(logo);
+		}
+
+		CheckBox cb = (CheckBox) mSetStartAppV.getChildAt(2);
+		if (cb.isChecked()) {
+			mLabels.add(new Label(ScheduleType.STARTAPP, mHour, mMinute, mEventRecurrence,
+					info.activityInfo.packageName, "pkg"));
+		}
 	}
 
 	//------------------------------------------------
@@ -366,30 +420,30 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mSetMuteV = (ViewGroup) view.findViewById(R.id.set_mute_ll);
 		mSetMuteV.setOnClickListener(this);
 		mSetMuteV.setTag(ScheduleType.MUTE);
-		mSetVibrateV= (ViewGroup) view.findViewById(R.id.set_vibrate_ll);
+		mSetVibrateV = (ViewGroup) view.findViewById(R.id.set_vibrate_ll);
 		mSetVibrateV.setOnClickListener(this);
 		mSetVibrateV.setTag(ScheduleType.VIBRATE);
-		mSetSoundV= (ViewGroup) view.findViewById(R.id.set_sound_ll);
+		mSetSoundV = (ViewGroup) view.findViewById(R.id.set_sound_ll);
 		mSetSoundV.setOnClickListener(this);
 		mSetSoundV.setTag(ScheduleType.SOUND);
 
-		mSetWifiV= (ViewGroup) view.findViewById(R.id.set_wifi_ll);
+		mSetWifiV = (ViewGroup) view.findViewById(R.id.set_wifi_ll);
 		mSetWifiV.setOnClickListener(this);
 		mSetWifiV.setTag(ScheduleType.WIFI);
-		mSetMobileDataV= (ViewGroup) view.findViewById(R.id.set_mobile_data_ll);
+		mSetMobileDataV = (ViewGroup) view.findViewById(R.id.set_mobile_data_ll);
 		mSetMobileDataV.setOnClickListener(this);
 		mSetMobileDataV.setTag(ScheduleType.MOBILE);
-		mSetBluetoothV= (ViewGroup) view.findViewById(R.id.set_bluetooth_ll);
+		mSetBluetoothV = (ViewGroup) view.findViewById(R.id.set_bluetooth_ll);
 		mSetBluetoothV.setOnClickListener(this);
 		mSetBluetoothV.setTag(ScheduleType.BLUETOOTH);
 
-		mSetCallAbortV= (ViewGroup) view.findViewById(R.id.set_call_abort_ll);
+		mSetCallAbortV = (ViewGroup) view.findViewById(R.id.set_call_abort_ll);
 		mSetCallAbortV.setOnClickListener(this);
 		mSetCallAbortV.setTag(ScheduleType.CALLABORT);
-		mSetStartAppV= (ViewGroup) view.findViewById(R.id.set_start_app_ll);
+		mSetStartAppV = (ViewGroup) view.findViewById(R.id.set_start_app_ll);
 		mSetStartAppV.setOnClickListener(this);
 		mSetStartAppV.setTag(ScheduleType.STARTAPP);
-		mSetBrightnessV= (ViewGroup) view.findViewById(R.id.set_brightness_ll);
+		mSetBrightnessV = (ViewGroup) view.findViewById(R.id.set_brightness_ll);
 		mSetBrightnessV.setOnClickListener(this);
 		mSetBrightnessV.setTag(ScheduleType.BRIGHTNESS);
 
@@ -414,7 +468,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			@Override
 			public void onClick(View v) {
 				mName = mNameEt.getText().toString();
-				if(TextUtils.isEmpty(mName)) {
+				if (TextUtils.isEmpty(mName)) {
 					com.chopping.utils.Utils.showLongToast(getActivity(), R.string.msg_label_name_must_given);
 				} else {
 					mLabel.setId(mId);
@@ -429,13 +483,12 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			}
 		});
 
-		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(
-				new OnAnimImageButtonClickedListener() {
-					@Override
-					public void onClick() {
-						EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
-					}
-				});
+		view.findViewById(R.id.open_timepicker_btn).setOnClickListener(new OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				EventBus.getDefault().post(new OpenTimePickerEvent(mHour, mMinute));
+			}
+		});
 		mRecurrenceV = view.findViewById(R.id.open_recurrence_btn);
 		mRecurrenceV.setOnClickListener(new OnAnimImageButtonClickedListener() {
 			@Override
@@ -466,7 +519,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		CheckBox cb = (CheckBox) vp.getChildAt(2);
 		cb.setChecked(!cb.isChecked());
 		ScheduleType type = (ScheduleType) v.getTag();
-		if(!cb.isChecked()) {
+		if (!cb.isChecked()) {
 			mLabel.getSelectedTypes().delete(type.getCode());
 		} else {
 			mLabel.getSelectedTypes().put(type.getCode(), type);
@@ -476,22 +529,24 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		case R.id.set_mute_ll:
 			discardAgainst(mSetSoundV);
 			discardAgainst(mSetVibrateV);
-			selectSMV(v);
+			selectSMVA((ViewGroup) v);
 			break;
 		case R.id.set_vibrate_ll:
 			discardAgainst(mSetSoundV);
 			discardAgainst(mSetMuteV);
-			selectSMV(v);
+			selectSMVA((ViewGroup) v);
 			break;
 		case R.id.set_sound_ll:
 			discardAgainst(mSetVibrateV);
 			discardAgainst(mSetMuteV);
-			selectSMV(v);
+			selectSMVA((ViewGroup) v);
 			break;
 		case R.id.set_call_abort_ll:
+			selectSMVA((ViewGroup) v);
 			break;
 		case R.id.set_start_app_ll:
-//			EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
+			ResolveInfo app = (ResolveInfo) cb.getTag();
+			EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
 			break;
 		case R.id.set_wifi_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
@@ -499,14 +554,14 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+					//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
 
 				}
 			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
+					//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
 
 				}
 			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -517,19 +572,20 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			}).create().show();
 			break;
 		case R.id.set_bluetooth_ll:
-			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(R.string.msg_bluetooth_on_off)
-					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(
+					R.string.msg_bluetooth_on_off).setCancelable(false).setPositiveButton(R.string.lbl_on,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+							//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+
+						}
+					}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
-
-				}
-			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
+					//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
 
 				}
 			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -545,16 +601,16 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-//							true));
+					//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+					//							true));
 
 				}
 			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-//							false));
+					//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+					//							false));
 
 				}
 			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -571,21 +627,21 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 
-//							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MAX.getLevelShortResId()));
+							//							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MAX.getLevelShortResId()));
 
 						}
 					}).setNegativeButton(Level.MIN.getLevelResId(), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MIN.getLevelShortResId()));
+					//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MIN.getLevelShortResId()));
 
 				}
 			}).setNeutralButton(Level.MEDIUM.getLevelResId(), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 
-//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MEDIUM.getLevelShortResId()));
+					//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MEDIUM.getLevelShortResId()));
 
 				}
 			}).create().show();
@@ -601,7 +657,9 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 
 	/**
 	 * Deselect the {@code againstV} when SMV(one of sound, mute, vibrate) is selected.
-	 * @param againstV Other {@link android.view.View} that is not selected.
+	 *
+	 * @param againstV
+	 * 		Other {@link android.view.View} that is not selected.
 	 */
 	private void discardAgainst(ViewGroup againstV) {
 		CheckBox cb = (CheckBox) againstV.getChildAt(2);
@@ -609,8 +667,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		ScheduleType type = (ScheduleType) mSetSoundV.getTag();
 		mLabel.getSelectedTypes().delete(type.getCode());
 		//Remove in labels collections.
-		for(Label label : mLabels) {
-			if(label.getType() == type) {
+		for (Label label : mLabels) {
+			if (label.getType() == type) {
 				mLabels.remove(label);
 				break;
 			}
@@ -618,19 +676,24 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	}
 
 	/**
-	 * Select a SMV(one of sound, mute, vibrate).
-	 * @param v {@link android.view.View} for SMV.
+	 * Select a SMV(one of sound, mute, vibrate, abort call).
+	 *
+	 * @param v
+	 * 		{@link android.view.ViewGroup} for SMVA.
 	 */
-	private void selectSMV(View v) {
+	private void selectSMVA(ViewGroup v) {
+		CheckBox cb = (CheckBox) v.getChildAt(2);
 		ScheduleType type = (ScheduleType) v.getTag();
 		//Remove in labels collections.
-		for(Label label : mLabels) {
-			if(label.getType() == type) {
+		for (Label label : mLabels) {
+			if (label.getType() == type) {
 				mLabels.remove(label);
 				break;
 			}
 		}
 		//Then re-add.
-		mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+		if (cb.isChecked()) {
+			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+		}
 	}
 }
