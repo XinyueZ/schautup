@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.numberpicker.NumberPickerBuilder;
@@ -141,6 +142,26 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 * {@code true} for edit, {@code false} for add new.
 	 */
 	private boolean mIsEdit;
+	/**
+	 * Information about wifi setting ON/OFF.
+	 */
+	private BadgeView mWifiInfoBgb;
+	/**
+	 * Information about bluetooth setting ON/OFF.
+	 */
+	private BadgeView mBluetoothInfoBgb;
+	/**
+	 * Information about mobile setting ON/OFF.
+	 */
+	private BadgeView mMobileInfoBgb;
+	/**
+	 * Information about setting brightness.
+	 */
+	private BadgeView mBrightnessInfoBgb;
+	/**
+	 * An icon of an application that has been selected.
+	 */
+	private ImageView mSelectedAppIv;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -193,36 +214,46 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		SparseArrayCompat<ScheduleType> types= item.getSelectedTypes();
 		int key;
 		ScheduleType type;
+		CheckBox cb;
 		for(int i = 0; i < types.size(); i++) {
 			key = types.keyAt(i);
 			type = types.get(key);
 			switch (type) {
 			case MUTE:
-				mSetMuteV.performClick();
+				cb = (CheckBox) mSetMuteV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case VIBRATE:
-				mSetVibrateV.performClick();
+				cb = (CheckBox) mSetVibrateV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case SOUND:
-				mSetSoundV.performClick();
+				cb = (CheckBox) mSetSoundV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case WIFI:
-				mSetWifiV.performClick();
+				cb = (CheckBox) mSetWifiV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case MOBILE:
-				mSetMobileDataV.performClick();
+				cb = (CheckBox) mSetMobileDataV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case BRIGHTNESS:
-				mSetBrightnessV.performClick();
+				cb = (CheckBox) mSetBrightnessV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case BLUETOOTH:
-				mSetBluetoothV.performClick();
+				cb = (CheckBox) mSetBluetoothV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case STARTAPP:
-				mSetStartAppV.performClick();
+				cb = (CheckBox) mSetStartAppV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			case CALLABORT:
-				mSetCallAbortV.performClick();
+				cb = (CheckBox) mSetCallAbortV.getChildAt(2);
+				cb.setChecked(!cb.isChecked());
 				break;
 			}
 		}
@@ -361,6 +392,16 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mSetBrightnessV= (ViewGroup) view.findViewById(R.id.set_brightness_ll);
 		mSetBrightnessV.setOnClickListener(this);
 		mSetBrightnessV.setTag(ScheduleType.BRIGHTNESS);
+
+		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wifi_bgv);
+		mWifiInfoBgb.setVisibility(View.GONE);
+		mBluetoothInfoBgb = (BadgeView) view.findViewById(R.id.info_bluetooth_bgv);
+		mBluetoothInfoBgb.setVisibility(View.GONE);
+		mMobileInfoBgb = (BadgeView) view.findViewById(R.id.info_mobile_data_bgv);
+		mMobileInfoBgb.setVisibility(View.GONE);
+		mBrightnessInfoBgb = (BadgeView) view.findViewById(R.id.info_brightness_bgv);
+		mBrightnessInfoBgb.setVisibility(View.GONE);
+		mSelectedAppIv = (ImageView) view.findViewById(R.id.info_start_app_iv);
 
 		view.findViewById(R.id.close_cancel_btn).setOnClickListener(new OnClickListener() {
 			@Override
