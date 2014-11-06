@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
-import com.schautup.bus.AppendNewFilterFromLabelEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.ShowFilterDefineDialogEvent;
 import com.schautup.bus.ShowSetFilterEvent;
@@ -65,13 +64,16 @@ public final class FiltersFragment extends BaseFragment {
 	public void onEvent(UpdateFilterEvent e) {
 		Filter newFilter = e.getFilter();
 		if (!e.isEdit()) {
-			new ParallelTask<Filter, Filter, Filter>(false) {
+			new ParallelTask<UpdateFilterEvent, Filter, Filter>(false) {
 				@Override
-				protected Filter doInBackground(Filter... params) {
+				protected Filter doInBackground(UpdateFilterEvent... params) {
 					Activity activity = getActivity();
 					if (activity != null) {
-						DB.getInstance(activity.getApplication()).addFilter(params[0]);
-						return params[0];
+						Filter filter = params[0].getFilter();
+						if(! params[0].isIgnoreCheckingDB()) {
+							DB.getInstance(activity.getApplication()).addFilter(filter);
+						}
+						return filter;
 					}
 					return null;
 				}
@@ -84,7 +86,7 @@ public final class FiltersFragment extends BaseFragment {
 						EventBus.getDefault().post(new UpdateActionBarEvent());
 					}
 				}
-			}.executeParallel(newFilter);
+			}.executeParallel(e);
 		} else {
 			new ParallelTask<Filter, Filter, Filter>(false) {
 				@Override
@@ -115,15 +117,6 @@ public final class FiltersFragment extends BaseFragment {
 	}
 
 
-	/**
-	 * Handler for {@link AppendNewFilterFromLabelEvent}.
-	 *
-	 * @param e
-	 * 		Event {@link AppendNewFilterFromLabelEvent}.
-	 */
-	public void onEvent(AppendNewFilterFromLabelEvent e) {
-		addNewFilter(e.getFilter());
-	}
 	//------------------------------------------------
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

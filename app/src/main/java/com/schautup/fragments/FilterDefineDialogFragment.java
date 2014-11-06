@@ -343,7 +343,7 @@ public final class FilterDefineDialogFragment extends DialogFragment implements 
 					mFilter.setHour(mHour);
 					mFilter.setMinute(mMinute);
 					mFilter.setEventRecurrence(mEventRecurrence);
-					EventBus.getDefault().post(new UpdateFilterEvent(mFilter, mIsEdit));
+					EventBus.getDefault().post(new UpdateFilterEvent(mFilter, mIsEdit, false));
 					dismiss();
 				}
 			}

@@ -466,7 +466,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				}
 			}
 			//Then re-add.
-			mLabels.add(new Label(type, "", ""));
+			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
 			break;
 		case R.id.set_vibrate_ll:
 			cb = (CheckBox) mSetSoundV.getChildAt(2);
@@ -502,7 +502,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				}
 			}
 			//Then re-add.
-			mLabels.add(new Label(type, "", ""));
+			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
 			break;
 		case R.id.set_sound_ll:
 			cb = (CheckBox) mSetVibrateV.getChildAt(2);
@@ -538,7 +538,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				}
 			}
 			//Then re-add.
-			mLabels.add(new Label(type, "", ""));
+			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
 			break;
 		case R.id.set_call_abort_ll:
 			break;

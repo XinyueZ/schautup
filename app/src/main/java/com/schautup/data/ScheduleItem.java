@@ -91,6 +91,30 @@ public final class ScheduleItem {
 		this(-1, type, hour, minute, System.currentTimeMillis());
 	}
 
+	/**
+	 * Constructor of {@link com.schautup.data.ScheduleItem}.
+	 *
+	 * @param type
+	 * 		{@link com.schautup.data.ScheduleType}. Different types scheduled.
+	 * @param hour
+	 * 		Hour.
+	 * @param minute
+	 * 		Minute.
+	 * @param recurrence
+	 * 		Recurrence of the event.
+	 * @param reserveLeft
+	 * 		The reserve data for some settings.
+	 * @param reserveRight
+	 * 		The reserve data for some settings.
+	 */
+	public ScheduleItem(ScheduleType type, int hour, int minute, EventRecurrence recurrence, String reserveLeft, String reserveRight) {
+		this(-1, type, hour, minute, System.currentTimeMillis());
+		setEventRecurrence(recurrence);
+		setReserveLeft(reserveLeft);
+		setReserveRight(reserveRight);
+	}
+
+
 
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.

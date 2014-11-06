@@ -881,6 +881,9 @@ public final class DB {
 			ContentValues v = new ContentValues();
 			v.put(LabelTbl.FILTER_ID, item.getIdFilter());
 			v.put(LabelTbl.TYPE, item.getType().toCode());
+			v.put(ScheduleTbl.HOUR, item.getHour());
+			v.put(ScheduleTbl.MINUTE, item.getMinute());
+			v.put(ScheduleTbl.RECURRENCE, item.getEventRecurrence().toString());
 			v.put(LabelTbl.RESERVE_LEFT, item.getReserveLeft());
 			v.put(LabelTbl.RESERVE_RIGHT, item.getReserveRight());
 			rowId = mDB.insert(LabelTbl.TABLE_NAME, null, v);
@@ -934,8 +937,7 @@ public final class DB {
 
 
 	/**
-	 * Returns all {@link com.schautup.data.Label}s from DB.
-	 *
+	 * Get all {@link com.schautup.data.Label}s from DB associated with a {@link com.schautup.data.Filter}.
 	 * @return All {@link com.schautup.data.Label}s from DB.
 	 */
 	public synchronized List<Label> getAllLabels(Filter filter) {
@@ -948,11 +950,17 @@ public final class DB {
 		Label item = null;
 		List<Label> list = new ArrayList<Label>();
 		try {
+			EventRecurrence er;
 			while (c.moveToNext()) {
+				er = new EventRecurrence();
+				er.parse(c.getString(c.getColumnIndex(ScheduleTbl.RECURRENCE)));
 				item = new Label(
 						c.getLong(c.getColumnIndex(LabelTbl.ID)),
 						c.getLong(c.getColumnIndex(LabelTbl.FILTER_ID)),
 						ScheduleType.fromCode(c.getInt( c.getColumnIndex(ScheduleTbl.TYPE))),
+						c.getInt(c.getColumnIndex(ScheduleTbl.HOUR)), c.getInt(
+						c.getColumnIndex(ScheduleTbl.MINUTE)),
+						er,
 						c.getString(c.getColumnIndex(LabelTbl.RESERVE_LEFT)),
 						c.getString(c.getColumnIndex(LabelTbl.RESERVE_RIGHT)) );
 
@@ -965,5 +973,17 @@ public final class DB {
 			close();
 			return list;
 		}
+	}
+
+	/**
+	 * Get all {@link com.schautup.data.Label}s from DB associated with a {@link com.schautup.data.Filter}.
+	 * <p/>
+	 * <b>After selected all labels, they will be removed from DB.</b>
+	 * @return All {@link com.schautup.data.Label}s from DB.
+	 */
+	public List<Label> fetchAllLabels(Filter filter) {
+		List<Label> ret = getAllLabels(filter);
+		removeLabels(filter);
+		return ret;
 	}
 }

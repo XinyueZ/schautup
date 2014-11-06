@@ -13,14 +13,17 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
-import com.schautup.bus.AppendNewFilterFromLabelEvent;
+import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetLabelEvent;
+import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdateLabelEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.Label;
+import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
+import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
 
@@ -31,7 +34,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class LabelsFragment extends BaseFragment{
+public final class LabelsFragment extends BaseFragment {
 	/**
 	 * Main layout for this component.
 	 */
@@ -53,6 +56,7 @@ public final class LabelsFragment extends BaseFragment{
 	//Subscribes, event-handlers
 	//------------------------------------------------
 
+
 	/**
 	 * Handler for {@link com.schautup.bus.UpdateLabelEvent}.
 	 *
@@ -70,7 +74,7 @@ public final class LabelsFragment extends BaseFragment{
 					if (activity != null) {
 						DB db = DB.getInstance(activity.getApplication());
 						db.addFilter(newFilter);
-						for(Label label : labels) {
+						for (Label label : labels) {
 							label.setIdFilter(newFilter.getId());
 							db.addLabel(label);
 						}
@@ -97,7 +101,7 @@ public final class LabelsFragment extends BaseFragment{
 					if (activity != null) {
 						DB db = DB.getInstance(activity.getApplication());
 						db.removeLabels(newFilter);
-						for(Label label : labels) {
+						for (Label label : labels) {
 							label.setIdFilter(newFilter.getId());
 							db.addLabel(label);
 						}
@@ -123,8 +127,6 @@ public final class LabelsFragment extends BaseFragment{
 	}
 
 
-
-
 	//------------------------------------------------
 
 
@@ -137,10 +139,10 @@ public final class LabelsFragment extends BaseFragment{
 		super.onViewCreated(view, savedInstanceState);
 
 		mLabelsVg = (ViewGroup) view.findViewById(R.id.labels_list_ll);
-		View addNewLabel =  view.findViewById(R.id.drawer_item_add_label);
+		View addNewLabel = view.findViewById(R.id.drawer_item_add_label);
 		addNewLabel.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(  View v) {
+			public void onClick(View v) {
 				EventBus.getDefault().post(new ShowLabelDefineDialogEvent());
 			}
 		});
@@ -173,8 +175,7 @@ public final class LabelsFragment extends BaseFragment{
 	 * 		A {@link com.schautup.data.Filter} to show.
 	 */
 	private void addNewLabel(final Filter filter) {
-		final ViewGroup labelV = (ViewGroup) getActivity().getLayoutInflater().inflate(LAYOUT_LABEL, mLabelsVg,
-				false);
+		final ViewGroup labelV = (ViewGroup) getActivity().getLayoutInflater().inflate(LAYOUT_LABEL, mLabelsVg, false);
 		labelV.setId((int) filter.getId());
 		TextView nameTv = (TextView) labelV.findViewById(R.id.label_name_tv);
 		nameTv.setText(filter.getName());
@@ -200,18 +201,36 @@ public final class LabelsFragment extends BaseFragment{
 			@Override
 			public void onClick() {
 				mLabelsVg.removeView(labelV);
-				new ParallelTask<Filter, Filter, Filter>(false) {
+				new ParallelTask<Filter, List<ScheduleItem>, List<ScheduleItem>>(false) {
+					Filter mFilter;
+
 					@Override
-					protected Filter doInBackground(Filter... params) {
-						DB.getInstance(getActivity().getApplication()).updateLabelToFilter(params[0]);
-						return params[0];
+					protected List<ScheduleItem> doInBackground(Filter... params) {
+						Activity activity = getActivity();
+						mFilter = params[0];
+						if (activity != null) {
+							DB db = DB.getInstance(activity.getApplication());
+							db.updateLabelToFilter(mFilter);
+							ScheduleItem newSchedule;
+							List<Label> labels = db.fetchAllLabels(mFilter);
+							for (Label label : labels) {
+								newSchedule = new ScheduleItem(label.getType(), label.getHour(), label.getMinute(),
+										label.getEventRecurrence(), label.getReserveLeft(), label.getReserveRight());
+								db.addSchedule(newSchedule);
+							}
+							return Utils.getAllSchedules(activity.getApplication());
+						}
+						return null;
 					}
 
 					@Override
-					protected void onPostExecute(Filter filter) {
-						super.onPostExecute(filter);
-						EventBus.getDefault().post(new AppendNewFilterFromLabelEvent(filter));
-						EventBus.getDefault().post(new CloseDrawerEvent());
+					protected void onPostExecute(List<ScheduleItem> items) {
+						super.onPostExecute(items);
+						if(items !=null) {
+							EventBus.getDefault().post(new UpdateFilterEvent(mFilter, false, true));
+							EventBus.getDefault().post(new CloseDrawerEvent());
+							EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
+						}
 					}
 				}.executeParallel(filter);
 			}
@@ -243,4 +262,5 @@ public final class LabelsFragment extends BaseFragment{
 			}
 		}.executeParallel();
 	}
+
 }
