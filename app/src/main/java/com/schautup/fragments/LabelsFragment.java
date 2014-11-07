@@ -105,6 +105,7 @@ public final class LabelsFragment extends BaseFragment {
 							label.setIdFilter(newFilter.getId());
 							db.addLabel(label);
 						}
+						db.updateFilter(newFilter);
 						return newFilter;
 					}
 					return null;

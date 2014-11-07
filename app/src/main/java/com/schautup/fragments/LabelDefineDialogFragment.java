@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -223,28 +222,23 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
 		EventBus.getDefault().removeStickyEvent(ShowSetLabelEvent.class);
 
-		new ParallelTask<Filter, Filter, Filter>(false) {
+		new ParallelTask<Filter, Filter, Void>(false) {
 			@Override
-			protected Filter doInBackground(Filter... params) {
+			protected Void doInBackground(Filter... params) {
 				Activity activity = getActivity();
 				if (activity != null) {
 					mLabels = DB.getInstance(activity.getApplication()).getAllLabels(params[0]);
 				}
-				return params[0];
+				return null;
 			}
 
 			@Override
-			protected void onPostExecute(Filter item) {
+			protected void onPostExecute(Void item) {
 				super.onPostExecute(item);
 
-				SparseArrayCompat<ScheduleType> types = item.getSelectedTypes();
-				int key;
-				ScheduleType type;
 				CheckBox cb;
-				for (int i = 0; i < types.size(); i++) {
-					key = types.keyAt(i);
-					type = types.get(key);
-					switch (type) {
+				for (Label label : mLabels) {
+					switch (label.getType()) {
 					case MUTE:
 						cb = (CheckBox) mSetMuteV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
@@ -277,27 +271,18 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 						cb = (CheckBox) mSetStartAppV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
 
-						Label l = null;
 						if (cb.isChecked()) {
-							for (Label label : mLabels) {
-								if (label.getType() == ScheduleType.STARTAPP) {
-									l = label;
-									break;
-								}
-							}
-						}
-						if (l != null) {
 							final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 							mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 							final List<ResolveInfo> pkgAppsList =
 									getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
 							PackageManager pm = getActivity().getPackageManager();
 							for (ResolveInfo app : pkgAppsList) {
-								if (TextUtils.equals(app.activityInfo.packageName, l.getReserveLeft())) {
+								if (TextUtils.equals(app.activityInfo.packageName, label.getReserveLeft())) {
 									cb.setTag(app);
 
 									try {
-										String startPackageName = l.getReserveLeft();
+										String startPackageName = label.getReserveLeft();
 										PackageInfo info = pm.getPackageInfo(startPackageName,
 												PackageManager.GET_ACTIVITIES);
 										Drawable logo = info.applicationInfo.loadIcon(pm);
@@ -338,6 +323,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 
 		CheckBox cb = (CheckBox) mSetStartAppV.getChildAt(2);
 		if (cb.isChecked()) {
+			mLabel.getSelectedTypes().put(ScheduleType.STARTAPP.getCode(), ScheduleType.STARTAPP);
 			mLabels.add(new Label(ScheduleType.STARTAPP, mHour, mMinute, mEventRecurrence,
 					info.activityInfo.packageName, "pkg"));
 		}
@@ -477,6 +463,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					mLabel.setMinute(mMinute);
 					mLabel.setEventRecurrence(mEventRecurrence);
 					mLabel.setLabel(true);
+					mLabel.getSelectedTypes().clear();
+					for(Label label : mLabels) {
+						mLabel.getSelectedTypes().put(label.getType().getCode(), label.getType());
+					}
 					EventBus.getDefault().post(new UpdateLabelEvent(mLabel, mIsEdit, mLabels));
 					dismiss();
 				}
@@ -518,35 +508,34 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		ViewGroup vp = (ViewGroup) v;
 		CheckBox cb = (CheckBox) vp.getChildAt(2);
 		cb.setChecked(!cb.isChecked());
-		ScheduleType type = (ScheduleType) v.getTag();
-		if (!cb.isChecked()) {
-			mLabel.getSelectedTypes().delete(type.getCode());
-		} else {
-			mLabel.getSelectedTypes().put(type.getCode(), type);
-		}
 
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
-			discardAgainst(mSetSoundV);
-			discardAgainst(mSetVibrateV);
-			selectSMVA((ViewGroup) v);
+			discardAgainst(mSetSoundV, ScheduleType.SOUND);
+			discardAgainst(mSetVibrateV,ScheduleType.VIBRATE);
+			selectSMVA((ViewGroup) v, ScheduleType.MUTE);
 			break;
 		case R.id.set_vibrate_ll:
-			discardAgainst(mSetSoundV);
-			discardAgainst(mSetMuteV);
-			selectSMVA((ViewGroup) v);
+			discardAgainst(mSetSoundV, ScheduleType.SOUND);
+			discardAgainst(mSetMuteV, ScheduleType.MUTE);
+			selectSMVA((ViewGroup) v, ScheduleType.VIBRATE);
 			break;
 		case R.id.set_sound_ll:
-			discardAgainst(mSetVibrateV);
-			discardAgainst(mSetMuteV);
-			selectSMVA((ViewGroup) v);
+			discardAgainst(mSetVibrateV, ScheduleType.VIBRATE);
+			discardAgainst(mSetMuteV, ScheduleType.MUTE);
+			selectSMVA((ViewGroup) v, ScheduleType.SOUND);
 			break;
 		case R.id.set_call_abort_ll:
-			selectSMVA((ViewGroup) v);
+			selectSMVA((ViewGroup) v, ScheduleType.CALLABORT);
 			break;
 		case R.id.set_start_app_ll:
-			ResolveInfo app = (ResolveInfo) cb.getTag();
-			EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
+			cb = removeHistory((ViewGroup) v,  ScheduleType.STARTAPP);
+			if(cb.isChecked()) {
+				ResolveInfo app = (ResolveInfo) cb.getTag();
+				EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
+			} else {
+				mSelectedAppIv.setVisibility(View.INVISIBLE);
+			}
 			break;
 		case R.id.set_wifi_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
@@ -660,19 +649,12 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 *
 	 * @param againstV
 	 * 		Other {@link android.view.View} that is not selected.
+	 * 	@param type  The type to remove.
 	 */
-	private void discardAgainst(ViewGroup againstV) {
+	private void discardAgainst(ViewGroup againstV,  ScheduleType type) {
 		CheckBox cb = (CheckBox) againstV.getChildAt(2);
 		cb.setChecked(false);
-		ScheduleType type = (ScheduleType) mSetSoundV.getTag();
-		mLabel.getSelectedTypes().delete(type.getCode());
-		//Remove in labels collections.
-		for (Label label : mLabels) {
-			if (label.getType() == type) {
-				mLabels.remove(label);
-				break;
-			}
-		}
+		removeHistory(againstV, type);
 	}
 
 	/**
@@ -680,10 +662,29 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 *
 	 * @param v
 	 * 		{@link android.view.ViewGroup} for SMVA.
+	 * 	@param type  The type that user selected.
 	 */
-	private void selectSMVA(ViewGroup v) {
+	private void selectSMVA(ViewGroup v, ScheduleType type) {
+		CheckBox checkBox = removeHistory(v, type);
+		//Then re-add.
+		if (checkBox.isChecked()) {
+			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
+		}
+	}
+
+	/**
+	 * Remove the old mark history of an item on {@link android.widget.CheckBox}.
+	 * <p/>
+	 * Read the {@link android.widget.CheckBox#getTag()} to determine the type that it represents.
+	 *
+	 * @param v
+	 * 		The host of {@link android.widget.CheckBox}.
+	 * 	@param type  The type to remove.
+	 *
+	 * @return {@link android.widget.CheckBox}, represents the item.
+	 */
+	private CheckBox removeHistory(ViewGroup v, ScheduleType type) {
 		CheckBox cb = (CheckBox) v.getChildAt(2);
-		ScheduleType type = (ScheduleType) v.getTag();
 		//Remove in labels collections.
 		for (Label label : mLabels) {
 			if (label.getType() == type) {
@@ -691,9 +692,6 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 				break;
 			}
 		}
-		//Then re-add.
-		if (cb.isChecked()) {
-			mLabels.add(new Label(type, mHour, mMinute, mEventRecurrence, "", ""));
-		}
+		return cb;
 	}
 }
