@@ -405,33 +405,24 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 
 		mSetMuteV = (ViewGroup) view.findViewById(R.id.set_mute_ll);
 		mSetMuteV.setOnClickListener(this);
-		mSetMuteV.setTag(ScheduleType.MUTE);
 		mSetVibrateV = (ViewGroup) view.findViewById(R.id.set_vibrate_ll);
 		mSetVibrateV.setOnClickListener(this);
-		mSetVibrateV.setTag(ScheduleType.VIBRATE);
 		mSetSoundV = (ViewGroup) view.findViewById(R.id.set_sound_ll);
 		mSetSoundV.setOnClickListener(this);
-		mSetSoundV.setTag(ScheduleType.SOUND);
 
 		mSetWifiV = (ViewGroup) view.findViewById(R.id.set_wifi_ll);
 		mSetWifiV.setOnClickListener(this);
-		mSetWifiV.setTag(ScheduleType.WIFI);
 		mSetMobileDataV = (ViewGroup) view.findViewById(R.id.set_mobile_data_ll);
 		mSetMobileDataV.setOnClickListener(this);
-		mSetMobileDataV.setTag(ScheduleType.MOBILE);
 		mSetBluetoothV = (ViewGroup) view.findViewById(R.id.set_bluetooth_ll);
 		mSetBluetoothV.setOnClickListener(this);
-		mSetBluetoothV.setTag(ScheduleType.BLUETOOTH);
 
 		mSetCallAbortV = (ViewGroup) view.findViewById(R.id.set_call_abort_ll);
 		mSetCallAbortV.setOnClickListener(this);
-		mSetCallAbortV.setTag(ScheduleType.CALLABORT);
 		mSetStartAppV = (ViewGroup) view.findViewById(R.id.set_start_app_ll);
 		mSetStartAppV.setOnClickListener(this);
-		mSetStartAppV.setTag(ScheduleType.STARTAPP);
 		mSetBrightnessV = (ViewGroup) view.findViewById(R.id.set_brightness_ll);
 		mSetBrightnessV.setOnClickListener(this);
-		mSetBrightnessV.setTag(ScheduleType.BRIGHTNESS);
 
 		mWifiInfoBgb = (BadgeView) view.findViewById(R.id.info_wifi_bgv);
 		mWifiInfoBgb.setVisibility(View.GONE);
