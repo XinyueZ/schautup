@@ -17,6 +17,7 @@ import com.schautup.bus.ShowLabelDefineDialogEvent;
 import com.schautup.bus.ShowSetLabelEvent;
 import com.schautup.bus.UpdateFilterEvent;
 import com.schautup.bus.UpdateLabelEvent;
+import com.schautup.bus.UpdatedItemGroupEvent;
 import com.schautup.data.Filter;
 import com.schautup.data.Label;
 import com.schautup.data.ScheduleItem;
@@ -232,6 +233,7 @@ public final class LabelsFragment extends BaseFragment {
 							EventBus.getDefault().post(new UpdateFilterEvent(mFilter, false, true));
 							EventBus.getDefault().post(new CloseDrawerEvent());
 							EventBus.getDefault().post(new AllScheduleLoadedEvent(items));
+							EventBus.getDefault().post(new UpdatedItemGroupEvent(items));
 						}
 					}
 				}.executeParallel(filter);

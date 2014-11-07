@@ -73,6 +73,7 @@ import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.RemovedScheduledStartAppsEvent;
 import com.schautup.bus.UpdatedItemEvent;
+import com.schautup.bus.UpdatedItemGroupEvent;
 import com.schautup.data.HistoryItem;
 import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
@@ -158,6 +159,22 @@ public final class App extends Application {
 		ScheduleItem item = e.getItem();
 		remove(item.getId());
 		add(item);
+	}
+
+	/**
+	 * Handler for {@link com.schautup.bus.UpdatedItemGroupEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.schautup.bus.UpdatedItemGroupEvent}.
+	 */
+	public void onEvent(UpdatedItemGroupEvent e) {
+		List<ScheduleItem> items = e.getItems();
+		if(items !=null ) {
+			for(ScheduleItem item : items) {
+				remove(item.getId());
+				add(item);
+			}
+		}
 	}
 
 	/**
