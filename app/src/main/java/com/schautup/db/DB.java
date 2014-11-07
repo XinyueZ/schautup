@@ -126,7 +126,7 @@ public final class DB {
 	 * Update a schedule in DB.
 	 *
 	 * @param item
-	 * 		{@link com.schautup.data.ScheduleItem} to insert.
+	 * 		{@link com.schautup.data.ScheduleItem} to update.
 	 *
 	 * @return {@code true} if insert is success.
 	 */
