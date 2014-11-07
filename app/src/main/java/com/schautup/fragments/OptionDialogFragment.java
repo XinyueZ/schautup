@@ -296,6 +296,8 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			if (logo != null) {
 				mSelectedAppIv.setImageDrawable(logo);
 			}
+		} else {
+			mSelStartAppV.setSelected(false);
 		}
 	}
 
