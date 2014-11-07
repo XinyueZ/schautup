@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/bg_option_dialog"
-    android:layout_width="@dimen/size_option_dialog"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.schautup.fragments.LabelDefineDialogFragment">
 
     <LinearLayout
         android:id="@+id/filters_define_date_time_ll"
-        android:layout_width="@dimen/size_option_dialog"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -19,7 +20,7 @@
             android:maxLines="1"
             android:minLines="1"
             android:inputType="textNoSuggestions"
-            android:layout_width="@dimen/size_option_dialog"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_common_black"
             android:hint="@string/lbl_label_name"
@@ -28,7 +29,7 @@
         <LinearLayout
 
             android:weightSum="5"
-            android:layout_width="@dimen/size_option_dialog"
+            android:layout_width="match_parent"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
@@ -100,20 +101,22 @@
             </FrameLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
-    <ScrollView
+    <HorizontalScrollView
         android:layout_above="@+id/filters_define_buttons_ll"
         android:layout_below="@+id/filters_define_date_time_ll"
-        android:layout_width="@dimen/size_option_dialog"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/setting_types_ll"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/selector_warning"
-            android:layout_height="wrap_content">
+        <android.support.v7.widget.GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:useDefaultMargins="true"
+            app:alignmentMode="alignMargins"
+            app:columnOrderPreserved="false"
+            app:columnCount="2">
 
 
             <LinearLayout
@@ -396,13 +399,13 @@
             </LinearLayout>
 
 
-        </LinearLayout>
-    </ScrollView>
+        </android.support.v7.widget.GridLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/filters_define_buttons_ll"
         android:layout_alignParentBottom="true"
-        android:layout_width="@dimen/size_option_dialog"
+        android:layout_width="match_parent"
         android:orientation="horizontal"
         android:weightSum="2"
         android:layout_height="wrap_content">
