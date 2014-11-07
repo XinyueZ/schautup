@@ -190,6 +190,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mMinute = e.getMinute();
 		mHourTv.setText(Utils.convertValue(mHour));
 		mMinuteTv.setText(Utils.convertValue(mMinute));
+
+		updateDateTimes();
 	}
 
 
@@ -204,6 +206,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		mRecurrenceV.setSelected(false);
 
 		mEventRecurrence = Utils.showRecurrenceBadge(getActivity(), mEventRecurrence, mRecurrenceBgv);
+		updateDateTimes();
 	}
 
 
@@ -753,5 +756,16 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			}
 		}
 		return cb;
+	}
+
+	/**
+	 * Update hour, minute and recurrence information on selected items.
+	 */
+	private void updateDateTimes() {
+		for(Label label : mLabels){
+			label.setHour(mHour);
+			label.setMinute(mMinute);
+			label.setEventRecurrence(mEventRecurrence);
+		}
 	}
 }

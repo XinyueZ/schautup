@@ -195,5 +195,10 @@ public final class Label {
 	public String getReserveRight() {
 		return mReserveRight;
 	}
-
+	/**
+	 * Set the {@link com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence}.
+	 */
+	public void setEventRecurrence(EventRecurrence eventRecurrence) {
+		mEventRecurrence = eventRecurrence;
+	}
 }
