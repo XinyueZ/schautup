@@ -279,6 +279,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					case BRIGHTNESS:
 						cb = (CheckBox) mSetBrightnessV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
+						if (cb.isChecked()) {
+							Level l = Level.fromInt(Integer.valueOf(label.getReserveLeft()));
+							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(l.getLevelShortResId()));
+						}
 						break;
 					case BLUETOOTH:
 						cb = (CheckBox) mSetBluetoothV.getChildAt(2);
