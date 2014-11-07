@@ -506,9 +506,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	@Override
 	public void onClick(View v) {
 		ViewGroup vp = (ViewGroup) v;
+		//Here change the current state of UI(checkbox).
 		CheckBox cb = (CheckBox) vp.getChildAt(2);
 		cb.setChecked(!cb.isChecked());
-
+		//Change now state of data and logical.
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
 			discardAgainst(mSetSoundV, ScheduleType.SOUND);
@@ -533,32 +534,33 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			if (cb.isChecked()) {
 				ResolveInfo app = (ResolveInfo) cb.getTag();
 				EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
-			} else {
-				mSelectedAppIv.setVisibility(View.INVISIBLE);
 			}
 			break;
 		case R.id.set_wifi_ll:
-			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
-					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
-
-				}
-			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
-
-				}
-			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-				}
-			}).create().show();
+			final CheckBox checkBox = removeHistory((ViewGroup) v, ScheduleType.WIFI);
+			if(cb.isChecked()) {
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off).setCancelable(
+						true).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+								if (checkBox.isChecked()) {
+									mLabels.add(new Label(ScheduleType.WIFI, mHour, mMinute, mEventRecurrence, "true",
+											"boolean"));
+								}
+							}
+						}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+								false));
+						if (checkBox.isChecked()) {
+							mLabels.add(new Label(ScheduleType.WIFI, mHour, mMinute, mEventRecurrence, "false",
+									"boolean"));
+						}
+					}
+				}).create().show();
+			}
 			break;
 		case R.id.set_bluetooth_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(
