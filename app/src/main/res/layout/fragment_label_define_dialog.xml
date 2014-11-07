@@ -104,303 +104,308 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
+    <ScrollView
         android:layout_above="@+id/filters_define_buttons_ll"
         android:layout_below="@+id/filters_define_date_time_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.GridLayout
+        <HorizontalScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:useDefaultMargins="true"
-            app:alignmentMode="alignMargins"
-            app:columnOrderPreserved="false"
-            app:columnCount="2">
+            android:layout_height="wrap_content">
 
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_mute_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_mute" />
-
-                <TextView
-                    android:text="@string/option_mute"
-                    style="@style/Filters_Define_TextView" />
-
-                <CheckBox
-                    android:id="@+id/filter_mute_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_vibrate_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_vibrate" />
-
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/option_vibrate" />
-
-                <CheckBox
-                    android:id="@+id/filter_vibrate_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_sound_ll"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+            <android.support.v7.widget.GridLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_sound" />
-
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/option_sound" />
-
-                <CheckBox
-                    android:id="@+id/filter_sound_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
+                app:useDefaultMargins="true"
+                app:alignmentMode="alignMargins"
+                app:columnOrderPreserved="false"
+                app:columnCount="2">
 
 
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_wifi_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <FrameLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_mute_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_gravity="center_horizontal"
                         android:layout_width="@dimen/size_hour_minute"
                         android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_wifi_btn" />
+                        android:background="@drawable/ic_mute" />
 
-                    <com.schautup.views.BadgeView
-                        android:id="@+id/info_wifi_bgv"
-                        android:visibility="gone"
+                    <TextView
+                        android:text="@string/option_mute"
+                        style="@style/Filters_Define_TextView" />
+
+                    <CheckBox
+                        android:id="@+id/filter_mute_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_vibrate_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_vibrate" />
+
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/option_vibrate" />
+
+                    <CheckBox
+                        android:id="@+id/filter_vibrate_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_sound_ll"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="@dimen/size_hour_minute"
+                        android:layout_height="@dimen/size_hour_minute"
+                        android:background="@drawable/ic_sound" />
+
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/option_sound" />
+
+                    <CheckBox
+                        android:id="@+id/filter_sound_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_wifi_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <FrameLayout
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
 
-                </FrameLayout>
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_wifi_btn" />
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_wifi_bgv"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </FrameLayout>
 
 
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/option_wifi" />
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/option_wifi" />
 
-                <CheckBox
-                    android:id="@+id/filter_wifi_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/filter_wifi_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_mobile_data_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_mobile_data_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_mobile_data_btn" />
-
-                    <com.schautup.views.BadgeView
-                        android:id="@+id/info_mobile_data_bgv"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
 
-                </FrameLayout>
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_mobile_data_btn" />
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_mobile_data_bgv"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </FrameLayout>
 
 
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/type_mobile_data_nb" />
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/type_mobile_data_nb" />
 
-                <CheckBox
-                    android:id="@+id/filter_mobile_data_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/filter_mobile_data_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_bluetooth_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_bluetooth_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_bluetooth_btn" />
-
-                    <com.schautup.views.BadgeView
-                        android:id="@+id/info_bluetooth_bgv"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
 
-                </FrameLayout>
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_bluetooth_btn" />
 
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/option_bluetooth" />
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_bluetooth_bgv"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                <CheckBox
-                    android:id="@+id/filter_bluetooth_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
+                    </FrameLayout>
 
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/option_bluetooth" />
 
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_call_abort_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="@dimen/size_hour_minute"
-                    android:layout_height="@dimen/size_hour_minute"
-                    android:background="@drawable/ic_dail_abort_btn" />
+                    <CheckBox
+                        android:id="@+id/filter_bluetooth_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
 
 
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/type_call_abort_nb" />
-
-                <CheckBox
-                    android:id="@+id/filter_call_abort_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_start_app_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_call_abort_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_gravity="center_horizontal"
                         android:layout_width="@dimen/size_hour_minute"
                         android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_app_list_btn" />
+                        android:background="@drawable/ic_dail_abort_btn" />
 
 
-                    <ImageView
-                        android:id="@+id/info_start_app_iv"
-                        android:layout_width="20dp"
-                        android:layout_gravity="bottom|right"
-                        android:layout_height="20dp" />
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/type_call_abort_nb" />
 
-                </FrameLayout>
+                    <CheckBox
+                        android:id="@+id/filter_call_abort_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
 
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/type_app_start_nb" />
-
-                <CheckBox
-                    android:id="@+id/filter_start_app_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/selector_bg3_btn"
-                android:id="@+id/set_brightness_ll"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_start_app_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="@dimen/size_hour_minute"
-                        android:layout_height="@dimen/size_hour_minute"
-                        android:background="@drawable/ic_brightness_btn" />
-
-                    <com.schautup.views.BadgeView
-                        android:id="@+id/info_brightness_bgv"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
 
-                </FrameLayout>
-
-                <TextView
-                    style="@style/Filters_Define_TextView"
-                    android:text="@string/option_brightness" />
-
-                <CheckBox
-                    android:id="@+id/filter_brightness_cb"
-                    style="@style/Filter_Define_CheckBox" />
-            </LinearLayout>
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_app_list_btn" />
 
 
-        </android.support.v7.widget.GridLayout>
-    </HorizontalScrollView>
+                        <ImageView
+                            android:id="@+id/info_start_app_iv"
+                            android:layout_width="20dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_height="20dp" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/type_app_start_nb" />
+
+                    <CheckBox
+                        android:id="@+id/filter_start_app_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/selector_bg3_btn"
+                    android:id="@+id/set_brightness_ll"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="@dimen/size_hour_minute"
+                            android:layout_height="@dimen/size_hour_minute"
+                            android:background="@drawable/ic_brightness_btn" />
+
+                        <com.schautup.views.BadgeView
+                            android:id="@+id/info_brightness_bgv"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        style="@style/Filters_Define_TextView"
+                        android:text="@string/option_brightness" />
+
+                    <CheckBox
+                        android:id="@+id/filter_brightness_cb"
+                        style="@style/Filter_Define_CheckBox" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.GridLayout>
+        </HorizontalScrollView>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/filters_define_buttons_ll"
