@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -262,6 +263,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					case MOBILE:
 						cb = (CheckBox) mSetMobileDataV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
+						if (cb.isChecked()) {
+							Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+									Boolean.parseBoolean(label.getReserveLeft())));
+						}
 						break;
 					case BRIGHTNESS:
 						cb = (CheckBox) mSetBrightnessV.getChildAt(2);
@@ -270,6 +275,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					case BLUETOOTH:
 						cb = (CheckBox) mSetBluetoothV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
+						if (cb.isChecked()) {
+							Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+									Boolean.parseBoolean(label.getReserveLeft())));
+						}
 						break;
 					case STARTAPP:
 						cb = (CheckBox) mSetStartAppV.getChildAt(2);
@@ -508,8 +517,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		ViewGroup vp = (ViewGroup) v;
 		//Here change the current state of UI(checkbox).
 		CheckBox cb = (CheckBox) vp.getChildAt(2);
+		final boolean oldState = cb.isChecked();//Might be used for some-else.
 		cb.setChecked(!cb.isChecked());
 		//Change now state of data and logical.
+		final CheckBox checkBox;
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
 			discardAgainst(mSetSoundV, ScheduleType.SOUND);
@@ -537,13 +548,15 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			}
 			break;
 		case R.id.set_wifi_ll:
-			final CheckBox checkBox = removeHistory((ViewGroup) v, ScheduleType.WIFI);
-			if(cb.isChecked()) {
-				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off).setCancelable(
-						true).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
+			checkBox = removeHistory((ViewGroup) v, ScheduleType.WIFI);
+			if (cb.isChecked()) {
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(
+						R.string.msg_wifi_on_off).setCancelable(true).setPositiveButton(R.string.lbl_on,
+						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
+								Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(
+										getActivity(), true));
 								if (checkBox.isChecked()) {
 									mLabels.add(new Label(ScheduleType.WIFI, mHour, mMinute, mEventRecurrence, "true",
 											"boolean"));
@@ -559,57 +572,82 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 									"boolean"));
 						}
 					}
+				}).setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						checkBox.setChecked(oldState);
+					}
 				}).create().show();
 			}
 			break;
 		case R.id.set_bluetooth_ll:
-			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(
-					R.string.msg_bluetooth_on_off).setCancelable(false).setPositiveButton(R.string.lbl_on,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
+			checkBox = removeHistory((ViewGroup) v, ScheduleType.BLUETOOTH);
+			if (cb.isChecked()) {
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_bluetooth).setMessage(
+						R.string.msg_bluetooth_on_off).setCancelable(true).setPositiveButton(R.string.lbl_on,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(
+										getActivity(), true));
+								if (checkBox.isChecked()) {
+									mLabels.add(new Label(ScheduleType.BLUETOOTH, mHour, mMinute, mEventRecurrence,
+											"true", "boolean"));
+								}
 
-							//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), true));
-
+							}
+						}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+								false));
+						if (checkBox.isChecked()) {
+							mLabels.add(new Label(ScheduleType.BLUETOOTH, mHour, mMinute, mEventRecurrence, "false",
+									"boolean"));
 						}
-					}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(), false));
-
-				}
-			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-				}
-			}).create().show();
+					}
+				}).setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						checkBox.setChecked(oldState);
+					}
+				}).create().show();
+			}
 			break;
 		case R.id.set_mobile_data_ll:
-			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(R.string.msg_wifi_on_off)
-					.setCancelable(false).setPositiveButton(R.string.lbl_on, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
+			checkBox = removeHistory((ViewGroup) v, ScheduleType.MOBILE);
+			if (cb.isChecked()) {
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_wifi).setMessage(
+						R.string.msg_wifi_on_off).setCancelable(true).setPositiveButton(R.string.lbl_on,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(
+										getActivity(), true));
+								if (checkBox.isChecked()) {
+									mLabels.add(new Label(ScheduleType.MOBILE, mHour, mMinute, mEventRecurrence,
+											"true", "boolean"));
+								}
 
-					//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-					//							true));
+							}
+						}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+								false));
+						if (checkBox.isChecked()) {
+							mLabels.add(new Label(ScheduleType.MOBILE, mHour, mMinute, mEventRecurrence, "false",
+									"boolean"));
+						}
 
-				}
-			}).setNegativeButton(R.string.lbl_off, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-					//							false));
-
-				}
-			}).setNeutralButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-				}
-			}).create().show();
+					}
+				}).setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						checkBox.setChecked(oldState);
+					}
+				}).create().show();
+			}
 			break;
 		case R.id.set_brightness_ll:
 			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_brightness).setMessage(

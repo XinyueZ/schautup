@@ -30,7 +30,7 @@
             style="@style/Drawer_Item_Text"
             android:layout_weight="1.5" />
 
-        <Button
+        <com.schautup.views.AnimImageTextView
             android:id="@+id/drawer_item_add_label"
             android:text="@string/btn_add"
             style="@style/Small_Button_Drawer" />

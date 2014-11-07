@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -26,6 +25,8 @@ import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Utils;
 import com.schautup.views.AnimImageButton;
 import com.schautup.views.AnimImageButton.OnAnimImageButtonClickedListener;
+import com.schautup.views.AnimImageTextView;
+import com.schautup.views.AnimImageTextView.OnAnimTextViewClickedListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -140,10 +141,10 @@ public final class LabelsFragment extends BaseFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		mLabelsVg = (ViewGroup) view.findViewById(R.id.labels_list_ll);
-		View addNewLabel = view.findViewById(R.id.drawer_item_add_label);
-		addNewLabel.setOnClickListener(new OnClickListener() {
+		AnimImageTextView addNewLabel = (AnimImageTextView) view.findViewById(R.id.drawer_item_add_label);
+		addNewLabel.setOnClickListener(new OnAnimTextViewClickedListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick() {
 				EventBus.getDefault().post(new ShowLabelDefineDialogEvent());
 			}
 		});
