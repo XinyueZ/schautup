@@ -170,6 +170,11 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 */
 	private ImageView mSelectedAppIv;
 
+	/**
+	 * The set {@link com.schautup.data.Label}s.
+	 */
+	private List<Label> mLabels = new ArrayList<Label>();
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -264,8 +269,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 						cb = (CheckBox) mSetMobileDataV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
 						if (cb.isChecked()) {
-							Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-									Boolean.parseBoolean(label.getReserveLeft())));
+							Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(
+									getActivity(), Boolean.parseBoolean(label.getReserveLeft())));
 						}
 						break;
 					case BRIGHTNESS:
@@ -276,8 +281,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 						cb = (CheckBox) mSetBluetoothV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
 						if (cb.isChecked()) {
-							Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
-									Boolean.parseBoolean(label.getReserveLeft())));
+							Utils.showBadgeView(getActivity(), mBluetoothInfoBgb, Utils.convertBooleanToOnOff(
+									getActivity(), Boolean.parseBoolean(label.getReserveLeft())));
 						}
 						break;
 					case STARTAPP:
@@ -625,8 +630,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 								Utils.showBadgeView(getActivity(), mMobileInfoBgb, Utils.convertBooleanToOnOff(
 										getActivity(), true));
 								if (checkBox.isChecked()) {
-									mLabels.add(new Label(ScheduleType.MOBILE, mHour, mMinute, mEventRecurrence,
-											"true", "boolean"));
+									mLabels.add(new Label(ScheduleType.MOBILE, mHour, mMinute, mEventRecurrence, "true",
+											"boolean"));
 								}
 
 							}
@@ -650,38 +655,50 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			}
 			break;
 		case R.id.set_brightness_ll:
-			new AlertDialog.Builder(getActivity()).setTitle(R.string.option_brightness).setMessage(
-					R.string.msg_brightness).setCancelable(true).setPositiveButton(Level.MAX.getLevelResId(),
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-
-							//							Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MAX.getLevelShortResId()));
-
+			checkBox = removeHistory((ViewGroup) v, ScheduleType.BRIGHTNESS);
+			if (cb.isChecked()) {
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.option_brightness).setMessage(
+						R.string.msg_brightness).setCancelable(true).setPositiveButton(Level.MAX.getLevelResId(),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(
+										Level.MAX.getLevelShortResId()));
+								if (checkBox.isChecked()) {
+									mLabels.add(new Label(ScheduleType.BRIGHTNESS, mHour, mMinute, mEventRecurrence,
+											Level.MAX.toCode() + "", "int"));
+								}
+							}
+						}).setNegativeButton(Level.MIN.getLevelResId(), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(
+								Level.MIN.getLevelShortResId()));
+						if (checkBox.isChecked()) {
+							mLabels.add(new Label(ScheduleType.BRIGHTNESS, mHour, mMinute, mEventRecurrence,
+									Level.MIN.toCode() + "", "int"));
 						}
-					}).setNegativeButton(Level.MIN.getLevelResId(), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MIN.getLevelShortResId()));
-
-				}
-			}).setNeutralButton(Level.MEDIUM.getLevelResId(), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-					//					Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(Level.MEDIUM.getLevelShortResId()));
-
-				}
-			}).create().show();
+					}
+				}).setNeutralButton(Level.MEDIUM.getLevelResId(), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Utils.showBadgeView(getActivity(), mBrightnessInfoBgb, getString(
+								Level.MEDIUM.getLevelShortResId()));
+						if (checkBox.isChecked()) {
+							mLabels.add(new Label(ScheduleType.BRIGHTNESS, mHour, mMinute, mEventRecurrence,
+									Level.MEDIUM.toCode() + "", "int"));
+						}
+					}
+				}).setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						checkBox.setChecked(oldState);
+					}
+				}).create().show();
+			}
 			break;
 		}
 	}
-
-	/**
-	 * The set {@link com.schautup.data.Label}s.
-	 */
-	private List<Label> mLabels = new ArrayList<Label>();
 
 
 	/**
