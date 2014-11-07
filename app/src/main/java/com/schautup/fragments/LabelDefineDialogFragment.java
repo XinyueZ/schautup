@@ -254,6 +254,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					case WIFI:
 						cb = (CheckBox) mSetWifiV.getChildAt(2);
 						cb.setChecked(!cb.isChecked());
+						if (cb.isChecked()) {
+							Utils.showBadgeView(getActivity(), mWifiInfoBgb, Utils.convertBooleanToOnOff(getActivity(),
+									Boolean.parseBoolean(label.getReserveLeft())));
+						}
 						break;
 					case MOBILE:
 						cb = (CheckBox) mSetMobileDataV.getChildAt(2);
@@ -272,6 +276,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 						cb.setChecked(!cb.isChecked());
 
 						if (cb.isChecked()) {
+							mSelectedAppIv.setVisibility(View.VISIBLE);
 							final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 							mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 							final List<ResolveInfo> pkgAppsList =
@@ -313,19 +318,23 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 * 		Event {@link com.schautup.bus.SelectedInstalledApplicationEvent}.
 	 */
 	public void onEvent(SelectedInstalledApplicationEvent e) {
-		ResolveInfo info = e.getResolveInfo();
-		mSetStartAppV.setTag(info);
-		PackageManager pm = getActivity().getPackageManager();
-		Drawable logo = info.loadIcon(pm);
-		if (logo != null) {
-			mSelectedAppIv.setImageDrawable(logo);
-		}
-
 		CheckBox cb = (CheckBox) mSetStartAppV.getChildAt(2);
-		if (cb.isChecked()) {
+		if (cb.isChecked() && e.getResolveInfo() != null) {
+
+			ResolveInfo info = e.getResolveInfo();
+			mSetStartAppV.setTag(info);
+			PackageManager pm = getActivity().getPackageManager();
+			Drawable logo = info.loadIcon(pm);
+			if (logo != null) {
+				mSelectedAppIv.setImageDrawable(logo);
+			}
+
+			mSelectedAppIv.setVisibility(View.VISIBLE);
 			mLabel.getSelectedTypes().put(ScheduleType.STARTAPP.getCode(), ScheduleType.STARTAPP);
 			mLabels.add(new Label(ScheduleType.STARTAPP, mHour, mMinute, mEventRecurrence,
 					info.activityInfo.packageName, "pkg"));
+		} else {
+			discardAgainst(mSetStartAppV, ScheduleType.STARTAPP);
 		}
 	}
 
@@ -455,7 +464,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 					mLabel.setEventRecurrence(mEventRecurrence);
 					mLabel.setLabel(true);
 					mLabel.getSelectedTypes().clear();
-					for(Label label : mLabels) {
+					for (Label label : mLabels) {
 						mLabel.getSelectedTypes().put(label.getType().getCode(), label.getType());
 					}
 					EventBus.getDefault().post(new UpdateLabelEvent(mLabel, mIsEdit, mLabels));
@@ -503,7 +512,7 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 		switch (v.getId()) {
 		case R.id.set_mute_ll:
 			discardAgainst(mSetSoundV, ScheduleType.SOUND);
-			discardAgainst(mSetVibrateV,ScheduleType.VIBRATE);
+			discardAgainst(mSetVibrateV, ScheduleType.VIBRATE);
 			selectSMVA((ViewGroup) v, ScheduleType.MUTE);
 			break;
 		case R.id.set_vibrate_ll:
@@ -520,8 +529,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 			selectSMVA((ViewGroup) v, ScheduleType.CALLABORT);
 			break;
 		case R.id.set_start_app_ll:
-			cb = removeHistory((ViewGroup) v,  ScheduleType.STARTAPP);
-			if(cb.isChecked()) {
+			cb = removeHistory((ViewGroup) v, ScheduleType.STARTAPP);
+			if (cb.isChecked()) {
 				ResolveInfo app = (ResolveInfo) cb.getTag();
 				EventBus.getDefault().post(new ShowInstalledApplicationsListEvent(app));
 			} else {
@@ -640,9 +649,10 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 *
 	 * @param againstV
 	 * 		Other {@link android.view.View} that is not selected.
-	 * 	@param type  The type to remove.
+	 * @param type
+	 * 		The type to remove.
 	 */
-	private void discardAgainst(ViewGroup againstV,  ScheduleType type) {
+	private void discardAgainst(ViewGroup againstV, ScheduleType type) {
 		CheckBox cb = (CheckBox) againstV.getChildAt(2);
 		cb.setChecked(false);
 		removeHistory(againstV, type);
@@ -653,7 +663,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 *
 	 * @param v
 	 * 		{@link android.view.ViewGroup} for SMVA.
-	 * 	@param type  The type that user selected.
+	 * @param type
+	 * 		The type that user selected.
 	 */
 	private void selectSMVA(ViewGroup v, ScheduleType type) {
 		CheckBox checkBox = removeHistory(v, type);
@@ -670,7 +681,8 @@ public final class LabelDefineDialogFragment extends DialogFragment implements O
 	 *
 	 * @param v
 	 * 		The host of {@link android.widget.CheckBox}.
-	 * 	@param type  The type to remove.
+	 * @param type
+	 * 		The type to remove.
 	 *
 	 * @return {@link android.widget.CheckBox}, represents the item.
 	 */

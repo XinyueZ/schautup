@@ -289,11 +289,13 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 	 */
 	public void onEvent(SelectedInstalledApplicationEvent e) {
 		ResolveInfo info = e.getResolveInfo();
-		mSelStartAppV.setTag(info);
-		PackageManager pm = getActivity().getPackageManager();
-		Drawable logo = info.loadIcon(pm);
-		if(logo != null) {
-			mSelectedAppIv.setImageDrawable(logo);
+		if( info != null) {
+			mSelStartAppV.setTag(info);
+			PackageManager pm = getActivity().getPackageManager();
+			Drawable logo = info.loadIcon(pm);
+			if (logo != null) {
+				mSelectedAppIv.setImageDrawable(logo);
+			}
 		}
 	}
 

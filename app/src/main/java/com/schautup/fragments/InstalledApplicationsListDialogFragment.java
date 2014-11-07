@@ -167,6 +167,7 @@ public final class InstalledApplicationsListDialogFragment extends DialogFragmen
 			dismiss();
 			break;
 		case R.id.close_cancel_btn:
+			EventBus.getDefault().post(new SelectedInstalledApplicationEvent(null));
 			dismiss();
 			break;
 		}
