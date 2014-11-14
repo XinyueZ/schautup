@@ -35,28 +35,6 @@
 
     <!--Log.-->
 
-    <LinearLayout
-        android:id="@+id/drawer_item_log_history_ll"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_drawer_item"
-        android:orientation="horizontal"
-        android:background="@drawable/selector_bg1_btn"
-        android:weightSum="2.5">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_log_btn"
-            android:layout_weight="0.5" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/drawer_item_log_history"
-            style="@style/Drawer_Item_Text"
-            android:layout_weight="1.5" />
-    </LinearLayout>
 
 
     <View

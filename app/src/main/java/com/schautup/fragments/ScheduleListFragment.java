@@ -32,10 +32,6 @@ public final class ScheduleListFragment extends BaseListFragment {
 	 * Main layout for this component.
 	 */
 	private static final int LAYOUT = R.layout.fragment_schedule_list;
-	/**
-	 * Header layout.
-	 */
-	private static final int LAYOUT_HEADER = R.layout.inc_lv_header;
 
 
 	/**
@@ -72,10 +68,6 @@ public final class ScheduleListFragment extends BaseListFragment {
 
 		setListViewWidget(listView);
 		setAdapter(new ScheduleListViewListAdapter());
-		//Add header.
-		View headerV = getActivity().getLayoutInflater().inflate(LAYOUT_HEADER, listView, false);
-		listView.addHeaderView(headerV, null, false);
-		headerV.getLayoutParams().height = getActionBarHeight();
 		((MarginLayoutParams)listView.getLayoutParams()).bottomMargin = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
 	}

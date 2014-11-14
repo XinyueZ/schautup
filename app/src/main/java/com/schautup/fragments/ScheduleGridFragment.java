@@ -28,10 +28,6 @@ public final class ScheduleGridFragment extends BaseListFragment {
 	 * Main layout for this component.
 	 */
 	private static final int LAYOUT = R.layout.fragment_schedule_grid;
-	/**
-	 * Header layout.
-	 */
-	private static final int LAYOUT_HEADER = R.layout.inc_lv_header;
 
 	/**
 	 * Initialize a {@link com.schautup.fragments.ScheduleListFragment}.
@@ -57,10 +53,6 @@ public final class ScheduleGridFragment extends BaseListFragment {
 		gridView.setColumnWidth(screenWidth / 3);
 		setListViewWidget(gridView);
 		setAdapter(new ScheduleGridViewListAdapter());
-		//Add header.
-		View headerV = getActivity().getLayoutInflater().inflate(LAYOUT_HEADER, (ViewGroup) view, false);
-		((ViewGroup) (view.findViewById(R.id.header_fl))).addView(headerV);
-		headerV.getLayoutParams().height = getActionBarHeight();
 		((MarginLayoutParams)gridView.getLayoutParams()).bottomMargin = getActionBarHeight();
 		super.onViewCreated(view, savedInstanceState);
 	}

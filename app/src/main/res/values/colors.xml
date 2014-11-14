@@ -12,7 +12,7 @@
     <color name="c8">#CC14b9d2</color>
     <color name="c9">#0f6ea5</color>
     <color name="c10">#FF0000</color>
-
+    <color name="blue_grey_200">#B0BEC5</color>
     <color name="c12">#0096ff</color>
     <color name="c13">#0032ff</color>
     <color name="c14">#0000c8</color>
@@ -43,10 +43,9 @@
     <color name="bg_blue_rect_stroke">@color/c13</color>
     <color name="bg_red_rect_stroke">@color/c10</color>
     <color name="bg_button_close_cancel">@color/c6</color>
-    <color name="bg_app">@color/c6</color>
     <color name="bg_eula">@color/c0</color>
     <color name="bg_selected_item">@color/c25</color>
-    <color name="bg_quick_settings">@color/bg_app</color>
+    <color name="checkbox">@color/c9</color>
 
     <color name="level_0">@color/c18</color>
     <color name="level_1">@color/c19</color>

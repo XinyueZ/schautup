@@ -6,9 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.schautup.activities.HomePageWebViewActivity">
 
-    <WebView
+    <com.schautup.views.WebViewEx
         android:id="@+id/home_wv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ActionBar_ToolBar" />
 
 </FrameLayout>

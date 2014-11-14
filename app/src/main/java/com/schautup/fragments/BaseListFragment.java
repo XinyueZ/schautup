@@ -3,18 +3,14 @@ package com.schautup.fragments;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
 import com.schautup.adapters.BaseScheduleListAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
@@ -57,20 +53,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mLv}.
 	 */
 	private int mLastFirstVisibleItem;
-
-	/**
-	 * {@link android.view.View} for "add".
-	 */
-	private AnimImageButton mAddNewVG;
 	/**
 	 * A button to load data when there's no data.
 	 */
 	private AnimImageButton mNoDataBtn;
-	/**
-	 * There is different between android pre 3.0 and 3.x, 4.x on this wording.
-	 */
-	private static final String ALPHA =
-			(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) ? "alpha" : "Alpha";
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -123,7 +109,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		mLv.setOnItemLongClickListener(this);
 		//The ActionMode is ending,  add-button should work again.
 		mLv.setOnScrollListener(this);
-		mAddNewVG.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -167,7 +152,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 				int hour = filter.getHour();
 				int minute = filter.getMinute();
 				EventRecurrence er = filter.getEventRecurrence();
-				List<ScheduleItem> items =  DB.getInstance(getActivity().getApplication()).getFilteredSchedules(hour,
+				List<ScheduleItem> items = DB.getInstance(getActivity().getApplication()).getFilteredSchedules(hour,
 						minute, filter.getSelectedTypes(), er);
 				return items;
 			}
@@ -187,16 +172,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		super.onViewCreated(view, savedInstanceState);
 		mLv.setOnScrollListener(this);
 
-		// Add new.
-		mAddNewVG = (AnimImageButton) view.findViewById(R.id.add_btn);
-		mAddNewVG.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
-			@Override
-			public void onClick() {
-				EventBus.getDefault().post(new AddNewScheduleItemEvent());
-			}
-		});
-
-		// No data.
 		mNoDataBtn = (AnimImageButton) view.findViewById(R.id.no_data_btn);
 		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
 			@Override
@@ -216,7 +191,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		}
 		//The ActionMode is starting, add-button should not work.
 		mLv.setOnScrollListener(null);
-		mAddNewVG.setVisibility(View.GONE);
 		return false;
 	}
 
@@ -248,28 +222,16 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		float translationY = ViewHelper.getTranslationY(mAddNewVG);
-		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-			//ListView is idle, user can add item with a button.
-			if (translationY != 0) {
-				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(0).setDuration(500);
-			}
-		} else if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-			//ListView moving, add button can dismiss.
-			if (translationY == 0) {
-				ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewVG);
-				animator.translationY(getActionBarHeight() * 4).setDuration(500);
-			}
-		}
 		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
-			if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-				if (getSupportActionBar().isShowing()) {
+			View c = view.getChildAt(0);
+			int scrollY = -c.getTop() + view.getFirstVisiblePosition() * c.getHeight();
+			if(scrollY == 0) {
+				EventBus.getDefault().post(new ShowActionBarEvent(false));
+			} else {
+				if (currentFirstVisibleItem > mLastFirstVisibleItem) {
 					EventBus.getDefault().post(new ShowActionBarEvent(false));
-				}
-			} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-				if (!getSupportActionBar().isShowing()) {
+				} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
 					EventBus.getDefault().post(new ShowActionBarEvent(true));
 				}
 			}
@@ -339,7 +301,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
 	/**
 	 * Show all selected data or filtered data.
-	 * @param data To show.
+	 *
+	 * @param data
+	 * 		To show.
 	 */
 	private void showAllSelectedData(List<ScheduleItem> data) {
 		// Show all schedules on the ListView or GridView.

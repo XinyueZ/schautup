@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.DownloadListener;
@@ -12,8 +13,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
 import com.schautup.utils.Prefs;
+import com.schautup.views.WebViewEx;
+import com.schautup.views.WebViewEx.OnWebViewExScrolledListener;
 
 /**
  * A WebView to the homepage of SchautUp.
@@ -35,8 +39,11 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 	/**
 	 * {@link WebView} shows homepage.
 	 */
-	private WebView mWebView;
-
+	private WebViewEx mWebView;
+	/**
+	 * The "ActionBar".
+	 */
+	private Toolbar mToolbar;
 	/**
 	 * Show single instance of {@link com.schautup.activities.HomePageWebViewActivity}.
 	 *
@@ -54,9 +61,25 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
-		getSupportActionBar().setIcon(R.drawable.ic_action_home_page);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(mToolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mWebView = (WebViewEx) findViewById(R.id.home_wv);
+		mWebView.setOnWebViewExScrolledListener(new OnWebViewExScrolledListener() {
+			@Override
+			public void onScrollChanged(boolean isUp) {
+				if(isUp) {
+					animToolActionBar(0);
+				} else {
+					animToolActionBar(-getActionBarHeight() * 4);
+				}
+			}
 
-		mWebView = (WebView) findViewById(R.id.home_wv);
+			@Override
+			public void onScrolledTop() {
+				animToolActionBar(-getActionBarHeight() * 4);
+			}
+		});
 		mWebView.setDownloadListener(this);
 		WebSettings settings = mWebView.getSettings();
 		settings.setLoadWithOverviewMode(true);
@@ -110,5 +133,17 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 		Uri uri = Uri.parse(url);
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		startActivity(intent);
+	}
+
+
+	/**
+	 * Animation and moving actionbar(toolbar).
+	 *
+	 * @param value
+	 * 		The property value of animation.
+	 */
+	private void animToolActionBar(float value) {
+		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mToolbar);
+		animator.translationY(value).setDuration(400);
 	}
 }

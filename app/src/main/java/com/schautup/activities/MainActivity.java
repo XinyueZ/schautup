@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
@@ -16,12 +17,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
@@ -38,6 +39,7 @@ import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
 import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
@@ -79,6 +81,7 @@ import com.schautup.scheduler.ScheduleManager;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Prefs;
 import com.schautup.utils.Utils;
+import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -99,6 +102,11 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Main menu.
 	 */
 	private static final int MENU = R.menu.main;
+
+	/**
+	 * Extras and flag to indicate that the
+	 */
+	public static final String EXTRAS_STOPPED_CALL_ABORT = "com.schautup.scheduler.Stop.CallAbort";
 
 	/**
 	 * Menu for the Action-Mode.
@@ -128,10 +136,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * {@link android.support.v7.view.ActionMode} on the list-view then it is not null.
 	 */
 	private ActionMode mActionMode;
-	/**
-	 * All labels, for add schedules by a group.
-	 */
-	private LongSparseArray<ViewGroup> mLabelsList;
 
 	/**
 	 * All defined {@link com.schautup.data.Filter}s to select.
@@ -145,6 +149,24 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * {@link android.view.MenuItem} to handle list or grid view.
 	 */
 	private MenuItem mViewMenuItem;
+	/**
+	 * {@link android.view.View} for "add".
+	 */
+	private AnimImageButton mAddNewV;
+
+	/**
+	 * The "ActionBar".
+	 */
+	private Toolbar mToolbar;
+
+	/**
+	 * Height of statusbar.
+	 */
+	private int mStatusBarHeight;
+	/**
+	 * Flag that is {@code true} if the statusbar will show first time.
+	 */
+	private boolean mFistTimeHide = true;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -187,12 +209,13 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	public void onEvent(ShowActionBarEvent e) {
 		if (e.isShow()) {
-			getSupportActionBar().show();
+			animShowMainUI();
 			ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 		} else {
-			getSupportActionBar().hide();
+			animHideMainUI();
 			ViewCompat.setY(mRefreshLayout, 0);
 		}
+		getSystemUiHelper().hide();
 	}
 
 	/**
@@ -228,6 +251,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			showDialogFragment(OptionDialogFragment.newInstance(this), null);
 		}
 	}
+
 
 	/**
 	 * Handler for {@link com.schautup.bus.OpenTimePickerEvent}.
@@ -460,14 +484,59 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		cxt.startActivity(intent);
 	}
 
+	/**
+	 * To get height of statusbar.
+	 */
+	private void calcStatusBarHeight() {
+		int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			mStatusBarHeight = getResources().getDimensionPixelSize(resourceId);
+		}
+	}
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		setContentView(LAYOUT);
+		calcStatusBarHeight();
 
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(mToolbar);
+		getSupportActionBar().setTitle(null);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			View decorView = getWindow().getDecorView();
+			decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+				@Override
+				public void onSystemUiVisibilityChange(int visibility) {
+					// Note that system bars will only be "visible" if none of the
+					// LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+					if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+						// The system bars are visible.
+						animToolActionBar(mStatusBarHeight);
+					} else {
+						if (mFistTimeHide) {
+							mFistTimeHide = false;
+							return;
+						}
+						// The system bars are NOT visible.
+						animToolActionBar(0);
+					}
+				}
+			});
+		}
 		initDrawer();
+		// Add new.
+		mAddNewV = (AnimImageButton) findViewById(R.id.add_btn);
+		mAddNewV.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
+			@Override
+			public void onClick() {
+				EventBus.getDefault().post(new AddNewScheduleItemEvent());
+			}
+		});
 
+		// No data.
 		//Sticky message box.
 		mStickyV = findViewById(R.id.sticky_fl);
 		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
@@ -644,6 +713,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public boolean onCreateActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
 		actionMode.getMenuInflater().inflate(ACTION_MODE_MENU, menu);
 		mActionMode = actionMode;
+		mAddNewV.setVisibility(View.GONE);
 		return true;
 	}
 
@@ -668,6 +738,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	@Override
 	public void onDestroyActionMode(android.support.v7.view.ActionMode actionMode) {
 		mActionMode = null;
+		mAddNewV.setVisibility(View.VISIBLE);
 		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 
@@ -686,13 +757,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				@Override
 				public void onDrawerSlide(View drawerView, float slideOffset) {
 					super.onDrawerSlide(drawerView, slideOffset);
-					if (!getSupportActionBar().isShowing()) {
-						getSupportActionBar().show();
-					}
+					animShowMainUI();
 				}
 			};
 			mDrawerLayout.setDrawerListener(mDrawerToggle);
-			findViewById(R.id.drawer_header_v).getLayoutParams().height = getActionBarHeight();
 		}
 	}
 
@@ -811,7 +879,33 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	}
 
 	/**
-	 * Extras and flag to indicate that the
+	 * Dismiss actionbar, and add-new-btn.
 	 */
-	public static final String EXTRAS_STOPPED_CALL_ABORT = "com.schautup.scheduler.Stop.CallAbort";
+	private void animHideMainUI() {
+		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
+		animator.translationY(getActionBarHeight() * 4).setDuration(400);
+
+		animToolActionBar(-getActionBarHeight() * 4);
+	}
+
+	/**
+	 * Show actionbar, and add-new-btn.
+	 */
+	private void animShowMainUI() {
+		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
+		animator.translationY(0).setDuration(400);
+
+		animToolActionBar(0);
+	}
+
+	/**
+	 * Animation and moving actionbar(toolbar).
+	 *
+	 * @param value
+	 * 		The property value of animation.
+	 */
+	private void animToolActionBar(float value) {
+		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mToolbar);
+		animator.translationY(value).setDuration(400);
+	}
 }

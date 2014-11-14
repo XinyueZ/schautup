@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bg_app"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.ScheduleGridFragment">
 
@@ -40,6 +39,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom" />
-        <include layout="@layout/inc_add_item" />
     </FrameLayout>
 </LinearLayout>

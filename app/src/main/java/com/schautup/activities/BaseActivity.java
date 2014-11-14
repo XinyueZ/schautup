@@ -22,6 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.schautup.R;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.utils.Prefs;
+import com.schautup.utils.uihelper.SystemUiHelper;
 
 /**
  * System basic {@link android.app.Activity}.
@@ -35,6 +36,10 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 	private int mActionBarHeight;
 
 	/**
+	 * The uiHelper classes from <a href="https://gist.github.com/chrisbanes/73de18faffca571f7292">Chris Banes</a>
+	 */
+	private SystemUiHelper mSystemUiHelper;
+	/**
 	 * Handler for {@link }
 	 *
 	 * @param e
@@ -42,6 +47,12 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 	 */
 	public void onEvent(Object e) {
 
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		mSystemUiHelper.hide();
 	}
 
 	@Override
@@ -76,6 +87,8 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 			_e.printStackTrace();
 		}
 
+		mSystemUiHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0);
+		mSystemUiHelper.hide();
 	}
 
 
@@ -160,4 +173,11 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 		return Prefs.getInstance(getApplication());
 	}
 
+
+	/**
+	 * The uiHelper classes from <a href="https://gist.github.com/chrisbanes/73de18faffca571f7292">Chris Banes</a>
+	 */
+	protected SystemUiHelper getSystemUiHelper() {
+		return mSystemUiHelper;
+	}
 }

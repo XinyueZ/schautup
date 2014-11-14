@@ -10,12 +10,18 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 
 import com.schautup.App;
 import com.schautup.BootReceiver;
 import com.schautup.R;
 import com.schautup.utils.Prefs;
+import com.schautup.utils.uihelper.SystemUiHelper;
 
 /**
  * Setting .
@@ -26,7 +32,14 @@ public final class SettingsActivity extends PreferenceActivity implements
 	 * Tricky to avoid first call.
 	 */
 	private boolean mInitModeList;
-
+	/**
+	 * The uiHelper classes from <a href="https://gist.github.com/chrisbanes/73de18faffca571f7292">Chris Banes</a>
+	 */
+	private SystemUiHelper mSystemUiHelper;
+	/**
+	 * The "ActionBar".
+	 */
+	private Toolbar mToolbar;
 	/**
 	 * Show an instance of SettingsActivity.
 	 *
@@ -39,11 +52,30 @@ public final class SettingsActivity extends PreferenceActivity implements
 		context.startActivity(intent);
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		mSystemUiHelper.hide();
+	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		mSystemUiHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0);
+		mSystemUiHelper.hide();
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+		mToolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar, null, false);
+		addContentView(mToolbar, new ViewGroup.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		mToolbar.setTitle(R.string.menu_settings);
+		mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+		mToolbar.setNavigationOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 
 		String val;
 		//Schedule running mode.

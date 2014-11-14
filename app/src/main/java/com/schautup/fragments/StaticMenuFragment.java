@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.chopping.bus.CloseDrawerEvent;
 import com.schautup.R;
 import com.schautup.activities.HomePageWebViewActivity;
-import com.schautup.activities.LogHistoryActivity;
 import com.schautup.activities.SettingsActivity;
 
 import de.greenrobot.event.EventBus;
@@ -42,7 +41,6 @@ public final class StaticMenuFragment extends BaseFragment {
 		});
 
 		View drawerItemHomePage = view.findViewById(R.id.drawer_item_home_page_ll);
-		View drawerItemLogHistory = view.findViewById(R.id.drawer_item_log_history_ll);
 		if (isStage) {
 			drawerItemHomePage.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -51,17 +49,8 @@ public final class StaticMenuFragment extends BaseFragment {
 					HomePageWebViewActivity.showInstance(getActivity());
 				}
 			});
-
-			drawerItemLogHistory.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					EventBus.getDefault().post(new CloseDrawerEvent());
-					LogHistoryActivity.showInstance(getActivity());
-				}
-			});
 		} else {
 			drawerItemHomePage.setVisibility(View.GONE);
-			drawerItemLogHistory.setVisibility(View.GONE);
 		}
 	}
 }

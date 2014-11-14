@@ -100,8 +100,7 @@
         <activity
             android:name="com.schautup.activities.MainActivity"
             android:label="@string/application_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoTitleTextOverlayTheme" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -115,13 +114,7 @@
         <activity
             android:name="com.schautup.activities.HomePageWebViewActivity"
             android:label="@string/drawer_item_home_page"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoOverlayTheme" />
-        <activity
-            android:name="com.schautup.activities.LogHistoryActivity"
-            android:label="@string/drawer_item_log_history"
-            android:screenOrientation="portrait"
-            android:theme="@style/OverlayTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.schautup.activities.QuickSettingsActivity"
             android:label="@string/settings_quick_title"
