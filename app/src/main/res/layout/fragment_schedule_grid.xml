@@ -32,8 +32,6 @@
             android:layoutAnimation="@anim/grid_wave_scale"/>
 
 
-        <include layout="@layout/inc_empty" />
-
         <fragment
             android:name="com.schautup.fragments.AdFragment"
             android:layout_width="match_parent"

@@ -46,7 +46,6 @@ import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
-import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
@@ -388,7 +387,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					if (result != null) {
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
 								getResources().getColor(R.color.warning_green_1)));
-						EventBus.getDefault().post(new DeletedConfirmEvent());
 					} else {
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
 								getResources().getColor(R.color.warning_red_1)));

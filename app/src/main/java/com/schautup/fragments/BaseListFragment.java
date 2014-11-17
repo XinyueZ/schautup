@@ -13,10 +13,8 @@ import android.widget.AdapterView;
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.R;
 import com.schautup.adapters.BaseScheduleListAdapter;
-import com.schautup.bus.AddNewScheduleItemEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
-import com.schautup.bus.DeletedConfirmEvent;
 import com.schautup.bus.FilterEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.HideActionModeEvent;
@@ -27,7 +25,6 @@ import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
 import com.schautup.utils.Utils;
-import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -53,10 +50,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * Helper value to detect scroll direction of {@link android.widget.ListView} {@link #mLv}.
 	 */
 	private int mLastFirstVisibleItem;
-	/**
-	 * A button to load data when there's no data.
-	 */
-	private AnimImageButton mNoDataBtn;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -82,9 +75,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 * 		Event {@link  com.schautup.bus.UpdatedItemEvent}.
 	 */
 	public void onEvent(UpdatedItemEvent e) {
-		if (mNoDataBtn.getVisibility() == View.VISIBLE) {
-			mNoDataBtn.setVisibility(View.GONE);
-		}
 		ScheduleItem item = e.getItem();
 		ScheduleItem itemFound = mAdp.findItem(item);
 		if (itemFound == null) {
@@ -126,17 +116,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		}
 	}
 
-	/**
-	 * Handler for {@link com.schautup.bus.DeletedConfirmEvent}.
-	 *
-	 * @param e
-	 * 		Event {@link com.schautup.bus.DeletedConfirmEvent}.
-	 */
-	public void onEvent(DeletedConfirmEvent e) {
-		if (mAdp == null || mAdp.getItemList() == null || mAdp.getItemList().size() == 0) {
-			mNoDataBtn.setVisibility(View.VISIBLE);
-		}
-	}
 
 	/**
 	 * Handler for {@link com.schautup.bus.FilterEvent}.
@@ -172,13 +151,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		super.onViewCreated(view, savedInstanceState);
 		mLv.setOnScrollListener(this);
 
-		mNoDataBtn = (AnimImageButton) view.findViewById(R.id.no_data_btn);
-		mNoDataBtn.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
-			@Override
-			public void onClick() {
-				EventBus.getDefault().post(new AddNewScheduleItemEvent());
-			}
-		});
 		((AdapterView) mLv).setAdapter(mAdp);
 		mLv.setOnItemLongClickListener(this);
 	}
@@ -308,15 +280,12 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	private void showAllSelectedData(List<ScheduleItem> data) {
 		// Show all schedules on the ListView or GridView.
 		if (data != null && data.size() > 0) {
-			//Never see the button "no data" after at least one item was added.
-			mNoDataBtn.setVisibility(View.GONE);
 			mAdp.setItemList(data);
 			//Show data.
 			mAdp.notifyDataSetChanged();
 		} else {
 			mAdp.setItemList(null);
 			mAdp.notifyDataSetChanged();
-			mNoDataBtn.setVisibility(View.VISIBLE);
 		}
 	}
 
