@@ -1,141 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:layout_height="wrap_content"
+<com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:longClickable="true"
-    android:background="@drawable/selector_item_bg"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content"
+    android:background="@color/common_white"
+    ripple:rv_type="simpleRipple"
+    ripple:rv_color="@color/primary_dark_color" >
 
-
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_height="wrap_content">
+        android:longClickable="true"
+        >
 
 
-        <FrameLayout
+        <LinearLayout
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/status_iv"
-                android:layout_width="@dimen/size_list_grid_item_img"
-                android:layout_height="@dimen/size_list_grid_item_img"
+
+            <FrameLayout
+                android:orientation="vertical"
                 android:layout_gravity="center"
-                android:contentDescription="@string/application_name"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_launcher" />
-
-            <com.schautup.views.BadgeView
-                android:id="@+id/info_bgv"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:id="@+id/info_start_app_iv"
-                android:layout_width="20dp" android:layout_gravity="bottom|right"
-                android:layout_height="20dp" />
-        </FrameLayout>
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/status_tv"
-            android:text="@string/app_name"
-            android:layout_width="match_parent"
-            android:textSize="@dimen/size_schedule_item_fired_time_text"
-            android:gravity="center"
-            android:textColor="@color/text_common_black"
+                <ImageView
+                    android:id="@+id/status_iv"
+                    android:layout_width="@dimen/size_list_grid_item_img"
+                    android:layout_height="@dimen/size_list_grid_item_img"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/application_name"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_launcher" />
+
+                <com.schautup.views.BadgeView
+                    android:id="@+id/info_bgv"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/info_start_app_iv"
+                    android:layout_width="20dp"
+                    android:layout_gravity="bottom|right"
+                    android:layout_height="20dp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/status_tv"
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:textSize="@dimen/size_schedule_item_fired_time_text"
+                android:gravity="center"
+                android:textColor="@color/text_common_black"
+                android:layout_height="wrap_content" />
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="bottom|center_horizontal">
+
+                <TableRow
+                    android:background="@android:color/transparent"
+                    android:gravity="bottom|center_horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/su_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_su" />
+
+                    <TextView
+                        android:id="@+id/mo_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_mo" />
+
+                    <TextView
+                        android:id="@+id/tu_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_tu" />
+
+                    <TextView
+                        android:id="@+id/we_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_we" />
+
+                    <TextView
+                        android:id="@+id/th_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_th" />
+
+                    <TextView
+                        android:id="@+id/fr_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_fr" />
+
+                    <TextView
+                        android:id="@+id/sa_tv"
+                        style="@style/WeekDayTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_sa" />
+                </TableRow>
+            </TableLayout>
+
+        </LinearLayout>
+
+
+        <CheckBox
+            android:id="@id/delete_cb"
+            android:visibility="gone"
+            android:layout_gravity="right|top"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
-        <TableLayout
+        <View
+            android:id="@+id/status_level_v"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="bottom|center_horizontal">
-
-            <TableRow
-                android:background="@android:color/transparent"
-                android:gravity="bottom|center_horizontal"
-                android:layout_gravity="bottom|center_horizontal"
-                android:orientation="horizontal">
+            android:background="@color/level_11"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="@dimen/margin_padding_status_level"
+            android:layout_marginLeft="@dimen/margin_padding_status_level"
+            android:layout_height="@dimen/size_status_level" />
 
 
-                <TextView
-                    android:id="@+id/su_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_su" />
-
-                <TextView
-                    android:id="@+id/mo_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_mo" />
-
-                <TextView
-                    android:id="@+id/tu_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_tu" />
-
-                <TextView
-                    android:id="@+id/we_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_we" />
-
-                <TextView
-                    android:id="@+id/th_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_th" />
-
-                <TextView
-                    android:id="@+id/fr_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_fr" />
-
-                <TextView
-                    android:id="@+id/sa_tv"
-                    style="@style/WeekDayTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_sa" />
-            </TableRow>
-        </TableLayout>
-
-    </LinearLayout>
-
-
-    <CheckBox
-        android:id="@id/delete_cb"
-        android:visibility="gone"
-        android:layout_gravity="right|top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <View
-        android:id="@+id/status_level_v"
-        android:layout_width="match_parent"
-        android:background="@color/level_11"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginRight="@dimen/margin_padding_status_level"
-        android:layout_marginLeft="@dimen/margin_padding_status_level"
-        android:layout_height="@dimen/size_status_level" />
-
-
-</FrameLayout>
+    </FrameLayout>
+</com.andexert.library.RippleView>

@@ -517,7 +517,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			}
 		});
 
-		// No data.
 		//Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
@@ -604,9 +603,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			return true;
 		}
 		switch (item.getItemId()) {
-		//		case R.id.action_add:
-		//			EventBus.getDefault().post(new AddNewScheduleItemEvent());
-		//			break;
 		case R.id.action_view:
 			if (!mListViewCurrent) {
 				//Current is grid, then switch to list.
@@ -810,6 +806,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 					Filter filter = (Filter) mFilterSpinner.getAdapter().getItem(location);
 					EventBus.getDefault().postSticky(new FilterEvent(filter, false));
 				} else {
+					EventBus.getDefault().removeStickyEvent(FilterEvent.class);
 					new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
 						@Override
 						protected List<ScheduleItem> doInBackground(Void... params) {

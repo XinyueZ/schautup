@@ -12,7 +12,8 @@
         <FrameLayout
             android:id="@+id/content_fl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="@dimen/height_divider"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/content_srl"

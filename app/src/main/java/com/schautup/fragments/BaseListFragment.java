@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.adapters.BaseScheduleListAdapter;
@@ -21,7 +23,6 @@ import com.schautup.data.Filter;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
 import com.schautup.utils.ParallelTask;
-import com.schautup.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,8 +32,8 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseListFragment extends BaseFragment implements AbsListView.OnScrollListener,
-		AdapterView.OnItemLongClickListener {
+public abstract class BaseListFragment extends BaseFragment implements OnScrollListener,
+		OnItemLongClickListener  {
 	/**
 	 * {@link android.widget.AbsListView} for all schedules.
 	 * <p/>
@@ -167,18 +168,18 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onResume() {
 		super.onResume();
 
-		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
-			@Override
-			protected List<ScheduleItem> doInBackground(Void... params) {
-				return Utils.getAllSchedules(getActivity().getApplication());
-			}
-
-			@Override
-			protected void onPostExecute(List<ScheduleItem> result) {
-				super.onPostExecute(result);
-				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
-			}
-		}.executeParallel();
+//		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+//			@Override
+//			protected List<ScheduleItem> doInBackground(Void... params) {
+//				return Utils.getAllSchedules(getActivity().getApplication());
+//			}
+//
+//			@Override
+//			protected void onPostExecute(List<ScheduleItem> result) {
+//				super.onPostExecute(result);
+//				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
+//			}
+//		}.executeParallel();
 	}
 
 	@Override

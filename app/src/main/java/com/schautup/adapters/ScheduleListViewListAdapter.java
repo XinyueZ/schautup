@@ -1,13 +1,13 @@
 package com.schautup.adapters;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.schautup.R;
 import com.schautup.bus.ShowSetOptionEvent;
 import com.schautup.utils.Utils;
-import com.schautup.views.AnimImageButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -27,12 +27,12 @@ public final class ScheduleListViewListAdapter extends BaseScheduleListAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-		convertView.setOnClickListener(new AnimImageButton.OnAnimImageButtonClickedListener() {
-					@Override
-					public void onClick() {
-						EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
-					}
-				});
+		convertView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventBus.getDefault().postSticky(new ShowSetOptionEvent(getItemList().get(position)));
+			}
+		});
 		viewHolder.mEditedTimeTv.setText(Utils.convertTimestamps2DateString(parent.getContext(), getItemList().get(
 				position).getEditedTime()));
 		return convertView;

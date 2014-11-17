@@ -26,8 +26,8 @@
             android:columnWidth="130dp"
             android:numColumns="auto_fit"
             android:stretchMode="columnWidth"
-            android:horizontalSpacing="3dp"
-            android:verticalSpacing="3dp"
+            android:horizontalSpacing="@dimen/height_divider"
+            android:verticalSpacing="@dimen/height_divider"
             android:gravity="center"
             android:layoutAnimation="@anim/grid_wave_scale"/>
 
