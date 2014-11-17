@@ -715,6 +715,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		actionMode.getMenuInflater().inflate(ACTION_MODE_MENU, menu);
 		mActionMode = actionMode;
 		mAddNewV.setVisibility(View.GONE);
+		mToolbar.setVisibility(View.GONE);
 		return true;
 	}
 
@@ -740,6 +741,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	public void onDestroyActionMode(android.support.v7.view.ActionMode actionMode) {
 		mActionMode = null;
 		mAddNewV.setVisibility(View.VISIBLE);
+		mToolbar.setVisibility(View.VISIBLE);
 		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 
