@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 
 import com.chopping.application.LL;
 import com.schautup.R;
+import com.schautup.data.IActionModeSupport;
 
 /**
  * An {@link android.widget.BaseAdapter} for {@link android.widget.ListView}s that can start {@link
@@ -19,12 +20,9 @@ import com.schautup.R;
  *
  * @author Xinyue Zhao
  */
-public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implements
+public abstract class BaseActionModeListAdapter<T extends IActionModeSupport> extends BaseAdapter implements
 		OnClickListener {
-	/**
-	 * Items that will be removed.
-	 */
-	private LongSparseArray<T> mToRmvItems;
+
 	/**
 	 * {@code true} if the the {@link android.widget.ListView} is under the ActionMode;
 	 */
@@ -56,7 +54,7 @@ public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implement
 			if(!mActionMode) {
 				vh.mDeleteCb.setChecked(false);
 			} else {
-				vh.mDeleteCb.setChecked(mToRmvItems.indexOfKey(getItemKey(item)) > 0);
+				vh.mDeleteCb.setChecked(item.isChecked());
 			}
 			vh.mDeleteCb.setTag(item);
 			vh.mDeleteCb.setOnClickListener(this);
@@ -70,7 +68,6 @@ public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implement
 	 * The {@link android.widget.ListView} begins in ActionMode.
 	 */
 	public void actionModeBegin() {
-		mToRmvItems = new LongSparseArray<T>();
 		mActionMode = true;
 		notifyDataSetChanged();
 	}
@@ -79,10 +76,6 @@ public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implement
 	 * The {@link android.widget.ListView} ends from ActionMode.
 	 */
 	public void actionModeEnd() {
-		if (mToRmvItems != null) {
-			mToRmvItems.clear();
-		}
-		mToRmvItems = null;
 		mActionMode = false;
 		notifyDataSetChanged();
 	}
@@ -94,31 +87,30 @@ public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implement
 	 * @return Data items that have been removed from cache. Return {@code null} when no removal happened.
 	 */
 	public LongSparseArray<T> removeItems() {
-		if (mToRmvItems != null) {
-			long key = 0;
-			T item;
-			List<T> ds = getDataSource();
-			for (int i = 0; i < mToRmvItems.size(); i++) {
-				key = mToRmvItems.keyAt(i);
-				item = mToRmvItems.get(key);
-				ds.remove(item);
+		LongSparseArray<T> itemsToRmv = new LongSparseArray<T>();
+
+		List<T> ds = getDataSource();
+		for (T t : ds) {
+			if (t.isChecked()) {
+				itemsToRmv.put(getItemKey(t), t);
 			}
-			return mToRmvItems;
 		}
-		return null;
+
+		long key;
+		T item; ;
+		for (int i = 0; i < itemsToRmv.size(); i++) {
+			key = itemsToRmv.keyAt(i);
+			item = itemsToRmv.get(key);
+			ds.remove(item);
+		}
+		return itemsToRmv;
 	}
 
 	@Override
 	public void onClick(View v) {
 		CompoundButton buttonView = (CompoundButton) v;
-		if (mToRmvItems != null) {
-			T item = (T) buttonView.getTag();
-			if (buttonView.isChecked()) {
-				mToRmvItems.put(getItemKey(item), item);
-			} else {
-				mToRmvItems.remove(getItemKey(item));
-			}
-		}
+		T item = (T) buttonView.getTag();
+		item.setCheck(buttonView.isChecked());
 	}
 
 
@@ -134,7 +126,6 @@ public abstract class BaseActionModeListAdapter<T> extends BaseAdapter implement
 	 * Get the key of item which will be moved.
 	 *
 	 * @param item
-	 * 		Item that should gives key for {@link #mToRmvItems}.
 	 *
 	 * @return The key.
 	 */

@@ -13,7 +13,6 @@ import android.text.TextUtils;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.schautup.data.Filter;
-import com.schautup.data.HistoryItem;
 import com.schautup.data.Label;
 import com.schautup.data.ScheduleItem;
 import com.schautup.data.ScheduleType;
@@ -153,98 +152,6 @@ public final class DB {
 			close();
 		}
 		return success;
-	}
-
-	/**
-	 * Log a history.
-	 *
-	 * @param item
-	 * 		An item to log.
-	 *
-	 * @return {@code} The log is successfully.
-	 */
-	public synchronized boolean logHistory(HistoryItem item) {
-		if (mDB == null || !mDB.isOpen()) {
-			open();
-		}
-		boolean success = false;
-		try {
-			long rowId = -1;
-			//Do "insert" command.
-			ContentValues v = new ContentValues();
-			v.put(LogHistoryTbl.TYPE, item.getType().toCode());
-			v.put(LogHistoryTbl.COMMENT, item.getComment());
-			v.put(LogHistoryTbl.EDIT_TIME, System.currentTimeMillis());
-			rowId = mDB.insert(LogHistoryTbl.TABLE_NAME, null, v);
-			success = rowId != -1;
-		} finally {
-			close();
-		}
-		return success;
-	}
-
-
-	/**
-	 * Remove one history from DB.
-	 *
-	 * @param item
-	 * 		The item to remove.
-	 *
-	 * @return The count of rows remain in DB after removed item.
-	 * <p/>
-	 * Return -1 if there's error when removed data.
-	 */
-	public synchronized int removeHistory(HistoryItem item) {
-		if (mDB == null || !mDB.isOpen()) {
-			open();
-		}
-		int rowsRemain = -1;
-		boolean success;
-		try {
-			long rowId;
-			String whereClause = LogHistoryTbl.ID + "=?";
-			String[] whereArgs = new String[] { String.valueOf(item.getId()) };
-			rowId = mDB.delete(LogHistoryTbl.TABLE_NAME, whereClause, whereArgs);
-			success = rowId > 0;
-			if (success) {
-				Cursor c = mDB.query(LogHistoryTbl.TABLE_NAME, new String[] { LogHistoryTbl.ID }, null, null, null,
-						null, null);
-				rowsRemain = c.getCount();
-			} else {
-				rowsRemain = -1;
-			}
-		} finally {
-			close();
-		}
-		return rowsRemain;
-	}
-
-	/**
-	 * Returns all {@link com.schautup.data.HistoryItem}s from DB.
-	 *
-	 * @return All {@link com.schautup.data.HistoryItem}s from DB.
-	 */
-	public synchronized List<HistoryItem> getAllHistories() {
-		if (mDB == null || !mDB.isOpen()) {
-			open();
-		}
-		Cursor c = mDB.query(LogHistoryTbl.TABLE_NAME, null, null, null, null, null, LogHistoryTbl.EDIT_TIME + " DESC");
-		HistoryItem item = null;
-		List<HistoryItem> list = new LinkedList<HistoryItem>();
-		try {
-			while (c.moveToNext()) {
-				item = new HistoryItem(c.getLong(c.getColumnIndex(LogHistoryTbl.ID)), ScheduleType.fromCode(c.getInt(
-						c.getColumnIndex(LogHistoryTbl.TYPE))), c.getLong(c.getColumnIndex(LogHistoryTbl.EDIT_TIME)));
-				item.setComment(c.getString(c.getColumnIndex(LogHistoryTbl.COMMENT)));
-				list.add(item);
-			}
-		} finally {
-			if (c != null) {
-				c.close();
-			}
-			close();
-			return list;
-		}
 	}
 
 

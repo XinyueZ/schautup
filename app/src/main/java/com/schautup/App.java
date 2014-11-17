@@ -68,13 +68,11 @@ import com.chopping.net.TaskHelper;
 import com.chopping.utils.DeviceUtils;
 import com.chopping.utils.DeviceUtils.Brightness;
 import com.schautup.activities.MainActivity;
-import com.schautup.bus.AddedHistoryEvent;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.GivenRemovedScheduleItemsEvent;
 import com.schautup.bus.RemovedScheduledStartAppsEvent;
 import com.schautup.bus.UpdatedItemEvent;
 import com.schautup.bus.UpdatedItemGroupEvent;
-import com.schautup.data.HistoryItem;
 import com.schautup.data.Level;
 import com.schautup.data.ScheduleItem;
 import com.schautup.db.DB;
@@ -412,7 +410,6 @@ public final class App extends Application {
 	 * 		The data-module of a schedule.
 	 */
 	private void doScheduleTask(ScheduleItem item) {
-		HistoryItem historyItem;
 		String actionContent = null;
 		String comment = null;
 		switch (item.getType()) {
@@ -604,15 +601,10 @@ public final class App extends Application {
 			showWarningsAbortCall();
 			break;
 		}
-		DB db = DB.getInstance(this);
-		historyItem = new HistoryItem(item.getType());
-		historyItem.setComment(comment);
-		db.logHistory(historyItem);
 		if (!TextUtils.isEmpty(comment)) {
 			sendNotification(this, new Result(getString(R.string.notify_can_not_set), getString(
 					R.string.lbl_avoid_change), actionContent, R.drawable.ic_some_warnings_notify), comment);
 		}
-		EventBus.getDefault().post(new AddedHistoryEvent(historyItem));
 	}
 
 

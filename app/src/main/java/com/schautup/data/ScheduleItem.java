@@ -5,7 +5,7 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 /**
  * Data structure of a schedule item.
  */
-public final class ScheduleItem {
+public final class ScheduleItem implements IActionModeSupport {
 	/**
 	 * Possible Id if data instance is from DB.
 	 */
@@ -38,7 +38,10 @@ public final class ScheduleItem {
 	 * The reserve data for some settings.
 	 */
 	private String mReserveRight;
-
+	/**
+	 * Whether item is checked to delete or not.
+	 */
+	private boolean mCheck;
 	/**
 	 * Constructor of {@link com.schautup.data.ScheduleItem}.
 	 *
@@ -284,5 +287,15 @@ public final class ScheduleItem {
 	 */
 	public void setReserveRight(String reserveRight) {
 		mReserveRight = reserveRight;
+	}
+
+	@Override
+	public void setCheck(boolean check) {
+		mCheck = check;
+	}
+
+	@Override
+	public boolean isChecked() {
+		return mCheck;
 	}
 }

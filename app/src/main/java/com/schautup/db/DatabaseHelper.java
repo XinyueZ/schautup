@@ -57,7 +57,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(ScheduleTbl.SQL_CREATE);
-		db.execSQL(LogHistoryTbl.SQL_CREATE);
 		db.execSQL(FilterTbl.SQL_CREATE);
 		db.execSQL(LabelTbl.SQL_CREATE);
 	}
