@@ -26,12 +26,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.crashlytics.android.Crashlytics;
@@ -40,6 +37,7 @@ import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.schautup.R;
 import com.schautup.adapters.FiltersAdapter;
@@ -121,14 +119,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	private SwipeRefreshLayout mRefreshLayout;
 	/**
-	 * Message sticky.
-	 */
-	private View mStickyV;
-	/**
-	 * {@link android.widget.TextView} where message to be shown.
-	 */
-	private TextView mStickyMsgTv;
-	/**
 	 * Use navigation-drawer for this fork.
 	 */
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -192,12 +182,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		if (getSupportActionBar().isShowing()) {
 			getSupportActionBar().hide();
 		}
-		mStickyMsgTv.setText(e.getMessage());
-		mStickyV.setVisibility(View.VISIBLE);
-		mStickyV.setBackgroundColor(e.getColor());
-		AnimationSet animSet = (AnimationSet) AnimationUtils.loadAnimation(this, R.anim.slide_in_and_out);
-		animSet.setAnimationListener(this);
-		mStickyV.startAnimation(animSet);
+		SnackBar sb = new SnackBar(this);
+		sb.show(e.getMessage());
 	}
 
 
@@ -236,7 +222,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	public void onEvent(ShowSetOptionEvent e) {
 		if (mActionMode == null) {
-			showDialogFragment(OptionDialogFragment.newInstance(this), null);
+			showDialogFragment(OptionDialogFragment.newInstance(getApplication()), null);
 		}
 	}
 
@@ -248,7 +234,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 */
 	public void onEvent(AddNewScheduleItemEvent e) {
 		if (mActionMode == null) {
-			showDialogFragment(OptionDialogFragment.newInstance(this), null);
+			showDialogFragment(OptionDialogFragment.newInstance(getApplication()), null);
 		}
 	}
 
@@ -319,16 +305,14 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			protected void onPostExecute(Object obj) {
 				super.onPostExecute(obj);
 				if (obj == null) {
-					onEvent(new ShowStickyEvent(getString(R.string.msg_err), getResources().getColor(
-							R.color.warning_red_1)));
+					onEvent(new ShowStickyEvent(getString(R.string.msg_err) ));
 				} else {
 					//Refresh ListView or GridView.
 					if (!mEditMode) {
 						//Show a tip: long press to remove for first insert.
 						Prefs prefs = Prefs.getInstance(getApplication());
 						if (!prefs.isTipLongPressRmvScheduleShown()) {
-							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv_schedule),
-									getResources().getColor(R.color.warning_green_1)));
+							onEvent(new ShowStickyEvent(getString(R.string.msg_long_press_rmv_schedule) ));
 							//							Utils.showLongToast(MainActivity.this, R.string.msg_long_press_rmv_schedule);
 							prefs.setTipLongPressRmvScheduleShown(true);
 						}
@@ -385,11 +369,9 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 				protected void onPostExecute(LongSparseArray<ScheduleItem> result) {
 					super.onPostExecute(result);
 					if (result != null) {
-						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success),
-								getResources().getColor(R.color.warning_green_1)));
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_success) ));
 					} else {
-						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail),
-								getResources().getColor(R.color.warning_red_1)));
+						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_rmv_fail) ));
 					}
 					mActionMode.finish();
 					mActionMode = null;
@@ -406,7 +388,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowFilterDefineDialogEvent}.
 	 */
 	public void onEvent(ShowFilterDefineDialogEvent e) {
-		showDialogFragment(FilterDefineDialogFragment.newInstance(this), null);
+		showDialogFragment(FilterDefineDialogFragment.newInstance(getApplication()), null);
 	}
 
 
@@ -417,7 +399,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		Event {@link com.schautup.bus.ShowLabelDefineDialogEvent}.
 	 */
 	public void onEvent(ShowLabelDefineDialogEvent e) {
-		showDialogFragment(LabelDefineDialogFragment.newInstance(this), null);
+		showDialogFragment(LabelDefineDialogFragment.newInstance(getApplication()), null);
 	}
 
 	/**
@@ -536,9 +518,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		});
 
 		// No data.
-		//Sticky message box.
-		mStickyV = findViewById(R.id.sticky_fl);
-		mStickyMsgTv = (TextView) mStickyV.findViewById(R.id.sticky_msg_tv);
 		//Progress-indicator.
 		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
@@ -699,7 +678,6 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mStickyV.setVisibility(View.GONE);
 		getSupportActionBar().show();
 	}
 

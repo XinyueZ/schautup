@@ -51,7 +51,7 @@ public abstract class BaseActionModeListAdapter<T extends IActionModeSupport> ex
 		T item = (T) getItem(position);
 		if (vh.mDeleteCb != null) {
 			vh.mDeleteCb.setVisibility(mActionMode ? View.VISIBLE : View.GONE);
-			if(!mActionMode) {
+			if(!isActionMode()) {
 				vh.mDeleteCb.setChecked(false);
 			} else {
 				vh.mDeleteCb.setChecked(item.isChecked());

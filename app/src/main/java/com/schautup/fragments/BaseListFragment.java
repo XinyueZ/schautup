@@ -2,16 +2,13 @@ package com.schautup.fragments;
 
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
-import com.schautup.R;
 import com.schautup.adapters.BaseScheduleListAdapter;
 import com.schautup.bus.AllScheduleLoadedEvent;
 import com.schautup.bus.AskDeleteScheduleItemsEvent;
@@ -82,7 +79,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 		} else {
 			mAdp.editItem(itemFound, item);
 		}
-		refreshUI(item, getResources().getDrawable(R.drawable.anim_list_warning_green));
+		refreshUI(item );
 	}
 
 
@@ -196,11 +193,14 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
-			View c = view.getChildAt(0);
-			int scrollY = -c.getTop() + view.getFirstVisiblePosition() * c.getHeight();
-			if(scrollY == 0) {
-				EventBus.getDefault().post(new ShowActionBarEvent(false));
-			} else {
+
+//			View c = view.getChildAt(0);
+//			int scrollY = -c.getTop() + view.getFirstVisiblePosition() * c.getHeight();
+//			if(scrollY == 0) {
+//				EventBus.getDefault().post(new ShowActionBarEvent(false));
+//			} else
+
+			{
 				if (currentFirstVisibleItem > mLastFirstVisibleItem) {
 					EventBus.getDefault().post(new ShowActionBarEvent(false));
 				} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
@@ -209,8 +209,6 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 			}
 			mLastFirstVisibleItem = currentFirstVisibleItem;
 		}
-		//So long the state of the ListView is changed, removed the warning highlighting.
-		mAdp.clearWarning();
 	}
 
 	/**
@@ -219,13 +217,9 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 	 *
 	 * @param item
 	 * 		The item that user wanna do.
-	 * @param warningDrawable
-	 * 		The {@link android.support.annotation.DrawableRes} for waning animation-list.
 	 */
-	private void refreshUI(ScheduleItem item, @DrawableRes Drawable warningDrawable) {
+	private void refreshUI(ScheduleItem item ) {
 		final int location = mAdp.getItemPosition(item);
-		//Change the state of layout cased by mLv(AbsListView).
-		mAdp.showWarningOnItem(item, warningDrawable);
 		//A tricky to jump to changed low.
 		//See. https://groups.google.com/forum/#!topic/android-developers/EnyldBQDUwE
 		mLv.clearFocus();

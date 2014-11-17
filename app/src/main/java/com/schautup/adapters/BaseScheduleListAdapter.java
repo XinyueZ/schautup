@@ -5,10 +5,7 @@ import java.util.List;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,14 +31,6 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 	 * Data source.
 	 */
 	private List<ScheduleItem> mItemList;
-	/**
-	 * The item that duplicates a current already shown item in {@link #mItemList}.
-	 */
-	private ScheduleItem mDuplicatedItem;
-	/**
-	 * {@link android.support.annotation.DrawableRes}, animation-list when an item needs show warning.
-	 */
-	private Drawable mWarningDrawable;
 
 	/**
 	 * Get data source, list of {@link com.schautup.data.ScheduleItem}.
@@ -94,12 +83,6 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 		vh.mStatusLevelV.setBackgroundColor(Utils.getStatusLevelColor(parent.getContext(), item));
 		vh.mStatusIv.setImageResource(item.getType().getIconDrawResId());
 		vh.mStatusTv.setText(Utils.convertValue(item));
-		if (mWarningDrawable != null && mDuplicatedItem != null && item.getId() == mDuplicatedItem.getId()) {
-			Utils.setBackgroundCompat(convertView, mWarningDrawable);
-			((AnimationDrawable) convertView.getBackground()).start();
-		} else {
-			convertView.setBackgroundResource(R.drawable.selector_item_bg);
-		}
 		if(!TextUtils.isEmpty(item.getReserveLeft()) &&
 				!TextUtils.isEmpty(item.getReserveRight())) {
 			if(TextUtils.equals("boolean", item.getReserveRight())) {
@@ -133,37 +116,37 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 			vh.mInfoIv.setVisibility(View.GONE);
 		}
 
-		vh.mSuTv.setSelected(false);vh.mSuTv.setTypeface(null, Typeface.NORMAL);
-		vh.mMoTv.setSelected(false);vh.mMoTv.setTypeface(null, Typeface.NORMAL);
-		vh.mTuTv.setSelected(false);vh.mTuTv.setTypeface(null, Typeface.NORMAL);
-		vh.mWeTv.setSelected(false);vh.mWeTv.setTypeface(null, Typeface.NORMAL);
-		vh.mThTv.setSelected(false);vh.mThTv.setTypeface(null, Typeface.NORMAL);
-		vh.mFrTv.setSelected(false);vh.mFrTv.setTypeface(null, Typeface.NORMAL);
-		vh.mSaTv.setSelected(false);vh.mSaTv.setTypeface(null, Typeface.NORMAL);
+		vh.mSuTv.setVisibility(View.GONE);
+		vh.mMoTv.setVisibility(View.GONE);
+		vh.mTuTv.setVisibility(View.GONE);
+		vh.mWeTv.setVisibility(View.GONE);
+		vh.mThTv.setVisibility(View.GONE);
+		vh.mFrTv.setVisibility(View.GONE);
+		vh.mSaTv.setVisibility(View.GONE);
 		EventRecurrence er = item.getEventRecurrence();
 		int[] byday = er.byday;
 		for (int i : byday) {
 			switch (i) {
 			case EventRecurrence.SU:
-				vh.mSuTv.setSelected(true);
+				vh.mSuTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.MO:
-				vh.mMoTv.setSelected(true);
+				vh.mMoTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.TU:
-				vh.mTuTv.setSelected(true);
+				vh.mTuTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.WE:
-				vh.mWeTv.setSelected(true);
+				vh.mWeTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.TH:
-				vh.mThTv.setSelected(true);
+				vh.mThTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.FR:
-				vh.mFrTv.setSelected(true);
+				vh.mFrTv.setVisibility(View.VISIBLE);
 				break;
 			case EventRecurrence.SA:
-				vh.mSaTv.setSelected(true);
+				vh.mSaTv.setVisibility(View.VISIBLE);
 				break;
 			}
 		}
@@ -299,32 +282,7 @@ public abstract class BaseScheduleListAdapter extends BaseActionModeListAdapter<
 		}
 	}
 
-	/**
-	 * Show a warning on the already shown item that might be duplicated by {@code item}.
-	 * <p/>
-	 * It calls <b>{@link #notifyDataSetChanged()}</b> internally.
-	 *
-	 * @param item
-	 * 		The item that might be inserted into DB or update in DB but it was rejected.
-	 * @param warningDrawable
-	 * 		The animation-list when an item needs show warning.
-	 */
-	public void showWarningOnItem(ScheduleItem item, @DrawableRes Drawable warningDrawable) {
-		mDuplicatedItem = item;
-		mWarningDrawable = warningDrawable;
-		notifyDataSetChanged();
-	}
 
-	/**
-	 * Clear warning animation if possible.
-	 */
-	public void clearWarning() {
-		if (mDuplicatedItem != null) {
-			mDuplicatedItem = null;
-			mWarningDrawable = null;
-			notifyDataSetChanged();
-		}
-	}
 
 	@Override
 	protected List<ScheduleItem> getDataSource() {

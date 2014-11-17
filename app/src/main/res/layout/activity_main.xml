@@ -30,9 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <include layout="@layout/inc_sticky" />
-
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             style="@style/ActionBar_ToolBar" />

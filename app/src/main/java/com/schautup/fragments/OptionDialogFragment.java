@@ -766,8 +766,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 		case R.id.close_confirm_btn:
 			if (mSelectedType == null) {
 				//Warning, if has not selected a type to schedule.
-				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_selection),
-						getResources().getColor(R.color.warning_green_1)));
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_selection) ));
 				mSettingTypesLl.setSelected(true);
 				mSelMuteV.setSelected(false);
 				mSelVibrateV.setSelected(false);
@@ -781,8 +780,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 			} else if (mEventRecurrence == null ||
 					((mEventRecurrence.byday == null || mEventRecurrence.byday.length == 0))) {
 				//Warning, we must select "repeat".
-				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_recurrence),
-						getResources().getColor(R.color.warning_green_1)));
+				EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_recurrence) ));
 				mRecurrenceV.setSelected(true);
 			} else {
 				if (mEditMode && mPreScheduleItem != null) {
@@ -836,8 +834,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 					if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 							mMinute)) {
 						EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated, getString(
-								mSelectedType.getNameResId()), Utils.convertValue(mHour), Utils.convertValue(mMinute)),
-								getResources().getColor(R.color.warning_red_1)));
+								mSelectedType.getNameResId()), Utils.convertValue(mHour), Utils.convertValue(mMinute)) ));
 						break;
 					}
 				} else {
@@ -850,8 +847,7 @@ public final class OptionDialogFragment extends DialogFragment implements View.O
 						if (DB.getInstance(getActivity().getApplication()).findDuplicatedItem(mSelectedType, mHour,
 								mMinute)) {
 							EventBus.getDefault().post(new ShowStickyEvent(getString(R.string.msg_tip_duplicated,
-									getString(mSelectedType.getNameResId()), Utils.convertValue(mHour),
-									Utils.convertValue(mMinute)), getResources().getColor(R.color.warning_red_1)));
+									getString(mSelectedType.getNameResId()), Utils.convertValue(mHour))));
 							break;
 						}
 					}
