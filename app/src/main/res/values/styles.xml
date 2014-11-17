@@ -22,11 +22,12 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_marginRight">10dp</item>
-        <item name="android:background">@color/bg_add_new</item>
+        <item name="android:background">@color/primary_color</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_weight">0.5</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/text_common_white</item>
     </style>
 
     <style name="ImageButton_SubItem_Drawer">
@@ -83,6 +84,11 @@
         <item name="popupTheme">@style/AppTheme</item>
         <item name="android:background">@drawable/bg_actionbar</item>
         <item name="background">@drawable/bg_actionbar</item>
+    </style>
+
+    <style name="Confirm_Buttons">
+        <item name="android:textColor">@color/text_common_white</item>
+        <item name="android:background">@color/indigo_700</item>
     </style>
 
 </resources>

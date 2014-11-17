@@ -8,6 +8,6 @@
     android:singleLine="true"
     android:maxLines="1"
     android:minLines="1"
-    android:background="@color/bg_overflow"
+    android:background="@color/primary_dark_color"
     android:textColor="@color/text_common_white"
     android:textAppearance="?android:attr/textAppearanceMedium" />

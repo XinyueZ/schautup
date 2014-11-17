@@ -1,69 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="c0">#ffffff</color>
-    <color name="c1">#80ffffff</color>
-    <color name="c2">#ccffffff</color>
-    <color name="c3">#052d41</color>
-    <color name="c4">#1effffff</color>
-    <color name="c5">#40ffffff</color>
-    <color name="c6">#33000000</color>
-    <color name="c7">#CC000000</color>
-    <color name="c8">#CC14b9d2</color>
-    <color name="c9">#0f6ea5</color>
-    <color name="c10">#FF0000</color>
-    <color name="blue_grey_200">#B0BEC5</color>
-    <color name="c12">#0096ff</color>
-    <color name="c13">#0032ff</color>
-    <color name="c14">#0000c8</color>
-    <color name="c15">#00007d</color>
-    <color name="c16">#ffff00</color>
-    <color name="c18">#c8ffff</color>
-    <color name="c19">#96ffff</color>
-    <color name="c20">#64ffff</color>
-    <color name="c21">#19ffff</color>
-    <color name="c22">#00ffff</color>
-    <color name="c23">#00c8ff</color>
-    <color name="c24">#4000c8ff</color>
-    <color name="c25">#cc0f6ea5</color>
 
-    <color name="text_common_black">@color/c7</color>
-    <color name="text_common_white">@color/c0</color>
-    <color name="text_common_blue">@color/c13</color>
-    <color name="bg_list_item">@color/c0</color>
-    <color name="bg_pressed_status">@color/c3</color>
-    <color name="bg_actionbar">@color/c9</color>
-    <color name="bg_overflow">@color/c3</color>
-    <color name="divider">@color/c6</color>
-    <color name="menu_divider">@color/c23</color>
-    <color name="bg_add_new">@color/c8</color>
-    <color name="bg_hour_minute">@color/c5</color>
-    <color name="bg_option_dialog">@color/c18</color>
-    <color name="bg_blue_rect_solid">@color/c24</color>
-    <color name="bg_blue_rect_stroke">@color/c13</color>
-    <color name="bg_red_rect_stroke">@color/c10</color>
-    <color name="bg_button_close_cancel">@color/c6</color>
-    <color name="bg_eula">@color/c0</color>
-    <color name="bg_selected_item">@color/c25</color>
-    <color name="checkbox">@color/c9</color>
 
-    <color name="level_0">@color/c18</color>
-    <color name="level_1">@color/c19</color>
-    <color name="level_2">@color/c20</color>
-    <color name="level_3">@color/c21</color>
-    <color name="level_4">@color/c22</color>
-    <color name="level_5">@color/c23</color>
-    <color name="level_6">@color/c12</color>
-    <color name="level_7">@color/c13</color>
-    <color name="level_8">@color/c14</color>
-    <color name="level_9">@color/c15</color>
-    <color name="level_10">@color/c16</color>
-    <color name="level_11">@color/c10</color>
 
-    <color name="prg_0">@color/c10</color>
-    <color name="prg_1">@color/c16</color>
-    <color name="prg_2">@color/c14</color>
-    <color name="prg_3">@color/c15</color>
+    <color name="level_0">#c8ffff</color>
+    <color name="level_1">#96ffff</color>
+    <color name="level_2">#64ffff</color>
+    <color name="level_3">#19ffff</color>
+    <color name="level_4">#00ffff</color>
+    <color name="level_5">#00c8ff</color>
+    <color name="level_6">#0096ff</color>
+    <color name="level_7">#0032ff</color>
+    <color name="level_8">#0000c8</color>
+    <color name="level_9">#00007d</color>
+    <color name="level_10">#ffff00</color>
+    <color name="level_11">#FF0000</color>
+
+    <color name="prg_0">@color/indigo_300</color>
+    <color name="prg_1">@color/indigo_500</color>
+    <color name="prg_2">@color/blue_grey_50</color>
+    <color name="prg_3">@color/blue_grey_600</color>
 
 
     <color name="warning_red_1">#FF0000</color>
@@ -92,4 +49,24 @@
     <color name="warning_green_11">#FFFFFF</color>
 
 
+    <color name="indigo_300">#7986CB</color>
+    <color name="indigo_500">#3F51B5</color>
+    <color name="indigo_700">#303F9F</color>
+    <color name="blue_grey_50">#607D8B</color>
+    <color name="blue_grey_600">#546E7A</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_500">#9E9E9E</color>
+    <color name="a400">#3D5AFE</color>
+
+    <color name="common_black">#000000</color>
+    <color name="common_white">#FFFFFF</color>
+    <color name="common_blue">@color/indigo_500</color>
+    <color name="common_transparent">@android:color/transparent</color>
+
+    <color name="text_common_black">@color/common_black</color>
+    <color name="text_common_white">@color/common_white</color>
+    <color name="text_common_blue">@color/common_blue</color>
+
+    <color name="primary_color">@color/indigo_500</color>
+    <color name="primary_dark_color">@color/indigo_700</color>
 </resources>

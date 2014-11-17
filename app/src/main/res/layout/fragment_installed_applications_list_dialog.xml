@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:orientation="vertical"
-    android:background="@color/bg_option_dialog"
+    android:background="@color/common_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,19 +23,17 @@
             android:id="@+id/close_cancel_btn"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="@color/text_common_black"
+            style="@style/Confirm_Buttons"
             android:layout_height="45dp"
-            android:text="@string/btn_cancel"
-            android:background="@drawable/selector_bg4_btn" />
+            android:text="@string/btn_cancel"  />
 
         <Button
             android:id="@+id/close_confirm_btn"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="@color/text_common_black"
+            style="@style/Confirm_Buttons"
             android:layout_height="45dp"
-            android:text="@string/btn_confirm"
-            android:background="@drawable/selector_bg2_btn" />
+            android:text="@string/btn_confirm" />
 
     </LinearLayout>
     

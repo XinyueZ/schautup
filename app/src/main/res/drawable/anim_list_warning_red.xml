@@ -36,6 +36,6 @@
         android:drawable="@color/warning_red_11"
         android:duration="@integer/anim_list_duration" />
     <item
-        android:drawable="@color/bg_list_item"
+        android:drawable="@color/common_white"
         android:duration="@integer/anim_list_duration" />
 </animation-list>

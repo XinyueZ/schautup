@@ -7,27 +7,26 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:dropDownListViewStyle">@style/OverflowDropDown</item>
-        <item name="android:colorPrimary">@android:color/white</item>
-        <item name="android:colorPrimaryDark">@color/checkbox</item>
-        <item name="android:colorAccent">@color/c9</item>
-        <item name="android:windowBackground">@color/blue_grey_200</item>
-        <item name="android:actionModeBackground">@color/c9</item>
+        <item name="android:colorPrimary">@color/primary_color</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="android:colorAccent">@color/primary_dark_color</item>
+        <item name="android:windowBackground">@color/grey_500</item>
+        <item name="android:actionModeBackground">@color/primary_dark_color</item>
         <!-- Support library compatibility -->
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="dropDownListViewStyle">@style/OverflowDropDown</item>
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/checkbox</item>
-        <item name="colorAccent">@color/checkbox</item>
-        <item name="actionModeBackground">@color/c9</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="colorAccent">@color/primary_dark_color</item>
+        <item name="actionModeBackground">@color/primary_dark_color</item>
     </style>
 
 
     <!--Actionbar overflow menu divider-->
     <style name="OverflowDropDown" parent="@style/Widget.AppCompat.ListView.DropDown">
-        <item name="android:divider">@color/menu_divider</item>
         <item name="android:dividerHeight">1dp</item>
-        <item name="android:background">@color/bg_overflow</item>
+        <item name="android:background">@color/primary_dark_color</item>
     </style>
 
 
