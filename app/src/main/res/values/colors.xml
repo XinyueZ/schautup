@@ -19,8 +19,8 @@
 
     <color name="prg_0">@color/indigo_300</color>
     <color name="prg_1">@color/indigo_500</color>
-    <color name="prg_2">@color/blue_grey_50</color>
-    <color name="prg_3">@color/blue_grey_600</color>
+    <color name="prg_2">@color/indigo_700</color>
+    <color name="prg_3">@color/a400</color>
 
 
 

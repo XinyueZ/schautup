@@ -6,10 +6,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.schautup.activities.HomePageWebViewActivity">
 
-    <com.schautup.views.WebViewEx
-        android:id="@+id/home_wv"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/content_srl"
+        android:layout_gravity="top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.schautup.views.WebViewEx
+            android:id="@+id/home_wv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

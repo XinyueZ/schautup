@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,10 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 	 */
 	private Toolbar mToolbar;
 	/**
+	 * Progress indicator.
+	 */
+	private SwipeRefreshLayout mRefreshLayout;
+	/**
 	 * Show single instance of {@link com.schautup.activities.HomePageWebViewActivity}.
 	 *
 	 * @param cxt
@@ -61,6 +67,17 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
+		//Progress-indicator.
+		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_srl);
+		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
+		mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				animToolActionBar(-getActionBarHeight() * 4);
+				mWebView.reload();
+			}
+		});
+
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,10 +110,12 @@ public final class HomePageWebViewActivity extends BaseActivity implements Downl
 		mWebView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+				mRefreshLayout.setRefreshing(true);
 			}
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
+				mRefreshLayout.setRefreshing(false);
 			}
 
 			@Override
