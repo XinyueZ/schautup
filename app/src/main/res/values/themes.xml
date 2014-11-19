@@ -4,8 +4,8 @@
     <style name="AppTheme.Base" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/common_white</item>
+        <item name="android:textColorSecondary">@color/common_white</item>
         <item name="android:dropDownListViewStyle">@style/OverflowDropDown</item>
         <item name="android:colorPrimary">@color/primary_color</item>
         <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
@@ -23,6 +23,14 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base"/>
+
+    <style name="SettingsTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/common_white</item>
+        <item name="android:textColorPrimary">@color/blue_grey_50</item>
+        <item name="android:textColorSecondary">@color/blue_grey_50</item>
+        <item name="android:colorAccent">@color/teal_500</item>
+        <item name="colorAccent">@color/teal_500</item>
+    </style>
 
     <!--Actionbar overflow menu divider-->
     <style name="OverflowDropDown" parent="@style/Widget.AppCompat.ListView.DropDown">

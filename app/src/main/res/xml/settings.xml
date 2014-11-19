@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/settings_category_schedule_mode">
+    <PreferenceCategory android:title="@string/settings_category_schedule_mode"  android:layout="@layout/setting_entry">
         <ListPreference
             android:key="key_schedule_mode"
             android:title="@string/settings_thirsty_mode"
@@ -8,7 +8,7 @@
             android:entries="@array/settings_schedule_modes"
             android:entryValues="@array/settings_schedule_modes_values" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/settings_sort_types">
+    <PreferenceCategory android:title="@string/settings_sort_types"   android:layout="@layout/setting_entry">
         <ListPreference
             android:key="key_sorted_by_edit"
             android:title="@string/settings_sort_types"
@@ -20,7 +20,7 @@
             android:entries="@array/settings_sort_direction"
             android:entryValues="@array/settings_sort_direction_values" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/settings_category_run_boot">
+    <PreferenceCategory android:title="@string/settings_category_run_boot"   android:layout="@layout/setting_entry">
         <CheckBoxPreference
             android:key="key_run_boot"
             android:title="@string/settings_run_boot"

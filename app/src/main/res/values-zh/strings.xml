@@ -96,6 +96,7 @@
     <string name="msg_label_name_must_given">标签名必须填。</string>
 
     <!--Settings-->
+    <string name="settings_category_schedule_mode">定时呼叫模式</string>
     <string name="settings_hungry_mode">模式1</string>
     <string name="settings_hungry_mode_desc">推荐在充电或者电量充足时选择。</string>
     <string name="settings_thirsty_mode">模式2</string>

@@ -110,7 +110,8 @@
         <activity
             android:name="com.schautup.activities.SettingsActivity"
             android:label="@string/menu_settings"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsTheme"  />
         <activity
             android:name="com.schautup.activities.HomePageWebViewActivity"
             android:label="@string/drawer_item_home_page"

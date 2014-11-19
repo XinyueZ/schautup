@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 
 import com.schautup.App;
 import com.schautup.BootReceiver;
 import com.schautup.R;
 import com.schautup.utils.Prefs;
+import com.schautup.utils.Utils;
 import com.schautup.utils.uihelper.SystemUiHelper;
 
 /**
@@ -103,6 +105,11 @@ public final class SettingsActivity extends PreferenceActivity implements
 		//Run at boot or not.
 		CheckBoxPreference runBoot = (CheckBoxPreference) findPreference(Prefs.KEY_RUN_BOOT);
 		runBoot.setOnPreferenceChangeListener(this);
+
+
+		((MarginLayoutParams)findViewById(android.R.id.list).getLayoutParams()).topMargin= Utils.getActionBarHeight(
+				this);
+
 	}
 
 	@Override

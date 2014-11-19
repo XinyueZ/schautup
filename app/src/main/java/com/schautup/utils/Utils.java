@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -44,6 +45,21 @@ public final class Utils {
 	public static final String ALPHA =
 			(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) ? "alpha" : "Alpha";
 
+	/**
+	 * Get height of {@link android.support.v7.app.ActionBar}.
+	 * @param activity {@link android.app.Activity} that hosts an  {@link android.support.v7.app.ActionBar}.
+	 * @return Height of bar.
+	 */
+	public static int getActionBarHeight(Activity activity) {
+		int[] abSzAttr;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			abSzAttr = new int[] { android.R.attr.actionBarSize };
+		} else {
+			abSzAttr = new int[] { R.attr.actionBarSize };
+		}
+		TypedArray a = activity.obtainStyledAttributes(abSzAttr);
+		return a.getDimensionPixelSize(0, -1);
+	}
 	/**
 	 * Convert value.
 	 * <p/>

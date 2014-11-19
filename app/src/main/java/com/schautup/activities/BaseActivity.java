@@ -5,9 +5,7 @@ import java.lang.reflect.Field;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -22,6 +20,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.schautup.R;
 import com.schautup.fragments.AboutDialogFragment;
 import com.schautup.utils.Prefs;
+import com.schautup.utils.Utils;
 import com.schautup.utils.uihelper.SystemUiHelper;
 
 /**
@@ -65,15 +64,7 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int[] abSzAttr;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			abSzAttr = new int[] { android.R.attr.actionBarSize };
-		} else {
-			abSzAttr = new int[] { R.attr.actionBarSize };
-		}
-		TypedArray a = obtainStyledAttributes(abSzAttr);
-		mActionBarHeight = a.getDimensionPixelSize(0, -1);
-
+		mActionBarHeight = Utils.getActionBarHeight(this);
 
 		try {
 			ViewConfiguration config = ViewConfiguration.get(this);

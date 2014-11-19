@@ -32,6 +32,7 @@
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="a400">#3D5AFE</color>
+    <color name="teal_500">#009688</color>
 
     <color name="common_black">#000000</color>
     <color name="common_white">#FFFFFF</color>
