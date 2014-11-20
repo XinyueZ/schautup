@@ -336,6 +336,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			getSupportActionBar().show();
 		}
 		startSupportActionMode(this);
+		getSystemUiHelper().show();
 	}
 
 	/**
@@ -714,6 +715,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		mActionMode = null;
 		mAddNewV.setVisibility(View.VISIBLE);
 		mToolbar.setVisibility(View.VISIBLE);
+		getSystemUiHelper().hide();
 		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 

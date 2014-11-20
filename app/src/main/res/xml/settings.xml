@@ -5,18 +5,18 @@
             android:key="key_schedule_mode"
             android:title="@string/settings_thirsty_mode"
             android:summary="@string/settings_thirsty_mode_desc"
-            android:entries="@array/settings_schedule_modes"
+            android:entries="@array/settings_schedule_modes" android:layout="@layout/setting_item"
             android:entryValues="@array/settings_schedule_modes_values" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_sort_types"   android:layout="@layout/setting_entry">
         <ListPreference
             android:key="key_sorted_by_edit"
             android:title="@string/settings_sort_types"
-            android:entries="@array/settings_sort_types"
+            android:entries="@array/settings_sort_types" android:layout="@layout/setting_item"
             android:entryValues="@array/settings_sort_types_values" />
         <ListPreference
             android:key="key_sorted_direction"
-            android:title="@string/settings_sort_direction"
+            android:title="@string/settings_sort_direction" android:layout="@layout/setting_item"
             android:entries="@array/settings_sort_direction"
             android:entryValues="@array/settings_sort_direction_values" />
     </PreferenceCategory>
@@ -25,7 +25,7 @@
             android:key="key_run_boot"
             android:title="@string/settings_run_boot"
             android:summaryOn="@string/settings_run_boot_on"
-            android:summaryOff="@string/settings_run_boot_off"
+            android:summaryOff="@string/settings_run_boot_off" android:layout="@layout/setting_item"
             android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

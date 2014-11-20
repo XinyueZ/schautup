@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/common_white"
-    ripple:rv_type="simpleRipple"
-    ripple:rv_color="@color/primary_dark_color">
+    ripple:rv_type="rectangle"
+    ripple:rv_color="@color/primary_dark_color"
+    ripple:rv_rippleDuration="80">
 
     <LinearLayout
         android:orientation="horizontal"

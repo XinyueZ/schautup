@@ -75,7 +75,7 @@ public final class ScheduleListFragment extends BaseListFragment {
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		super.onItemLongClick(parent, view, position, id);
-		EventBus.getDefault().post(new ShowActionModeEvent(getAdapter().getItem(position - 1)));
+		EventBus.getDefault().post(new ShowActionModeEvent(getAdapter().getItem(position  )));
 		return true;
 	}
 }
