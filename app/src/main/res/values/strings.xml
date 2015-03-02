@@ -58,7 +58,7 @@
     <string name="menu_view">View</string>
     <string name="menu_sort_by_schedule">Sort by schedule.</string>
     <string name="menu_sort_by_edited_time">Sort by recently edited.</string>
-    <string name="menu_share_app">Share this</string>
+    <string name="menu_share_app">Share</string>
     <string name="menu_about">About</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_forward">Forward</string>
@@ -183,9 +183,10 @@
     <string name="type_app_start_nb">Start App</string>
 
     <!--debug:-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <!--release:--><!--<string name="banner_ad_unit_id">ca-app-pub-9133982521997162/3545646131</string>-->
-
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
+    <!--release:-->
+    <string name="banner_ad_unit_id">ca-app-pub-9133982521997162/3545646131</string>
+    <string name="ad_unit_id">ca-app-pub-9133982521997162/4897087332</string>
     <string name="play_service_url">market://details?id=com.google.android.gms</string>
 
 

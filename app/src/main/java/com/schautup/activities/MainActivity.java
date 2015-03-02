@@ -6,8 +6,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
@@ -38,7 +36,8 @@ import com.doomonafireball.betterpickers.recurrencepicker.EventRecurrence;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog;
 import com.doomonafireball.betterpickers.recurrencepicker.RecurrencePickerDialog.OnRecurrenceSetListener;
 import com.github.mrengineer13.snackbar.SnackBar;
-import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.schautup.R;
 import com.schautup.adapters.FiltersAdapter;
 import com.schautup.bus.AddNewScheduleItemEvent;
@@ -157,7 +156,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Flag that is {@code true} if the statusbar will show first time.
 	 */
 	private boolean mFistTimeHide = true;
-
+	/**
+	 * The interstitial ad.
+	 */
+	private InterstitialAd mInterstitialAd;
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -201,7 +203,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			animHideMainUI();
 			ViewCompat.setY(mRefreshLayout, 0);
 		}
-		getSystemUiHelper().hide();
+		//getSystemUiHelper().hide();
 	}
 
 	/**
@@ -336,7 +338,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 			getSupportActionBar().show();
 		}
 		startSupportActionMode(this);
-		getSystemUiHelper().show();
+		//getSystemUiHelper().show();
 	}
 
 	/**
@@ -438,7 +440,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		} else {
 			mViewMenuItem.setIcon(R.drawable.ic_action_gridview);
 		}
-		makeFilterSpinner();
+		//makeFilterSpinner();
 	}
 
 	/**
@@ -487,27 +489,27 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		getSupportActionBar().setTitle(null);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT  < VERSION_CODES.LOLLIPOP) {
-			View decorView = getWindow().getDecorView();
-			decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-				@Override
-				public void onSystemUiVisibilityChange(int visibility) {
-					// Note that system bars will only be "visible" if none of the
-					// LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-					if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-						// The system bars are visible.
-						animToolActionBar(mStatusBarHeight);
-					} else {
-						if (mFistTimeHide) {
-							mFistTimeHide = false;
-							return;
-						}
-						// The system bars are NOT visible.
-						animToolActionBar(0);
-					}
-				}
-			});
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT  < VERSION_CODES.LOLLIPOP) {
+//			View decorView = getWindow().getDecorView();
+//			decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+//				@Override
+//				public void onSystemUiVisibilityChange(int visibility) {
+//					// Note that system bars will only be "visible" if none of the
+//					// LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+//					if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+//						// The system bars are visible.
+//						animToolActionBar(mStatusBarHeight);
+//					} else {
+//						if (mFistTimeHide) {
+//							mFistTimeHide = false;
+//							return;
+//						}
+//						// The system bars are NOT visible.
+//						animToolActionBar(0);
+//					}
+//				}
+//			});
+//		}
 		initDrawer();
 		// Add new.
 		mAddNewV = (AnimImageButton) findViewById(R.id.add_btn);
@@ -523,16 +525,32 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		mRefreshLayout.setColorSchemeResources(R.color.prg_0, R.color.prg_1, R.color.prg_2, R.color.prg_3);
 		//Fragments will load data from DB, here we show the indicator directly.
 		mRefreshLayout.setRefreshing(true);
-		//Show all saved schedules.
-		if (Prefs.getInstance(getApplication()).isLastAListView()) {
-			showListView();
-		} else {
-			showGridView();
-		}
+
 		// Move the progress-indicator firstly under the ActionBar.
 		ViewCompat.setY(mRefreshLayout, getActionBarHeight());
 
 		handleStopAbortIncomings(getIntent());
+
+		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
+			@Override
+			protected List<ScheduleItem> doInBackground(Void... params) {
+				return Utils.getAllSchedules(getApplication());
+			}
+
+			@Override
+			protected void onPostExecute(List<ScheduleItem> result) {
+				super.onPostExecute(result);
+				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
+				//Show all saved schedules.
+				if (Prefs.getInstance(getApplication()).isLastAListView()) {
+					showListView();
+				} else {
+					showGridView();
+				}
+			}
+		}.executeParallel();
+
+		makeAds();
 	}
 
 	private void handleStopAbortIncomings(Intent intent) {
@@ -572,6 +590,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		super.onDestroy();
 		EventBus.getDefault().removeStickyEvent(AllScheduleLoadedEvent.class);
 		Prefs.getInstance(getApplication()).setLastAListView(mListViewCurrent);
+		displayInterstitial();
 	}
 
 	@Override
@@ -586,10 +605,10 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		String text = getString(R.string.lbl_share_app_content);
 		provider.setShareIntent(Utils.getDefaultShareIntent(provider, subject, text));
 
-		MenuItem menuFilter = menu.findItem(R.id.action_filter);
-		mFilterSpinner = (Spinner) MenuItemCompat.getActionView(menuFilter);
-		mNewSpinner = true;
-		makeFilterSpinner();
+//		MenuItem menuFilter = menu.findItem(R.id.action_filter);
+//		mFilterSpinner = (Spinner) MenuItemCompat.getActionView(menuFilter);
+//		mNewSpinner = true;
+//		makeFilterSpinner();
 
 		mViewMenuItem = menu.findItem(R.id.action_view);
 
@@ -715,7 +734,7 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 		mActionMode = null;
 		mAddNewV.setVisibility(View.VISIBLE);
 		mToolbar.setVisibility(View.VISIBLE);
-		getSystemUiHelper().hide();
+		//getSystemUiHelper().hide();
 		EventBus.getDefault().post(new HideActionModeEvent());
 	}
 
@@ -860,8 +879,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Dismiss actionbar, and add-new-btn.
 	 */
 	private void animHideMainUI() {
-		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
-		animator.translationY(getActionBarHeight() * 4).setDuration(400);
+//		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
+//		animator.translationY(getActionBarHeight() * 4).setDuration(400);
 
 		animToolActionBar(-getActionBarHeight() * 4);
 	}
@@ -870,8 +889,8 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * Show actionbar, and add-new-btn.
 	 */
 	private void animShowMainUI() {
-		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
-		animator.translationY(0).setDuration(400);
+//		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mAddNewV);
+//		animator.translationY(0).setDuration(400);
 
 		animToolActionBar(0);
 	}
@@ -883,7 +902,31 @@ public final class MainActivity extends BaseActivity implements OnTimeSetListene
 	 * 		The property value of animation.
 	 */
 	private void animToolActionBar(float value) {
-		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mToolbar);
-		animator.translationY(value).setDuration(400);
+//		ViewPropertyAnimator animator = ViewPropertyAnimator.animate(mToolbar);
+//		animator.translationY(value).setDuration(400);
+	}
+
+	/**
+	 * Invoke displayInterstitial() when you are ready to display an interstitial.
+	 */
+	public void displayInterstitial() {
+		if (mInterstitialAd.isLoaded()) {
+			mInterstitialAd.show();
+		}
+	}
+
+
+
+	/**
+	 * Make an Admob Interstitial.
+	 *
+	 */
+	private void makeAds() {
+		// Create an ad.
+		mInterstitialAd = new InterstitialAd(this);
+		mInterstitialAd.setAdUnitId(getString(R.string.ad_unit_id));
+		// Create ad request.
+		AdRequest adRequest = new AdRequest.Builder().build();
+		mInterstitialAd.loadAd(adRequest);
 	}
 }

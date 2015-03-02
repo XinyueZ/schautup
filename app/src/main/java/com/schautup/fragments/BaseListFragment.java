@@ -164,23 +164,6 @@ public abstract class BaseListFragment extends BaseFragment implements OnScrollL
 		return false;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-
-//		new ParallelTask<Void, Void, List<ScheduleItem>>(true) {
-//			@Override
-//			protected List<ScheduleItem> doInBackground(Void... params) {
-//				return Utils.getAllSchedules(getActivity().getApplication());
-//			}
-//
-//			@Override
-//			protected void onPostExecute(List<ScheduleItem> result) {
-//				super.onPostExecute(result);
-//				EventBus.getDefault().postSticky(new AllScheduleLoadedEvent(result));
-//			}
-//		}.executeParallel();
-	}
 
 	@Override
 	public void onPause() {
@@ -195,11 +178,11 @@ public abstract class BaseListFragment extends BaseFragment implements OnScrollL
 		if (view.getId() == mLv.getId()) {
 			final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 
-//			View c = view.getChildAt(0);
-//			int scrollY = -c.getTop() + view.getFirstVisiblePosition() * c.getHeight();
-//			if(scrollY == 0) {
-//				EventBus.getDefault().post(new ShowActionBarEvent(false));
-//			} else
+			View c = view.getChildAt(0);
+			int scrollY = -c.getTop() + view.getFirstVisiblePosition() * c.getHeight();
+			if(scrollY == 0) {
+				EventBus.getDefault().post(new ShowActionBarEvent(false));
+			} else
 
 			{
 				if (currentFirstVisibleItem > mLastFirstVisibleItem) {

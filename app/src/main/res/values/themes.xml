@@ -3,9 +3,9 @@
 
     <style name="AppTheme.Base" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:textColorPrimary">@color/common_white</item>
-        <item name="android:textColorSecondary">@color/common_white</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:textColorPrimary">#ebebeb</item>
+        <item name="android:textColorSecondary">#ebebeb</item>
         <item name="android:dropDownListViewStyle">@style/OverflowDropDown</item>
         <item name="android:colorPrimary">@color/primary_color</item>
         <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
@@ -14,13 +14,16 @@
         <item name="android:actionModeBackground">@color/primary_dark_color</item>
         <!-- Support library compatibility -->
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">false</item>
         <item name="dropDownListViewStyle">@style/OverflowDropDown</item>
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/primary_dark_color</item>
         <item name="actionModeBackground">@color/primary_dark_color</item>
     </style>
+
+
+
 
     <style name="AppTheme" parent="AppTheme.Base"/>
 

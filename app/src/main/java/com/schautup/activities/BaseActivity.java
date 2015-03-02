@@ -51,7 +51,7 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		mSystemUiHelper.hide();
+//		mSystemUiHelper.hide();
 	}
 
 	@Override
@@ -78,8 +78,8 @@ public abstract class BaseActivity extends com.chopping.activities.BaseActivity 
 			_e.printStackTrace();
 		}
 
-		mSystemUiHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0);
-		mSystemUiHelper.hide();
+//		mSystemUiHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0);
+//		mSystemUiHelper.hide();
 	}
 
 

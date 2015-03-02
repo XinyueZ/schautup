@@ -9,11 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/content_fl"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/height_divider"/>
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ActionBar_ToolBar" />
+
+            <FrameLayout
+                android:id="@+id/content_fl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/height_divider" />
+        </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/content_srl"
@@ -31,9 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/ActionBar_ToolBar" />
 
         <com.schautup.views.AnimImageButton
             android:id="@+id/add_btn"
@@ -42,7 +49,7 @@
             android:background="@drawable/bg_circle"
             android:layout_gravity="bottom|right"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="55dp"/>
+            android:layout_marginBottom="55dp" />
 
     </FrameLayout>
 
@@ -74,27 +81,27 @@
             <!--Labels define.-->
 
 
-            <fragment
-                android:name="com.schautup.fragments.LabelsFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!--<fragment-->
+                <!--android:name="com.schautup.fragments.LabelsFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/lv_divider" />
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@drawable/lv_divider" />-->
 
             <!--Filter define.-->
 
-            <fragment
-                android:name="com.schautup.fragments.FiltersFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!--<fragment-->
+                <!--android:name="com.schautup.fragments.FiltersFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/lv_divider" />
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@drawable/lv_divider" />-->
 
 
             <!--External applications list.-->

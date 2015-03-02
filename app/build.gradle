@@ -30,12 +30,9 @@ android {
     }
     buildTypes {
         debug {
-            zipAlign true
-//            versionNameSuffix buildNumber
+            versionNameSuffix buildNumber
         }
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
@@ -54,17 +51,19 @@ android {
             versionName project.APP_VERSIONNAME
         }
     }
-
+    lintOptions {
+        htmlReport false
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'joda-time:joda-time:2.3'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.crashlytics.android:crashlytics:1.+'
-    compile 'com.google.android.gms:play-services:6.1.11'
-    compile 'com.android.support:gridlayout-v7:21.0.+'
-    compile 'com.github.traex.rippleeffect:library:1.2.2'
+    compile 'com.crashlytics.android:crashlytics:1.1.13'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile 'com.github.mrengineer13:snackbar:0.4.0'
     compile project(':volley_cz')
     compile project(':ChoppingBootstrap')
@@ -72,11 +71,11 @@ dependencies {
 }
 
 // Rename final apks
-android.applicationVariants.all { variant ->
-    def apk = variant.outputFile
-    def newName = apk.name
-            .replace("_Android", "")
-            .replace(".apk", "-${android.defaultConfig.versionName}${buildNumber}.apk")
-    variant.outputFile = new File(apk.parent, newName)
+android.applicationVariants.all {  variant ->
+    variant.outputs.each  { output ->
+        output.outputFile = new File(
+                output.outputFile.parent, output.outputFile.name.replace("_Android", "")
+                .replace(".apk", "-${android.defaultConfig.versionName}${buildNumber}.apk"))
+    }
 }
 
