@@ -6,13 +6,9 @@ You can call this project "Schedule Helper" in English or "Aufgaben Helfer" in G
  - Thirsty: For Android 4.4.X users it is the best alternative by using [AlarmManager](http://developer.android.com/intl/zh-cn/reference/android/app/AlarmManager.html).
  - Neutral: All devices under 4.4.x could use this mode to achieve best scheduled user-feelings by using [AlarmManager](http://developer.android.com/intl/zh-cn/reference/android/app/AlarmManager.html).
 
-Some screens for current status(updated always)
-======
-![enter image description here](https://dl.dropbox.com/s/ggm2v4s21lwphgu/device-2014-10-06-145838.png)
-![enter image description here](https://dl.dropbox.com/s/iieef6guz5o62vd/device-2014-10-06-145957.png)
-![enter image description here](https://dl.dropbox.com/s/z1c8iwtaflqxefw/device-2014-10-06-150013.png)
-![enter image description here](https://dl.dropbox.com/s/9yqn4adr32kwrsu/device-2014-10-06-150044.png)
-![enter image description here](https://dl.dropbox.com/s/eyaq43pusaq6ywz/device-2014-10-06-150052.png)
+
+[![https://play.google.com/store/apps/details?id=com.schautup](https://dl.dropbox.com/s/phrg0387osr3riz/images.jpeg)](https://play.google.com/store/apps/details?id=com.schautup)
+
 
 License
 ======
